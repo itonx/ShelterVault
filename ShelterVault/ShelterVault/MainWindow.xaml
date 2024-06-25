@@ -8,12 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
-        <PasswordBox x:Name="password" PlaceholderText="Enter your password" Width="300"/>
-        <PasswordBox x:Name="passwordConfirmation" Margin="0 15" PlaceholderText="Confirm your password" Width="300"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Width="70" Click="Button_Click">Reset</Button>
-            <Button Width="70" Margin="10 0 0 0" Click="Button_Click_1">OK</Button>
-        </StackPanel>
-    </StackPanel>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <ContentControl x:Name="AppContent"/>
+    </Grid>
 </Window>

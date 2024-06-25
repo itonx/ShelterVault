@@ -16,6 +16,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Text;
 using System.Diagnostics;
+using ShelterVault.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,19 +33,7 @@ namespace ShelterVault
         public MainWindow()
         {
             this.InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.password.Password = string.Empty;
-            this.passwordConfirmation.Password = string.Empty;
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            byte[] sensitiveData = System.Text.Encoding.UTF8.GetBytes("YourSensitiveData");
-            _encryptedPassword = ProtectedData.Protect(sensitiveData, null, DataProtectionScope.CurrentUser);
-            TestEncryptDecrypt();
+            this.AppContent.Content = new CreateMasterKeyView();
         }
 
         private byte[] DecryptPassword(byte[] encryptedData)
