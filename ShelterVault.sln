@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "ShelterVault (Package)", "ShelterVault\ShelterVault (Package)\ShelterVault (Package).wapproj", "{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelterVault", "ShelterVault\ShelterVault\ShelterVault.csproj", "{8236DD80-EC55-4728-BA83-86D88FA00A57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|ARM64.Build.0 = Debug|ARM64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|x64.ActiveCfg = Debug|x64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|x64.Build.0 = Debug|x64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|x64.Deploy.0 = Debug|x64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|x86.ActiveCfg = Debug|x86
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|x86.Build.0 = Debug|x86
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Debug|x86.Deploy.0 = Debug|x86
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|ARM64.ActiveCfg = Release|ARM64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|ARM64.Build.0 = Release|ARM64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|ARM64.Deploy.0 = Release|ARM64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|x64.ActiveCfg = Release|x64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|x64.Build.0 = Release|x64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|x64.Deploy.0 = Release|x64
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|x86.ActiveCfg = Release|x86
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|x86.Build.0 = Release|x86
+		{3FE592FE-15F4-4BA0-B7BB-3963C654DFC4}.Release|x86.Deploy.0 = Release|x86
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Debug|ARM64.Build.0 = Debug|ARM64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Debug|x64.ActiveCfg = Debug|x64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Debug|x64.Build.0 = Debug|x64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Debug|x86.ActiveCfg = Debug|x86
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Debug|x86.Build.0 = Debug|x86
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Release|ARM64.ActiveCfg = Release|ARM64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Release|ARM64.Build.0 = Release|ARM64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Release|x64.ActiveCfg = Release|x64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Release|x64.Build.0 = Release|x64
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Release|x86.ActiveCfg = Release|x86
+		{8236DD80-EC55-4728-BA83-86D88FA00A57}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C207324-6F88-4BA1-8E82-73B41E61CCD0}
+	EndGlobalSection
+EndGlobal

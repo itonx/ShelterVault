@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="ShelterVault.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ShelterVault"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+        <PasswordBox x:Name="password" PlaceholderText="Enter your password" Width="300"/>
+        <PasswordBox x:Name="passwordConfirmation" Margin="0 15" PlaceholderText="Confirm your password" Width="300"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Width="70" Click="Button_Click">Reset</Button>
+            <Button Width="70" Margin="10 0 0 0" Click="Button_Click_1">OK</Button>
+        </StackPanel>
+    </StackPanel>
+</Window>
