@@ -33,7 +33,7 @@ namespace ShelterVault
         public MainWindow()
         {
             this.InitializeComponent();
-            this.AppContent.Content = new CreateMasterKeyView();
+            LoadInitialView();
         }
 
         private byte[] DecryptPassword(byte[] encryptedData)
@@ -50,6 +50,22 @@ namespace ShelterVault
 
             Debug.WriteLine($"Encrypted (b64-encode): {Convert.ToBase64String(encrypted.Item1)}");
             Debug.WriteLine($"Decrypted: {decrypted}");
+        }
+
+        public void LoadMasterKeyConfirmationView()
+        {
+            this.AppContent.Content = new MasterKeyConfirmationView();
+        }
+
+        public void LoadCredentialsView()
+        {
+            this.AppContent.Content = new CredentialsView();
+        }
+
+        private void LoadInitialView()
+        {
+            if(Sqlite3Tool.DBExists()) this.AppContent.Content = new MasterKeyConfirmationView();
+            else this.AppContent.Content = new CreateMasterKeyView();
         }
     }
 }

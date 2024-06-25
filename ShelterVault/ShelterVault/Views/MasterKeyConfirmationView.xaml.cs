@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -19,9 +18,9 @@ using Windows.Foundation.Collections;
 
 namespace ShelterVault.Views
 {
-    public sealed partial class CreateMasterKeyView : UserControl
+    public sealed partial class MasterKeyConfirmationView : UserControl
     {
-        public CreateMasterKeyView()
+        public MasterKeyConfirmationView()
         {
             this.InitializeComponent();
         }
@@ -29,18 +28,14 @@ namespace ShelterVault.Views
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             this.password.Password = string.Empty;
-            this.passwordConfirmation.Password = string.Empty;
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.password.Password.Length <= 8 || this.password.Password.Length > 32 ||
-                this.passwordConfirmation.Password.Length <= 8 || this.passwordConfirmation.Password.Length > 32) return;
-            bool wasVaultCreated = Sqlite3Tool.CreateShelterVault(this.password.Password);
-            if (wasVaultCreated)
+            if (Sqlite3Tool.IsMasterKey(this.password.Password))
             {
                 MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-                mainWindow?.LoadMasterKeyConfirmationView();
+                mainWindow?.LoadCredentialsView();
             }
         }
     }
