@@ -25,11 +25,11 @@ namespace ShelterVault.ViewModels
             CreateMasterKeyCommand = new RelayCommand<Dictionary<string, StringBuilder>>(CreateMasterKey);
         }
 
-        private async void CreateMasterKey(Dictionary<string, StringBuilder> passwords)
+        private async void CreateMasterKey(Dictionary<string, StringBuilder> masterKeyPasswords)
         {
-            if (!await IsValid(passwords)) return;
-            bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(passwords.Values.First().ToString());
-            if (wasVaultCreated) UITools.LoadMasterKeyConfirmationView(Encoding.Unicode.GetBytes(passwords.Values.First().ToString()));
+            if (!await IsValid(masterKeyPasswords)) return;
+            bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(masterKeyPasswords.Values.First().ToString());
+            if (wasVaultCreated) UITools.LoadMasterKeyConfirmationView(Encoding.Unicode.GetBytes(masterKeyPasswords.Values.First().ToString()));
         }
 
         private async Task<bool> IsValid(Dictionary<string, StringBuilder> passwords)

@@ -35,5 +35,11 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
             mainWindow?.LoadMasterKeyConfirmationView(password);
         }
+
+        public static void LoadCredentialsView()
+        {
+            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            mainWindow?.LoadCredentialsView();
+        }
     }
 }

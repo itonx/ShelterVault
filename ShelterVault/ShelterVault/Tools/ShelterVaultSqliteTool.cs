@@ -70,7 +70,7 @@ namespace ShelterVault.Tools
             }
         }
 
-        public static bool IsMasterKey(string masterKey)
+        public static bool IsMasterKeyValid(string masterKey)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {

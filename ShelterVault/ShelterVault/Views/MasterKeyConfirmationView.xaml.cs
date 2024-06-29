@@ -25,19 +25,5 @@ namespace ShelterVault.Views
         {
             this.InitializeComponent();
         }
-
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.password.Password = string.Empty;
-        }
-
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (ShelterVaultSqliteTool.IsMasterKey(this.password.Password))
-            {
-                MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-                mainWindow?.LoadCredentialsView();
-            }
-        }
     }
 }
