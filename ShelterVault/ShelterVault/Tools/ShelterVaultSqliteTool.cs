@@ -3,24 +3,20 @@ using Microsoft.Data.Sqlite;
 using ShelterVault.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ShelterVault
+namespace ShelterVault.Tools
 {
-    internal static class Sqlite3Tool
+    public static class ShelterVaultSqliteTool
     {
-        private static string DB_NAME = "ShelterVault.db";
+        private static readonly string _dbName = "ShelterVault.db";
         private static string _userPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        private static string _dbPath => Path.Combine(_userPath, DB_NAME);
+        private static string _dbPath => Path.Combine(_userPath, _dbName);
         private static string _dbConnectionString => $"Data Source={_dbPath}";
-        internal static bool DBExists() => File.Exists(_dbPath);
 
-        internal static bool CreateShelterVault(string masterKey)
+        public static bool DBExists() => File.Exists(_dbPath);
+
+        public static bool CreateShelterVault(string masterKey)
         {
             try
             {
@@ -60,7 +56,7 @@ namespace ShelterVault
 
                     using (var command = new SqliteCommand(insertMasterKeyQuery, connection))
                     {
-                        command.Parameters.AddWithValue("$hash", GetSHA256InBase64(ref masterKey));
+                        command.Parameters.AddWithValue("$hash", masterKey.ToSHA256Base64());
                         command.ExecuteNonQuery();
                     }
                 }
@@ -73,7 +69,7 @@ namespace ShelterVault
             }
         }
 
-        internal static bool IsMasterKey(string masterKey)
+        public static bool IsMasterKey(string masterKey)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -85,15 +81,14 @@ namespace ShelterVault
                     FROM shelter_vault_master_key
                     WHERE hash = $hash
                 ";
-                command.Parameters.AddWithValue("$hash", GetSHA256InBase64(ref masterKey));
+                command.Parameters.AddWithValue("$hash", masterKey.ToSHA256Base64());
 
                 object result = command.ExecuteScalar();
                 return result != null && int.Parse(result.ToString()) == 1;
             }
         }
 
-
-        internal static bool InsertCredential(Credential credential)
+        public static bool InsertCredential(Credential credential)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -119,7 +114,7 @@ namespace ShelterVault
             }
         }
 
-        internal static bool UpdateCredential(Credential credential)
+        public static bool UpdateCredential(Credential credential)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -144,7 +139,7 @@ namespace ShelterVault
             }
         }
 
-        internal static bool DeleteCredential(string uuid)
+        public static bool DeleteCredential(string uuid)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -162,7 +157,7 @@ namespace ShelterVault
             }
         }
 
-        internal static IEnumerable<Credential> GetAllCredentials()
+        public static IEnumerable<Credential> GetAllCredentials()
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -177,7 +172,7 @@ namespace ShelterVault
             }
         }
 
-        internal static Credential GetCredentialByUUID(string uuid)
+        public static Credential GetCredentialByUUID(string uuid)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -188,18 +183,10 @@ namespace ShelterVault
                     WHERE uuid=$uuid
                 ";
 
-                Credential result = connection.QueryFirst<Credential>(query, new { uuid = uuid });
+                Credential result = connection.QueryFirst<Credential>(query, new { uuid });
                 return result;
-            }
-        }
-
-        internal static string GetSHA256InBase64(ref string val)
-        {
-            using(SHA256 sha256 = SHA256.Create())
-            {
-                byte[] hashValueBytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(val));
-                return Convert.ToBase64String(hashValueBytes);
             }
         }
     }
 }
+ 

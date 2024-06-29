@@ -17,6 +17,7 @@ using Windows.Foundation.Collections;
 using System.Text;
 using System.Diagnostics;
 using ShelterVault.Views;
+using ShelterVault.Tools;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -64,7 +65,7 @@ namespace ShelterVault
 
         private void LoadInitialView()
         {
-            if(Sqlite3Tool.DBExists()) this.AppContent.Content = new MasterKeyConfirmationView();
+            if(ShelterVaultSqliteTool.DBExists()) this.AppContent.Content = new MasterKeyConfirmationView();
             else this.AppContent.Content = new CreateMasterKeyView();
         }
     }

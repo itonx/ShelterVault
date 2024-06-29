@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using ShelterVault.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +33,7 @@ namespace ShelterVault.Views
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Sqlite3Tool.IsMasterKey(this.password.Password))
+            if (ShelterVaultSqliteTool.IsMasterKey(this.password.Password))
             {
                 MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
                 mainWindow?.LoadCredentialsView();

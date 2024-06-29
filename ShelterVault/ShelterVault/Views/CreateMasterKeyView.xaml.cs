@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using ShelterVault.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +37,7 @@ namespace ShelterVault.Views
         {
             if (this.password.Password.Length <= 8 || this.password.Password.Length > 32 ||
                 this.passwordConfirmation.Password.Length <= 8 || this.passwordConfirmation.Password.Length > 32) return;
-            bool wasVaultCreated = Sqlite3Tool.CreateShelterVault(this.password.Password);
+            bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(this.password.Password);
             if (wasVaultCreated)
             {
                 MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;

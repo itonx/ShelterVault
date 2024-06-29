@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ShelterVault
+namespace ShelterVault.Tools
 {
-    internal static class EncryptionTool
+    public static class EncryptionTool
     {
-        internal static (byte[], byte[]) EncryptAes(ref string plainText, byte[] key)
+        public static (byte[], byte[]) EncryptAes(ref string plainText, byte[] key)
         {
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException(nameof(plainText));
@@ -46,7 +42,7 @@ namespace ShelterVault
             return (encrypted, lastIV);
         }
 
-        internal static string DecryptAes(byte[] cipherText, byte[] key, byte[] iv)
+        public static string DecryptAes(byte[] cipherText, byte[] key, byte[] iv)
         {
             if (cipherText == null || cipherText.Length <= 0)
                 throw new ArgumentNullException(nameof(cipherText));
