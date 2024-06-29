@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Dapper;
+using Microsoft.Data.Sqlite;
+using ShelterVault.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,9 +35,10 @@ namespace ShelterVault
 
                     string createShelterVaultEncryptedCredentialsTableQuery = @"
                         CREATE TABLE IF NOT EXISTS shelter_vault_encrypted_credentials (
-                            title TEXT,
+                            uuid TEXT PRIMARY KEY,
+                            title TEXT NOT NULL,
                             username TEXT,
-                            encrypted_password TEXT NOT NULL,
+                            encryptedPassword TEXT NOT NULL,
                             url TEXT,
                             notes TEXT
                     )";
@@ -86,6 +89,107 @@ namespace ShelterVault
 
                 object result = command.ExecuteScalar();
                 return result != null && int.Parse(result.ToString()) == 1;
+            }
+        }
+
+
+        internal static bool InsertCredential(Credential credential)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    INSERT INTO shelter_vault_encrypted_credentials
+                    VALUES($uuid, $title, $username, $encryptedPassword, $url, $notes)
+                ";
+                string uuid = Guid.NewGuid().ToString();
+                command.Parameters.AddWithValue("uuid", uuid);
+                command.Parameters.AddWithValue("$title", credential.Title);
+                command.Parameters.AddWithValue("$username", credential.Username);
+                command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
+                command.Parameters.AddWithValue("$url", credential.Url);
+                command.Parameters.AddWithValue("$notes", credential.Notes);
+
+                int result = command.ExecuteNonQuery();
+                if (result > 0) credential.UUID = uuid;
+
+                return result > 0;
+            }
+        }
+
+        internal static bool UpdateCredential(Credential credential)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    UPDATE shelter_vault_encrypted_credentials
+                    SET
+                    title=$title, username=$username, encryptedPassword=$encryptedPassword, url=$url, notes=$notes
+                    WHERE uuid=$uuid
+                ";
+                command.Parameters.AddWithValue("$title", credential.Title);
+                command.Parameters.AddWithValue("$username", credential.Username);
+                command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
+                command.Parameters.AddWithValue("$url", credential.Url);
+                command.Parameters.AddWithValue("$notes", credential.Notes);
+                command.Parameters.AddWithValue("uuid", credential.UUID);
+
+                int result = command.ExecuteNonQuery();
+                return result == 1;
+            }
+        }
+
+        internal static bool DeleteCredential(string uuid)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    DELETE FROM shelter_vault_encrypted_credentials
+                    WHERE uuid=$uuid
+                ";
+                command.Parameters.AddWithValue("uuid", uuid);
+
+                int result = command.ExecuteNonQuery();
+                return result == 1;
+            }
+        }
+
+        internal static IEnumerable<Credential> GetAllCredentials()
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT * FROM shelter_vault_encrypted_credentials
+                ";
+
+                IEnumerable<Credential> results = connection.Query<Credential>(query);
+                return results;
+            }
+        }
+
+        internal static Credential GetCredentialByUUID(string uuid)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT * FROM shelter_vault_encrypted_credentials
+                    WHERE uuid=$uuid
+                ";
+
+                Credential result = connection.QueryFirst<Credential>(query, new { uuid = uuid });
+                return result;
             }
         }
 
