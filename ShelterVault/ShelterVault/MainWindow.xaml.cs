@@ -53,8 +53,9 @@ namespace ShelterVault
             Debug.WriteLine($"Decrypted: {decrypted}");
         }
 
-        public void LoadMasterKeyConfirmationView()
+        public void LoadMasterKeyConfirmationView(byte[] password)
         {
+            _encryptedPassword = ProtectedData.Protect(password, null, DataProtectionScope.CurrentUser);
             this.AppContent.Content = new MasterKeyConfirmationView();
         }
 

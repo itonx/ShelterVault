@@ -35,6 +35,7 @@ namespace ShelterVault.Tools
                             title TEXT NOT NULL,
                             username TEXT,
                             encryptedPassword TEXT NOT NULL,
+                            initializationVector TEXT NOT NULL,
                             url TEXT,
                             notes TEXT
                     )";
@@ -97,13 +98,14 @@ namespace ShelterVault.Tools
                 var command = connection.CreateCommand();
                 command.CommandText = @"
                     INSERT INTO shelter_vault_encrypted_credentials
-                    VALUES($uuid, $title, $username, $encryptedPassword, $url, $notes)
+                    VALUES($uuid, $title, $username, $encryptedPassword, $initializationVector, $url, $notes)
                 ";
                 string uuid = Guid.NewGuid().ToString();
                 command.Parameters.AddWithValue("uuid", uuid);
                 command.Parameters.AddWithValue("$title", credential.Title);
                 command.Parameters.AddWithValue("$username", credential.Username);
                 command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
+                command.Parameters.AddWithValue("$initializationVector", credential.InitializationVector);
                 command.Parameters.AddWithValue("$url", credential.Url);
                 command.Parameters.AddWithValue("$notes", credential.Notes);
 

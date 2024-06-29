@@ -5,13 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ShelterVault.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:viewmodels="using:ShelterVault.ViewModels"
+    mc:Ignorable="d"
+    xmlns:tools="using:ShelterVault.Tools">
+    <UserControl.DataContext>
+        <viewmodels:CreateMasterKeyViewModel/>
+    </UserControl.DataContext>
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
-        <TextBlock Margin="0 0 0 15" TextWrapping="Wrap">IMPORTANT: This password will be use to encrypt your vault.</TextBlock>
+        <TextBlock Margin="0 0 0 15" TextWrapping="Wrap">IMPORTANT: This password will be used to encrypt your vault.</TextBlock>
         <TextBlock Margin="0 0 0 5">Enter your password:</TextBlock>
-        <PasswordBox x:Name="password" Margin="0 0 0 15" MaxLength="32"/>
+        <PasswordBox x:Name="password" Margin="0 0 0 15" MaxLength="32" tools:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}"/>
         <TextBlock Margin="0 0 0 5">Confirm your password:</TextBlock>
         <PasswordBox x:Name="passwordConfirmation" Margin="0 0 0 15" MaxLength="32"/>
         <Grid>
@@ -19,8 +24,9 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Width="90" Grid.Column="0" Click="ClearButton_Click">Clear</Button>
-            <Button Width="90" Grid.Column="1" Margin="10 0 0 0" Click="OkButton_Click" HorizontalAlignment="Right">OK</Button>
+            <Button Width="90" Grid.Column="0" HorizontalAlignment="Left" Command="{Binding CreateMasterKeyCommand}" CommandParameter="{Binding ElementName=root, Path=password}">Clear</Button>
+            <Button Width="90" Grid.Column="1" Margin="0 0 0 0" HorizontalAlignment="Right" Command="{Binding CreateMasterKeyCommand}" Content="OK"
+                    CommandParameter="{Binding ElementName=password, Path=(tools:MultiPasswordBoxValuesHelper.SecurePasswords)}"/>
         </Grid>
     </StackPanel>
 </UserControl>

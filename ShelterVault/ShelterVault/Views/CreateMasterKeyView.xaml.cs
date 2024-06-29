@@ -14,6 +14,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using System;
+using System.Globalization;
+using Microsoft.UI.Xaml.Markup;
+using System.Text;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,24 +29,6 @@ namespace ShelterVault.Views
         public CreateMasterKeyView()
         {
             this.InitializeComponent();
-        }
-
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.password.Password = string.Empty;
-            this.passwordConfirmation.Password = string.Empty;
-        }
-
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.password.Password.Length <= 8 || this.password.Password.Length > 32 ||
-                this.passwordConfirmation.Password.Length <= 8 || this.passwordConfirmation.Password.Length > 32) return;
-            bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(this.password.Password);
-            if (wasVaultCreated)
-            {
-                MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-                mainWindow?.LoadMasterKeyConfirmationView();
-            }
         }
     }
 }
