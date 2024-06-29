@@ -19,7 +19,7 @@ namespace ShelterVault.ViewModels
 
         private void ConfirmMasterKey(string masterKey)
         {
-            if (ShelterVaultSqliteTool.IsMasterKeyValid(masterKey)) UITools.LoadCredentialsView();
+            if (ShelterVaultSqliteTool.IsMasterKeyValid(masterKey)) UITools.LoadCredentialsView(Encoding.Unicode.GetBytes(masterKey));
         }
     }
 }

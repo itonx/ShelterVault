@@ -6,7 +6,7 @@ namespace ShelterVault.Tools
 {
     public static class EncryptionTool
     {
-        public static (byte[], byte[]) EncryptAes(ref string plainText, byte[] key)
+        public static (byte[], byte[]) EncryptAes(string plainText, byte[] key)
         {
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException(nameof(plainText));
@@ -40,6 +40,12 @@ namespace ShelterVault.Tools
             }
 
             return (encrypted, lastIV);
+        }
+
+        public static (string, string) EncryptAesWithBase64(string plainText, byte[] key)
+        {
+            (byte[], byte[]) encryptedBytes = EncryptAes(plainText, key);
+            return (Convert.ToBase64String(encryptedBytes.Item1), Convert.ToBase64String(encryptedBytes.Item2));
         }
 
         public static string DecryptAes(byte[] cipherText, byte[] key, byte[] iv)

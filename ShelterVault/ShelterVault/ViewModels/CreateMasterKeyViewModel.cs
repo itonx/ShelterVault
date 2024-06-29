@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public class CreateMasterKeyViewModel : ObservableObject
+    public class CreateMasterKeyViewModel
     {
         private readonly Regex _passwordChecker = new Regex(@"^(?=.*[0-9])(?=.*[!@#$%^&*(),.?"":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?"":{}|<>]{8,32}$");
 
@@ -29,7 +29,7 @@ namespace ShelterVault.ViewModels
         {
             if (!await IsValid(masterKeyPasswords)) return;
             bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(masterKeyPasswords.Values.First().ToString());
-            if (wasVaultCreated) UITools.LoadMasterKeyConfirmationView(Encoding.Unicode.GetBytes(masterKeyPasswords.Values.First().ToString()));
+            if (wasVaultCreated) UITools.LoadMasterKeyConfirmationView();
         }
 
         private async Task<bool> IsValid(Dictionary<string, StringBuilder> passwords)

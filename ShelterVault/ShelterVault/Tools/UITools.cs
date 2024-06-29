@@ -30,16 +30,30 @@ namespace ShelterVault.Tools
             await dialog.ShowAsync();
         }
 
-        public static void LoadMasterKeyConfirmationView(byte[] password)
+        public static async Task<bool> ShowContinueConfirmationDialogAsync(string title, string message, string primaryButtonText = "No", string secondaryButtonText = "Yes")
         {
-            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-            mainWindow?.LoadMasterKeyConfirmationView(password);
+            ContentDialog dialog = BuildDialog(title, message, primaryButtonText);
+            dialog.SecondaryButtonText = secondaryButtonText;
+            ContentDialogResult result = await dialog.ShowAsync();
+            return result == ContentDialogResult.Primary;
         }
 
-        public static void LoadCredentialsView()
+        public static void LoadMasterKeyConfirmationView()
         {
             MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-            mainWindow?.LoadCredentialsView();
+            mainWindow?.LoadMasterKeyConfirmationView();
+        }
+
+        public static void LoadCredentialsView(byte[] password)
+        {
+            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            mainWindow?.LoadCredentialsView(password);
+        }
+
+        public static byte[] GetMasterKey()
+        {
+            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            return mainWindow?.GetMasterKey();
         }
     }
 }

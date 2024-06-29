@@ -37,30 +37,30 @@ namespace ShelterVault
             LoadInitialView();
         }
 
-        private byte[] DecryptPassword(byte[] encryptedData)
+        public byte[] GetMasterKey()
         {
-            return ProtectedData.Unprotect(encryptedData, null, DataProtectionScope.CurrentUser);
+            return ProtectedData.Unprotect(_encryptedPassword, null, DataProtectionScope.CurrentUser);
         }
         public void TestEncryptDecrypt()
         {
-            string original = "Here is some data to encrypt!";
+            /*string original = "Here is some data to encrypt!";
             Debug.WriteLine($"Original: {original}");
             byte[] passwordDecrypted = DecryptPassword(_encryptedPassword);
             var encrypted = EncryptionTool.EncryptAes(ref original, passwordDecrypted);
             string decrypted = EncryptionTool.DecryptAes(encrypted.Item1, passwordDecrypted, encrypted.Item2);
 
             Debug.WriteLine($"Encrypted (b64-encode): {Convert.ToBase64String(encrypted.Item1)}");
-            Debug.WriteLine($"Decrypted: {decrypted}");
+            Debug.WriteLine($"Decrypted: {decrypted}");*/
         }
 
-        public void LoadMasterKeyConfirmationView(byte[] password)
+        public void LoadMasterKeyConfirmationView()
         {
-            _encryptedPassword = ProtectedData.Protect(password, null, DataProtectionScope.CurrentUser);
             this.AppContent.Content = new MasterKeyConfirmationView();
         }
 
-        public void LoadCredentialsView()
+        public void LoadCredentialsView(byte[] password)
         {
+            _encryptedPassword = ProtectedData.Protect(password, null, DataProtectionScope.CurrentUser);
             this.AppContent.Content = new CredentialsView();
         }
 

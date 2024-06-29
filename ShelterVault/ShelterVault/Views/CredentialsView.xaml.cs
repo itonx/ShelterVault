@@ -24,7 +24,7 @@ namespace ShelterVault.Views
         public CredentialsView()
         {
             this.InitializeComponent();
-            this.DataContext = this;
+            /*this.DataContext = this;
             this.CredentialList.ItemsSource = new List<Credential>()
             {
                 new Credential()
@@ -37,10 +37,10 @@ namespace ShelterVault.Views
                     Title = "Title 2",
                     Notes = "Note 2"
                 }
-            };
+            };*/
         }
 
-        private void CredentialList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*private void CredentialList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Credential selectedCredential = (sender as ListView).SelectedItem as Credential;
 
@@ -51,6 +51,6 @@ namespace ShelterVault.Views
             this.SelectedEncriptedPassword.Text = selectedCredential.EncryptedPassword;
             this.SelectedUrl.Text = selectedCredential.Url;
             this.SelectedNotes.Document.Selection.Text = selectedCredential.Notes;
-        }
+        }*/
     }
 }
