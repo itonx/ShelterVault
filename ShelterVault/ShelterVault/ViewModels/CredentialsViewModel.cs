@@ -25,13 +25,32 @@ namespace ShelterVault.ViewModels
         }
         public ObservableCollection<Credential> Credentials { get; }
         public IRelayCommand DeleteCredentialCommand { get; }
+        public IRelayCommand SaveCredentialChangesCommand { get; }
         public IRelayCommand SelectedCredentialChangedCommand { get; }
 
         public CredentialsViewModel()
         {
             Credentials = new ObservableCollection<Credential>(ShelterVaultSqliteTool.GetAllCredentials());
             DeleteCredentialCommand = new RelayCommand(DeleteCredential);
+            SaveCredentialChangesCommand = new RelayCommand(SaveCredentialChanges);
             SelectedCredentialChangedCommand = new RelayCommand<object>(SelectedCredentialChanged);
+        }
+
+        private async void SaveCredentialChanges()
+        {
+            StringBuilder err = new StringBuilder();
+
+            if (SelectedCredential.IsNewCredentialValid(err))
+            {
+                (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
+                bool inserted = ShelterVaultSqliteTool.InsertCredential(SelectedCredential.GetNewCredentialValues(encryptedValues));
+                if (inserted) await UITools.ShowConfirmationDialogAsync("Important", "Your credential was saved.");
+                else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
+            }
+            else
+            {
+                await UITools.ShowConfirmationDialogAsync("Important", err.ToString());
+            }
         }
 
         private async void SelectedCredentialChanged(object parameter)
@@ -47,6 +66,8 @@ namespace ShelterVault.ViewModels
                 _confirmationInProcess = false;
             }
             if(!_confirmationInProcess) _lastSelectedItem = SelectedCredential;
+            SelectedCredential.Password = EncryptionTool.DecryptAes(Convert.FromBase64String(SelectedCredential.EncryptedPassword), UITools.GetMasterKey(), Convert.FromBase64String(SelectedCredential.InitializationVector));
+            SelectedCredential.PasswordConfirmation = SelectedCredential.Password;
         }
 
         private async void DeleteCredential()
