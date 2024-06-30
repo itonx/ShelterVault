@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using ShelterVault.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,8 +51,10 @@ namespace ShelterVault.Models
         public bool IsNewCredentialValid(StringBuilder err)
         {
             if (err == null) throw new ArgumentNullException("Error while validating the new credential.");
-            if (string.IsNullOrWhiteSpace(Title)) err.AppendLine("");
-            if (Password != PasswordConfirmation) err.AppendLine("");
+            if (string.IsNullOrWhiteSpace(Title)) err.AppendLine("[-] Title can't be empty");
+            if (Password != PasswordConfirmation) err.AppendLine("[-] Passwords don't match");
+            if (Password.IsStrongPassword()) err.AppendLine("[-] Password doesn't meet minimum requirements.");
+
             return err.Length > 0;
         }
 

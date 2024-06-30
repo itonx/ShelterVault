@@ -37,7 +37,7 @@ namespace ShelterVault.ViewModels
             StringBuilder err = new StringBuilder();
 
             if (!passwords.Values.All(val => val.ToString().Equals(passwords.Values.First().ToString()))) err.AppendLine("[-] Passwords don't match");
-            if (!_passwordChecker.IsMatch(passwords.Values.First().ToString())) err.AppendLine("[-] Password doesn't meet minimum requirements.");
+            if (!passwords.Values.First().ToString().IsStrongPassword()) err.AppendLine("[-] Password doesn't meet minimum requirements.");
 
             if (err.Length > 0)
             {
