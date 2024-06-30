@@ -21,7 +21,15 @@ namespace ShelterVault.ViewModels
         public Credential SelectedCredential
         {
             get => _selectedCredential;
-            set => SetProperty(ref _selectedCredential, value.Clone());
+            set
+            {
+                if (!_confirmationInProcess)
+                {
+                    value.Password = EncryptionTool.DecryptAes(Convert.FromBase64String(value.EncryptedPassword), UITools.GetMasterKey(), Convert.FromBase64String(value.InitializationVector));
+                    value.PasswordConfirmation = value.Password;
+                }
+                SetProperty(ref _selectedCredential, value.Clone());
+            }
         }
         public ObservableCollection<Credential> Credentials { get; }
         public IRelayCommand DeleteCredentialCommand { get; }
@@ -44,7 +52,7 @@ namespace ShelterVault.ViewModels
             {
                 (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
                 bool inserted = ShelterVaultSqliteTool.InsertCredential(SelectedCredential.GetNewCredentialValues(encryptedValues));
-                if (inserted) await UITools.ShowConfirmationDialogAsync("Important", "Your credential was saved.");
+                if (inserted) await UITools.ShowConfirmationDialogAsync("Important", "Chages were saved.");
                 else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
             }
             else
@@ -66,8 +74,6 @@ namespace ShelterVault.ViewModels
                 _confirmationInProcess = false;
             }
             if(!_confirmationInProcess) _lastSelectedItem = SelectedCredential;
-            SelectedCredential.Password = EncryptionTool.DecryptAes(Convert.FromBase64String(SelectedCredential.EncryptedPassword), UITools.GetMasterKey(), Convert.FromBase64String(SelectedCredential.InitializationVector));
-            SelectedCredential.PasswordConfirmation = SelectedCredential.Password;
         }
 
         private async void DeleteCredential()
