@@ -26,12 +26,12 @@ namespace ShelterVault.ViewModels
             get => _selectedCredential;
             set
             {
-                if (!_confirmationInProcess)
+                if (!_confirmationInProcess && value != null && value.Password == null)
                 {
                     value.Password = EncryptionTool.DecryptAes(Convert.FromBase64String(value.EncryptedPassword), UITools.GetMasterKey(), Convert.FromBase64String(value.InitializationVector));
                     value.PasswordConfirmation = value.Password;
                 }
-                SetProperty(ref _selectedCredential, value.Clone());
+                SetProperty(ref _selectedCredential, value == null ? null : value.Clone());
             }
         }
         private bool _togglePasswordVisibility;
@@ -40,7 +40,12 @@ namespace ShelterVault.ViewModels
             get => _togglePasswordVisibility;
             set => SetProperty(ref _togglePasswordVisibility, value);
         }
-        public ObservableCollection<Credential> Credentials { get; }
+        private ObservableCollection<Credential> _credentials;
+        public ObservableCollection<Credential> Credentials
+        {
+            get => _credentials;
+            set => SetProperty(ref _credentials, value);
+        }
         public IRelayCommand DeleteCredentialCommand { get; }
         public IRelayCommand SetClipboardCommand { get; }
         public IRelayCommand ShowPasswordCommand { get; }
@@ -97,9 +102,23 @@ namespace ShelterVault.ViewModels
 
             if (SelectedCredential.IsNewCredentialValid(err))
             {
-                (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
-                bool inserted = ShelterVaultSqliteTool.InsertCredential(SelectedCredential.GetNewCredentialValues(encryptedValues));
-                if (inserted) await UITools.ShowConfirmationDialogAsync("Important", "Chages were saved.");
+                Credential credential = Credentials.First(c => c.UUID == SelectedCredential.UUID);
+                Credential credentialUpdated = SelectedCredential;
+                if(credential.Password != SelectedCredential.Password)
+                {
+                    (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
+                    credentialUpdated = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
+                }
+
+                bool updated = ShelterVaultSqliteTool.UpdateCredential(credentialUpdated);
+                if (updated)
+                {
+                    Credential credentialUpdatedInView = Credentials.First(c => c.UUID == credentialUpdated.UUID);
+                    Credentials[Credentials.IndexOf(credentialUpdatedInView)] = credentialUpdated;
+                    SelectedCredential = null;
+                    SelectedCredential = Credentials.First(c => c.UUID == credentialUpdated.UUID);
+                    await UITools.ShowConfirmationDialogAsync("Important", "Chages were saved.");
+                }
                 else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
             }
             else

@@ -126,12 +126,13 @@ namespace ShelterVault.Tools
                 command.CommandText = @"
                     UPDATE shelter_vault_encrypted_credentials
                     SET
-                    title=$title, username=$username, encryptedPassword=$encryptedPassword, url=$url, notes=$notes
+                    title=$title, username=$username, encryptedPassword=$encryptedPassword, initializationVector=$initializationVector, url=$url, notes=$notes
                     WHERE uuid=$uuid
                 ";
                 command.Parameters.AddWithValue("$title", credential.Title);
                 command.Parameters.AddWithValue("$username", credential.Username);
                 command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
+                command.Parameters.AddWithValue("$initializationVector", credential.InitializationVector);
                 command.Parameters.AddWithValue("$url", credential.Url);
                 command.Parameters.AddWithValue("$notes", credential.Notes);
                 command.Parameters.AddWithValue("uuid", credential.UUID);

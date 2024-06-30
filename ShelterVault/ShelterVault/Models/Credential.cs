@@ -55,10 +55,10 @@ namespace ShelterVault.Models
             if (Password != PasswordConfirmation) err.AppendLine("[-] Passwords don't match");
             if (Password.IsStrongPassword()) err.AppendLine("[-] Password doesn't meet minimum requirements.");
 
-            return err.Length > 0;
+            return err.Length == 0;
         }
 
-        public Credential GetNewCredentialValues((byte[], byte[]) encryptedValues)
+        public Credential GetUpdatedCredentialValues((byte[], byte[]) encryptedValues)
         {
             Credential newCredential = this.Clone();
             newCredential.EncryptedPassword = Convert.ToBase64String(encryptedValues.Item1);
