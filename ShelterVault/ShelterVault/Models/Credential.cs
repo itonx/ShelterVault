@@ -16,18 +16,7 @@ namespace ShelterVault.Models
         public string EncryptedPassword { get; set; }
         public string InitializationVector { get; set; }
         public string Url { get; set; }
-        private string _notes;
-        public string Notes
-        {
-            get
-            {
-                return _notes;
-            }
-            set
-            {
-                SetProperty(ref _notes, value);
-            }
-        }
+        public string Notes { get; set; }
 
         public Credential Clone() => (Credential)this.MemberwiseClone();
 

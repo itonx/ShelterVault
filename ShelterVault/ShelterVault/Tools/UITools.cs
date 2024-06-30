@@ -30,12 +30,12 @@ namespace ShelterVault.Tools
             await dialog.ShowAsync();
         }
 
-        public static async Task<bool> ShowContinueConfirmationDialogAsync(string title, string message, string primaryButtonText = "No", string secondaryButtonText = "Yes")
+        public static async Task<bool> ShowContinueConfirmationDialogAsync(string title, string message, string primaryButtonText = "No", string secondaryButtonText = "Yes", ContentDialogResult expectedResult = ContentDialogResult.Primary)
         {
             ContentDialog dialog = BuildDialog(title, message, primaryButtonText);
             dialog.SecondaryButtonText = secondaryButtonText;
             ContentDialogResult result = await dialog.ShowAsync();
-            return result == ContentDialogResult.Primary;
+            return result == expectedResult;
         }
 
         public static void LoadMasterKeyConfirmationView()
