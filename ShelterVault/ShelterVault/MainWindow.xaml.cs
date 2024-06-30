@@ -1,21 +1,5 @@
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using System.Text;
-using System.Diagnostics;
 using ShelterVault.Views;
 using ShelterVault.Tools;
 
@@ -41,17 +25,6 @@ namespace ShelterVault
         {
             return ProtectedData.Unprotect(_encryptedPassword, null, DataProtectionScope.CurrentUser);
         }
-        public void TestEncryptDecrypt()
-        {
-            /*string original = "Here is some data to encrypt!";
-            Debug.WriteLine($"Original: {original}");
-            byte[] passwordDecrypted = DecryptPassword(_encryptedPassword);
-            var encrypted = EncryptionTool.EncryptAes(ref original, passwordDecrypted);
-            string decrypted = EncryptionTool.DecryptAes(encrypted.Item1, passwordDecrypted, encrypted.Item2);
-
-            Debug.WriteLine($"Encrypted (b64-encode): {Convert.ToBase64String(encrypted.Item1)}");
-            Debug.WriteLine($"Decrypted: {decrypted}");*/
-        }
 
         public void LoadMasterKeyConfirmationView()
         {
@@ -64,7 +37,7 @@ namespace ShelterVault
             this.AppContent.Content = new CredentialsView();
         }
 
-        private void LoadInitialView()
+        public void LoadInitialView()
         {
             if(ShelterVaultSqliteTool.DBExists()) this.AppContent.Content = new MasterKeyConfirmationView();
             else this.AppContent.Content = new CreateMasterKeyView();

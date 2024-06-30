@@ -1,15 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using ShelterVault.Models;
+﻿using CommunityToolkit.Mvvm.Input;
 using ShelterVault.Tools;
-using ShelterVault.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
