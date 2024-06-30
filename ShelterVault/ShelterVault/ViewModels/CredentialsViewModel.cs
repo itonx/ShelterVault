@@ -31,8 +31,15 @@ namespace ShelterVault.ViewModels
                 SetProperty(ref _selectedCredential, value.Clone());
             }
         }
+        private bool _togglePasswordVisibility;
+        public bool TogglePasswordVisibility
+        {
+            get => _togglePasswordVisibility;
+            set => SetProperty(ref _togglePasswordVisibility, value);
+        }
         public ObservableCollection<Credential> Credentials { get; }
         public IRelayCommand DeleteCredentialCommand { get; }
+        public IRelayCommand ShowPasswordCommand { get; }
         public IRelayCommand SaveCredentialChangesCommand { get; }
         public IRelayCommand SelectedCredentialChangedCommand { get; }
 
@@ -40,8 +47,14 @@ namespace ShelterVault.ViewModels
         {
             Credentials = new ObservableCollection<Credential>(ShelterVaultSqliteTool.GetAllCredentials());
             DeleteCredentialCommand = new RelayCommand(DeleteCredential);
+            ShowPasswordCommand = new RelayCommand(ShowPassword);
             SaveCredentialChangesCommand = new RelayCommand(SaveCredentialChanges);
             SelectedCredentialChangedCommand = new RelayCommand<object>(SelectedCredentialChanged);
+        }
+
+        private void ShowPassword()
+        {
+            TogglePasswordVisibility = !TogglePasswordVisibility;
         }
 
         private async void SaveCredentialChanges()
