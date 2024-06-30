@@ -16,8 +16,6 @@ namespace ShelterVault.ViewModels
 {
     public class CreateMasterKeyViewModel
     {
-        private readonly Regex _passwordChecker = new Regex(@"^(?=.*[0-9])(?=.*[!@#$%^&*(),.?"":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?"":{}|<>]{8,32}$");
-
         public IRelayCommand CreateMasterKeyCommand { get; }
 
         public CreateMasterKeyViewModel()

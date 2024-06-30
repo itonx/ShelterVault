@@ -8,12 +8,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ShelterVault.ViewModels
 {
     public class CredentialsViewModel : ObservableObject
     {
+        private CancellationTokenSource _cancellationTokenSource;
         private Credential _lastSelectedItem;
         private bool _confirmationInProcess;
         private bool _requestConfirmation => _lastSelectedItem == null || Credentials.First(c => c.UUID == _lastSelectedItem.UUID).Equals(_lastSelectedItem);
@@ -39,6 +42,7 @@ namespace ShelterVault.ViewModels
         }
         public ObservableCollection<Credential> Credentials { get; }
         public IRelayCommand DeleteCredentialCommand { get; }
+        public IRelayCommand SetClipboardCommand { get; }
         public IRelayCommand ShowPasswordCommand { get; }
         public IRelayCommand SaveCredentialChangesCommand { get; }
         public IRelayCommand SelectedCredentialChangedCommand { get; }
@@ -47,9 +51,39 @@ namespace ShelterVault.ViewModels
         {
             Credentials = new ObservableCollection<Credential>(ShelterVaultSqliteTool.GetAllCredentials());
             DeleteCredentialCommand = new RelayCommand(DeleteCredential);
+            SetClipboardCommand = new RelayCommand(SetClipboard);
             ShowPasswordCommand = new RelayCommand(ShowPassword);
             SaveCredentialChangesCommand = new RelayCommand(SaveCredentialChanges);
             SelectedCredentialChangedCommand = new RelayCommand<object>(SelectedCredentialChanged);
+        }
+
+        private void SetClipboard()
+        {
+            if(_cancellationTokenSource != null)
+            {
+                try
+                {
+                    _cancellationTokenSource.Cancel();
+                }
+                finally 
+                {
+                    _cancellationTokenSource.Dispose();
+                }
+            }
+
+            CancellationTokenSource tokenCancellation = new CancellationTokenSource();
+            CancellationToken ct = tokenCancellation.Token;
+            _cancellationTokenSource = tokenCancellation;
+
+            SelectedCredential.Password.SendToClipboard();
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                ct.ThrowIfCancellationRequested();
+                "ShelterVault".SendToClipboard();
+            }, tokenCancellation.Token);
+
         }
 
         private void ShowPassword()

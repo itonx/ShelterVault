@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ShelterVault.Tools
 {
@@ -19,5 +20,13 @@ namespace ShelterVault.Tools
         }
 
         public static bool IsStrongPassword(this string value) => _passwordChecker.IsMatch(value);
+
+        public static void SendToClipboard(this string value)
+        {
+            DataPackage data = new();
+            data.RequestedOperation = DataPackageOperation.Copy;
+            data.SetText(value);
+            Clipboard.SetContent(data);
+        }
     }
 }
