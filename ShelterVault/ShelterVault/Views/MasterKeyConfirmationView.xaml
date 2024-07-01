@@ -7,21 +7,102 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:viewmodels="using:ShelterVault.ViewModels"
+    xmlns:behaviors="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:tools="using:ShelterVault.Tools"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ShelterVaultForeground" Color="Black"/>
+                    <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlButtonForeground" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlForeground" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="Black"/>
+                    <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle">
+                        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
+                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="IsPasswordRevealButtonEnabled" Value="False"/>
+                    </Style>
+                    <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle">
+                        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
+                        <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
+                    </Style>
+                    <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush2" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
+                        <LinearGradientBrush.RelativeTransform>
+                            <ScaleTransform ScaleY="-1" CenterY="0.5"/>
+                        </LinearGradientBrush.RelativeTransform>
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Offset="1.0" Color="{ThemeResource SystemAccentColorLight2}"/>
+                            <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}"/>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                    <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlButtonForeground" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlForeground" Color="#D400FF05"/>
+                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#00FF05"/>
+                    <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle">
+                        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
+                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="IsPasswordRevealButtonEnabled" Value="False"/>
+                    </Style>
+                    <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle">
+                        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
+                        <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
+                    </Style>
+                    <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush2" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
+                        <LinearGradientBrush.RelativeTransform>
+                            <ScaleTransform ScaleY="-1" CenterY="0.5"/>
+                        </LinearGradientBrush.RelativeTransform>
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Offset="1.0" Color="#00FF05"/>
+                            <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}"/>
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                    <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <viewmodels:MasterKeyConfirmationViewModel/>
     </UserControl.DataContext>
     
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
-        <TextBlock Margin="0 0 0 5">Enter your master key:</TextBlock>
-        <PasswordBox x:Name="password" Margin="0 0 0 15" MaxLength="32"/>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Button Width="90" Grid.Column="0">Clear</Button>
-            <Button Width="90" Grid.Column="1" Margin="10 0 0 0" HorizontalAlignment="Right" Command="{Binding ConfirmMasterKeyCommand}" CommandParameter="{Binding ElementName=password, Path=Password}">OK</Button>
-        </Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="500">
+        <TextBlock Margin="0 0 0 5" Foreground="{StaticResource ShelterVaultForeground}" Text="
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣿⣷⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀&#x0a;
+⠀⠀⣄⠀⠀⠀⠀⠀⠀⠈⢿⡇⠀⠈⣿⣿⠁⠀⢸⡿⠁⠀⠀⠀⠀⠀⠀⣠⠀⠀&#x0a;
+⠀⠀⢹⣦⠀⠀⠀⠀⠀⠀⠻⣷⣤⣴⢏⡹⣦⣤⣾⠟⠀⠀⠀⠀⠀⠀⣴⡏⠀⠀&#x0a;
+⠀⠀⠀⢿⣷⣄⠀⠀⠀⠀⠀⠀⠙⠛⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⣠⣾⡿⠀⠀⠀&#x0a;
+⠀⠀⠀⠈⢿⣿⣧⡀⠀⠀⠀⢸⣧⡀⠀⠀⢀⣼⡇⠀⠀⠀⢀⣼⣿⡿⠁⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⠈⠻⣿⣿⣦⣀⠀⠀⠙⠿⣷⣾⠿⠋⠀⠀⣀⣴⣿⣿⠟⠁⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣷⣄⡀⠀⠀⠀⠀⢀⣠⣾⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢿⣿⠿⠒⢀⣠⣶⣿⣿⡿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⠀⠀⠀⠰⢶⡄⠀⣠⣴⣾⣿⣿⡿⠟⠋⠀⢠⡶⠆⠀⠀⠀⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⠀⣀⠀⣀⣤⡈⢻⣆⠸⠿⠟⠋⠁⠠⠶⠇⣰⡟⢁⣤⣀⠀⣀⠀⠀⠀⠀&#x0a;
+⠀⠀⠀⢸⣿⡇⠘⠛⠁⠀⠻⠆⠀⠀⠀⠀⠀⠀⠰⠟⠀⠈⠛⠃⢸⣿⡇⠀⠀⠀&#x0a;
+                   " TextWrapping="Wrap" HorizontalAlignment="Center"/>
+        <TextBlock Margin="0 0 0 5" Style="{StaticResource ShelterVaultTextBlockStyle}">Master key:</TextBlock>
+        <PasswordBox x:Name="password" Margin="0 0 0 15" MaxLength="32" Height="50" Style="{StaticResource ShelterVaultPasswordBoxStyle}" tools:RequestFocusHelper.Focus="True">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:EventTriggerBehavior EventName="KeyDown" >
+                    <behaviors:InvokeCommandAction Command="{Binding ConfirmMasterKeyCommand}"/>
+                </behaviors:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </PasswordBox>
     </StackPanel>
 </UserControl>

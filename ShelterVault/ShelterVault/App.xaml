@@ -9,10 +9,22 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="ShelterVaultForeground" Color="Black" />
+                    <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="red"/>
+                    <SolidColorBrush x:Key="TextControlButtonForeground" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlForeground" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="Black"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="Black"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
+                    <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlButtonForeground" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlForeground" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#00FF05"/>
+                    <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#00FF05"/>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>

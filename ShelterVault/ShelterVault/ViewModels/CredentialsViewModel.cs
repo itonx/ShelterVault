@@ -50,6 +50,12 @@ namespace ShelterVault.ViewModels
             get => _state;
             set => SetProperty(ref _state, value);
         }
+        private bool _requestFocusOnFirstField;
+        public bool RequestFocusOnFirstField
+        {
+            get => _requestFocusOnFirstField;
+            set => SetProperty(ref _requestFocusOnFirstField, value);
+        }
         public IRelayCommand NewCredentialCommand { get; }
         public IRelayCommand CancelCredentialCommand { get; }
         public IRelayCommand DeleteCredentialCommand { get; }
@@ -60,7 +66,7 @@ namespace ShelterVault.ViewModels
 
         public CredentialsViewModel()
         {
-            State = CredentialsViewModelState.Default;
+            State = CredentialsViewModelState.Empty;
             ShowPassword = false;
             Credentials = new ObservableCollection<Credential>(ShelterVaultSqliteTool.GetAllCredentials());
             NewCredentialCommand = new RelayCommand(OnNewCredential);
@@ -74,7 +80,7 @@ namespace ShelterVault.ViewModels
 
         private void OnCancelCredential()
         {
-            State = CredentialsViewModelState.Default;
+            State = CredentialsViewModelState.Empty;
             SelectedCredential = null;
         }
 
@@ -86,6 +92,7 @@ namespace ShelterVault.ViewModels
             SelectedCredential = null;
             SelectedCredential = newCredential;
             ShowPassword = false;
+            RequestFocusOnFirstField = true;
         }
 
         private void OnSetClipboard()
@@ -148,8 +155,10 @@ namespace ShelterVault.ViewModels
                         await UITools.ShowConfirmationDialogAsync("Important", "Chages were saved.");
                     }
                     else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be updated.");
+
+                    RequestFocusOnFirstField = true;
                 }
-                else
+                else if(State == CredentialsViewModelState.Adding)
                 {
                     Credential newCredential = SelectedCredential;
                     (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
@@ -165,6 +174,8 @@ namespace ShelterVault.ViewModels
                         State = CredentialsViewModelState.Default;
                     }
                     else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
+
+                    RequestFocusOnFirstField = true;
                 }
             }
             else
@@ -189,6 +200,7 @@ namespace ShelterVault.ViewModels
             {
                 ShowPassword = false;
                 _lastSelectedItem = SelectedCredential;
+                if(State == CredentialsViewModelState.Empty) State = CredentialsViewModelState.Default;
             }
         }
 
@@ -206,6 +218,8 @@ namespace ShelterVault.ViewModels
                 await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential was deleted.", "OK");
             }
             else await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential couldn't be deleted.", "OK");
+
+            State = CredentialsViewModelState.Empty;
         }
 
     }

@@ -13,7 +13,13 @@ namespace ShelterVault.Tools
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value is CredentialsViewModelState state && parameter != null && state == (CredentialsViewModelState)Enum.Parse(typeof(CredentialsViewModelState), parameter.ToString());
+            if(value is CredentialsViewModelState state && parameter != null)
+            {
+                foreach (var item in parameter.ToString().Split(":"))
+                    if (state == (CredentialsViewModelState)Enum.Parse(typeof(CredentialsViewModelState), item.ToString())) return true;      
+            }
+
+            return false;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

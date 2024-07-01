@@ -22,7 +22,7 @@ namespace ShelterVault.Tools
         }
 
         public static readonly DependencyProperty IsMonitoringProperty =
-            DependencyProperty.RegisterAttached("IsMonitoringProperty", typeof(bool), typeof(PasswordBoxHelper), new PropertyMetadata(false, OnIsMonitoringChanged));
+            DependencyProperty.RegisterAttached("FocusProperty", typeof(bool), typeof(PasswordBoxHelper), new PropertyMetadata(false, OnIsMonitoringChanged));
 
         public static bool GetIsMonitoring(DependencyObject obj) => (bool)obj.GetValue(IsMonitoringProperty);
 
