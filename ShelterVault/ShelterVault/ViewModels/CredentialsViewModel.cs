@@ -33,7 +33,7 @@ namespace ShelterVault.ViewModels
             }
         }
         private bool _togglePasswordVisibility;
-        public bool TogglePasswordVisibility
+        public bool ShowPassword
         {
             get => _togglePasswordVisibility;
             set => SetProperty(ref _togglePasswordVisibility, value);
@@ -61,32 +61,34 @@ namespace ShelterVault.ViewModels
         public CredentialsViewModel()
         {
             State = CredentialsViewModelState.Default;
+            ShowPassword = false;
             Credentials = new ObservableCollection<Credential>(ShelterVaultSqliteTool.GetAllCredentials());
-            NewCredentialCommand = new RelayCommand(NewCredential);
-            CancelCredentialCommand = new RelayCommand(CancelCredential);
-            DeleteCredentialCommand = new RelayCommand(DeleteCredential);
-            SetClipboardCommand = new RelayCommand(SetClipboard);
-            ShowPasswordCommand = new RelayCommand(ShowPassword);
-            SaveCredentialChangesCommand = new RelayCommand(SaveCredentialChanges);
-            SelectedCredentialChangedCommand = new RelayCommand<object>(SelectedCredentialChanged);
+            NewCredentialCommand = new RelayCommand(OnNewCredential);
+            CancelCredentialCommand = new RelayCommand(OnCancelCredential);
+            DeleteCredentialCommand = new RelayCommand(OnDeleteCredential);
+            SetClipboardCommand = new RelayCommand(OnSetClipboard);
+            ShowPasswordCommand = new RelayCommand(OnShowPassword);
+            SaveCredentialChangesCommand = new RelayCommand(OnSaveCredentialChanges);
+            SelectedCredentialChangedCommand = new RelayCommand<object>(OnSelectedCredentialChanged);
         }
 
-        private void CancelCredential()
+        private void OnCancelCredential()
         {
             State = CredentialsViewModelState.Default;
             SelectedCredential = null;
         }
 
-        private void NewCredential()
+        private void OnNewCredential()
         {
             State = CredentialsViewModelState.Adding;
             Credential newCredential = new Credential();
             newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
             SelectedCredential = null;
             SelectedCredential = newCredential;
+            ShowPassword = false;
         }
 
-        private void SetClipboard()
+        private void OnSetClipboard()
         {
             if(_cancellationTokenSource != null)
             {
@@ -115,12 +117,12 @@ namespace ShelterVault.ViewModels
 
         }
 
-        private void ShowPassword()
+        private void OnShowPassword()
         {
-            TogglePasswordVisibility = !TogglePasswordVisibility;
+            ShowPassword = !ShowPassword;
         }
 
-        private async void SaveCredentialChanges()
+        private async void OnSaveCredentialChanges()
         {
             StringBuilder err = new StringBuilder();
 
@@ -171,7 +173,7 @@ namespace ShelterVault.ViewModels
             }
         }
 
-        private async void SelectedCredentialChanged(object parameter)
+        private async void OnSelectedCredentialChanged(object parameter)
         {
             /* Pending changes not saved, ask for user confirmation before loosing changes */
             if (!_requestConfirmation && !_confirmationInProcess)
@@ -183,10 +185,14 @@ namespace ShelterVault.ViewModels
                 if(!cancelNewSelection) SelectedCredential = (Credential)(parameter as SelectionChangedEventArgs).AddedItems[0];
                 _confirmationInProcess = false;
             }
-            if(!_confirmationInProcess) _lastSelectedItem = SelectedCredential;
+            if (!_confirmationInProcess)
+            {
+                ShowPassword = false;
+                _lastSelectedItem = SelectedCredential;
+            }
         }
 
-        private async void DeleteCredential()
+        private async void OnDeleteCredential()
         {
             if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
             string uuid = SelectedCredential.UUID;
