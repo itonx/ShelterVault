@@ -189,12 +189,14 @@ namespace ShelterVault.ViewModels
         private async void DeleteCredential()
         {
             if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
-
-            if (ShelterVaultSqliteTool.DeleteCredential(SelectedCredential.UUID))
+            string uuid = SelectedCredential.UUID;
+            if (ShelterVaultSqliteTool.DeleteCredential(uuid))
             {
-                Credential credential = Credentials.First(c => c.UUID == SelectedCredential.UUID);
-                Credentials.Remove(credential);
                 SelectedCredential = null;
+                SelectedCredential = new Credential();
+                SelectedCredential.Password = SelectedCredential.PasswordConfirmation = string.Empty;
+                Credential credential = Credentials.First(c => c.UUID == uuid);
+                Credentials.Remove(credential);
                 await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential was deleted.", "OK");
             }
             else await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential couldn't be deleted.", "OK");
