@@ -2,6 +2,10 @@ using Microsoft.UI.Xaml;
 using System.Security.Cryptography;
 using ShelterVault.Views;
 using ShelterVault.Tools;
+using Microsoft.UI;
+using System;
+using Windows.ApplicationModel;
+using System.IO;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,6 +23,7 @@ namespace ShelterVault
         {
             this.InitializeComponent();
             LoadInitialView();
+            LoadIcon();
         }
 
         public byte[] GetMasterKey()
@@ -41,6 +46,11 @@ namespace ShelterVault
         {
             if(ShelterVaultSqliteTool.DBExists()) this.AppContent.Content = new MasterKeyConfirmationView();
             else this.AppContent.Content = new CreateMasterKeyView();
+        }
+
+        private void LoadIcon()
+        {
+            this.AppWindow.SetIcon(Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico"));
         }
     }
 }

@@ -10,12 +10,16 @@
     <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\CreateMasterKeyView.xaml" />
     <None Remove="Views\CredentialsView.xaml" />
     <None Remove="Views\MasterKeyConfirmationView.xaml" />
     <None Remove="Views\ShelterVaultMessageView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
