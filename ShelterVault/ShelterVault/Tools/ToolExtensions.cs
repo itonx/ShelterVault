@@ -8,7 +8,7 @@ namespace ShelterVault.Tools
 {
     public static class ToolExtensions
     {
-        private static readonly Regex _passwordChecker = new Regex(@"^(?=.*\d)(?=.*[!@#$%^&*()\-_=+[\]{};:',.<>/?])(?=.*[a-z])(?=.*[A-Z]).{8,32}$");
+        private static string _passwordPattern = @"^(?=.*\d)(?=.*[!@#$%^&*()-_=+[\]{};:',.<>/?])(?=.*[a-z])(?=.*[A-Z]).{8,32}$";
 
         public static string ToSHA256Base64(this string value)
         {
@@ -19,7 +19,7 @@ namespace ShelterVault.Tools
             }
         }
 
-        public static bool IsStrongPassword(this string value) => _passwordChecker.IsMatch(value);
+        public static bool IsStrongPassword(this string value) => Regex.IsMatch(value, _passwordPattern);
 
         public static void SendToClipboard(this string value)
         {
