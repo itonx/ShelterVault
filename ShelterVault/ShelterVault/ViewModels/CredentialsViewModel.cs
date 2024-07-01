@@ -122,15 +122,15 @@ namespace ShelterVault.ViewModels
 
         private async void SaveCredentialChanges()
         {
-            if(State == CredentialsViewModelState.Default)
-            {
-                StringBuilder err = new StringBuilder();
+            StringBuilder err = new StringBuilder();
 
-                if (SelectedCredential.IsNewCredentialValid(err))
+            if (SelectedCredential.IsUpdatedCredentialValid(err))
+            {
+                if (State == CredentialsViewModelState.Default)
                 {
                     Credential credential = Credentials.First(c => c.UUID == SelectedCredential.UUID);
                     Credential credentialUpdated = SelectedCredential;
-                    if(credential.Password != SelectedCredential.Password)
+                    if (credential.Password != SelectedCredential.Password)
                     {
                         (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
                         credentialUpdated = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
@@ -145,22 +145,35 @@ namespace ShelterVault.ViewModels
                         SelectedCredential = Credentials.First(c => c.UUID == credentialUpdated.UUID);
                         await UITools.ShowConfirmationDialogAsync("Important", "Chages were saved.");
                     }
-                    else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
+                    else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be updated.");
                 }
                 else
                 {
-                    await UITools.ShowConfirmationDialogAsync("Important", err.ToString());
+                    Credential newCredential = SelectedCredential;
+                    (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
+                    newCredential = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
+
+                    bool inserted = ShelterVaultSqliteTool.InsertCredential(newCredential);
+                    if (inserted)
+                    {
+                        Credentials.Add(newCredential);
+                        SelectedCredential = null;
+                        SelectedCredential = Credentials.First(c => c.UUID == newCredential.UUID);
+                        await UITools.ShowConfirmationDialogAsync("Important", "Your credential was saved.");
+                        State = CredentialsViewModelState.Default;
+                    }
+                    else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
                 }
             }
             else
             {
-                await UITools.ShowConfirmationDialogAsync("Important", "Adding...");
+                await UITools.ShowConfirmationDialogAsync("Important", err.ToString());
             }
         }
 
         private async void SelectedCredentialChanged(object parameter)
         {
-            /* Pending changes not saved, ask for user confirmation */
+            /* Pending changes not saved, ask for user confirmation before loosing changes */
             if (!_requestConfirmation && !_confirmationInProcess)
             {
                 _confirmationInProcess = true;
@@ -177,7 +190,13 @@ namespace ShelterVault.ViewModels
         {
             if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
 
-            if (ShelterVaultSqliteTool.DeleteCredential(SelectedCredential.UUID)) await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential was deleted.", "OK");
+            if (ShelterVaultSqliteTool.DeleteCredential(SelectedCredential.UUID))
+            {
+                Credential credential = Credentials.First(c => c.UUID == SelectedCredential.UUID);
+                Credentials.Remove(credential);
+                SelectedCredential = null;
+                await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential was deleted.", "OK");
+            }
             else await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential couldn't be deleted.", "OK");
         }
 

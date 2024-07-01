@@ -44,7 +44,7 @@ namespace ShelterVault.Models
             return HashCode.Combine(UUID, Title, Username, EncryptedPassword, InitializationVector, Url, Notes);
         }
 
-        public bool IsNewCredentialValid(StringBuilder err)
+        public bool IsUpdatedCredentialValid(StringBuilder err)
         {
             if (err == null) throw new ArgumentNullException("Error while validating the new credential.");
             if (string.IsNullOrWhiteSpace(Title)) err.AppendLine("[-] Title can't be empty");
