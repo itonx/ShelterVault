@@ -24,7 +24,7 @@ namespace ShelterVault.ViewModels
             get => _selectedCredential;
             set
             {
-                if (!_confirmationInProcess && value != null && value.Password == null)
+                if (!_confirmationInProcess && value != null && value.Password == null && value.EncryptedPassword != null)
                 {
                     value.Password = EncryptionTool.DecryptAes(Convert.FromBase64String(value.EncryptedPassword), UITools.GetMasterKey(), Convert.FromBase64String(value.InitializationVector));
                     value.PasswordConfirmation = value.Password;
@@ -44,6 +44,14 @@ namespace ShelterVault.ViewModels
             get => _credentials;
             set => SetProperty(ref _credentials, value);
         }
+        private CredentialsViewModelState _state;
+        public CredentialsViewModelState State
+        {
+            get => _state;
+            set => SetProperty(ref _state, value);
+        }
+        public IRelayCommand NewCredentialCommand { get; }
+        public IRelayCommand CancelCredentialCommand { get; }
         public IRelayCommand DeleteCredentialCommand { get; }
         public IRelayCommand SetClipboardCommand { get; }
         public IRelayCommand ShowPasswordCommand { get; }
@@ -52,12 +60,30 @@ namespace ShelterVault.ViewModels
 
         public CredentialsViewModel()
         {
+            State = CredentialsViewModelState.Default;
             Credentials = new ObservableCollection<Credential>(ShelterVaultSqliteTool.GetAllCredentials());
+            NewCredentialCommand = new RelayCommand(NewCredential);
+            CancelCredentialCommand = new RelayCommand(CancelCredential);
             DeleteCredentialCommand = new RelayCommand(DeleteCredential);
             SetClipboardCommand = new RelayCommand(SetClipboard);
             ShowPasswordCommand = new RelayCommand(ShowPassword);
             SaveCredentialChangesCommand = new RelayCommand(SaveCredentialChanges);
             SelectedCredentialChangedCommand = new RelayCommand<object>(SelectedCredentialChanged);
+        }
+
+        private void CancelCredential()
+        {
+            State = CredentialsViewModelState.Default;
+            SelectedCredential = null;
+        }
+
+        private void NewCredential()
+        {
+            State = CredentialsViewModelState.Adding;
+            Credential newCredential = new Credential();
+            newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
+            SelectedCredential = null;
+            SelectedCredential = newCredential;
         }
 
         private void SetClipboard()
@@ -96,32 +122,39 @@ namespace ShelterVault.ViewModels
 
         private async void SaveCredentialChanges()
         {
-            StringBuilder err = new StringBuilder();
-
-            if (SelectedCredential.IsNewCredentialValid(err))
+            if(State == CredentialsViewModelState.Default)
             {
-                Credential credential = Credentials.First(c => c.UUID == SelectedCredential.UUID);
-                Credential credentialUpdated = SelectedCredential;
-                if(credential.Password != SelectedCredential.Password)
-                {
-                    (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
-                    credentialUpdated = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
-                }
+                StringBuilder err = new StringBuilder();
 
-                bool updated = ShelterVaultSqliteTool.UpdateCredential(credentialUpdated);
-                if (updated)
+                if (SelectedCredential.IsNewCredentialValid(err))
                 {
-                    Credential credentialUpdatedInView = Credentials.First(c => c.UUID == credentialUpdated.UUID);
-                    Credentials[Credentials.IndexOf(credentialUpdatedInView)] = credentialUpdated;
-                    SelectedCredential = null;
-                    SelectedCredential = Credentials.First(c => c.UUID == credentialUpdated.UUID);
-                    await UITools.ShowConfirmationDialogAsync("Important", "Chages were saved.");
+                    Credential credential = Credentials.First(c => c.UUID == SelectedCredential.UUID);
+                    Credential credentialUpdated = SelectedCredential;
+                    if(credential.Password != SelectedCredential.Password)
+                    {
+                        (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
+                        credentialUpdated = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
+                    }
+
+                    bool updated = ShelterVaultSqliteTool.UpdateCredential(credentialUpdated);
+                    if (updated)
+                    {
+                        Credential credentialUpdatedInView = Credentials.First(c => c.UUID == credentialUpdated.UUID);
+                        Credentials[Credentials.IndexOf(credentialUpdatedInView)] = credentialUpdated;
+                        SelectedCredential = null;
+                        SelectedCredential = Credentials.First(c => c.UUID == credentialUpdated.UUID);
+                        await UITools.ShowConfirmationDialogAsync("Important", "Chages were saved.");
+                    }
+                    else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
                 }
-                else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
+                else
+                {
+                    await UITools.ShowConfirmationDialogAsync("Important", err.ToString());
+                }
             }
             else
             {
-                await UITools.ShowConfirmationDialogAsync("Important", err.ToString());
+                await UITools.ShowConfirmationDialogAsync("Important", "Adding...");
             }
         }
 
