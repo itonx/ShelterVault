@@ -7,8 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:viewmodels="using:ShelterVault.ViewModels"
-    xmlns:behaviors="using:Microsoft.Xaml.Interactions.Core" 
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:Microsoft.Xaml.Interactions.Core"
     xmlns:tools="using:ShelterVault.Tools"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -95,12 +94,6 @@
 ⠀⠀⠀⢸⣿⡇⠘⠛⠁⠀⠻⠆⠀⠀⠀⠀⠀⠀⠰⠟⠀⠈⠛⠃⢸⣿⡇⠀⠀⠀&#x0a;
                    " TextWrapping="Wrap" HorizontalAlignment="Center"/>
         <TextBlock Margin="0 0 0 5" Style="{StaticResource ShelterVaultTextBlockStyle}">Master key:</TextBlock>
-        <PasswordBox x:Name="password" Margin="0 0 0 15" MaxLength="32" Height="50" Style="{StaticResource ShelterVaultPasswordBoxStyle}" tools:RequestFocusHelper.Focus="True">
-            <interactivity:Interaction.Behaviors>
-                <behaviors:EventTriggerBehavior EventName="KeyDown" >
-                    <behaviors:InvokeCommandAction Command="{Binding ConfirmMasterKeyCommand}"/>
-                </behaviors:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-        </PasswordBox>
+        <PasswordBox x:Name="password" Margin="0 0 0 15" MaxLength="32" Height="50" Style="{StaticResource ShelterVaultPasswordBoxStyle}" tools:RequestFocusHelper.Focus="True" tools:EnterToCommandHelper.Command="{Binding ConfirmMasterKeyCommand}" tools:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </StackPanel>
 </UserControl>

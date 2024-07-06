@@ -72,6 +72,8 @@ namespace ShelterVault.Tools
 
         public static bool IsMasterKeyValid(string masterKey)
         {
+            if(string.IsNullOrWhiteSpace(masterKey)) return false;
+
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
                 connection.Open();
