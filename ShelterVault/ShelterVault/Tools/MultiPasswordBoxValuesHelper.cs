@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 
 namespace ShelterVault.Tools
 {
@@ -15,6 +16,14 @@ namespace ShelterVault.Tools
 
         public static void SetSecurePasswords(DependencyObject obj, Dictionary<string, StringBuilder> value) => obj.SetValue(SecurePasswordsProperty, value);
 
+        public static readonly DependencyProperty PasswordChangedToCommandProperty =
+            DependencyProperty.RegisterAttached("PasswordChangedToCommand", typeof(ICommand), typeof(MultiPasswordBoxValuesHelper), new PropertyMetadata(null));
+
+        public static ICommand GetPasswordChangedToCommand(DependencyObject obj) => (ICommand)obj.GetValue(PasswordChangedToCommandProperty);
+
+        public static void SetPasswordChangedToCommand(DependencyObject obj, ICommand value) => obj.SetValue(PasswordChangedToCommandProperty, value);
+
+
         public static readonly DependencyProperty PasswordBoxConfirmationProperty =
             DependencyProperty.RegisterAttached("PasswordBoxConfirmation", typeof(PasswordBox), typeof(MultiPasswordBoxValuesHelper), new PropertyMetadata(null, OnPasswordBoxConfirmationChanged));
 
@@ -24,18 +33,21 @@ namespace ShelterVault.Tools
 
         private static void OnPasswordBoxConfirmationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is PasswordBox passwordBox && e.NewValue is PasswordBox passwordBoxConfirmation)
+            if(e.OldValue == null)
             {
-                if (string.IsNullOrWhiteSpace(passwordBox.Name) || string.IsNullOrWhiteSpace(passwordBoxConfirmation.Name)) throw new Exception("Names are not valid!");
-                Dictionary<string, StringBuilder> passwords = new Dictionary<string, StringBuilder>()
+                if (d is PasswordBox passwordBox && e.NewValue is PasswordBox passwordBoxConfirmation)
                 {
-                    { passwordBox.Name, new StringBuilder() },
-                    { passwordBoxConfirmation.Name, new StringBuilder() }
-                };
-                SetSecurePasswords(passwordBox, passwords);
-                SetSecurePasswords(passwordBoxConfirmation, passwords);
-                passwordBox.PasswordChanged += PasswordBox_PasswordChanged;
-                passwordBoxConfirmation.PasswordChanged += PasswordBox_PasswordChanged;
+                    if (string.IsNullOrWhiteSpace(passwordBox.Name) || string.IsNullOrWhiteSpace(passwordBoxConfirmation.Name)) throw new Exception("Names are not valid!");
+                    Dictionary<string, StringBuilder> passwords = new Dictionary<string, StringBuilder>()
+                    {
+                        { passwordBox.Name, new StringBuilder() },
+                        { passwordBoxConfirmation.Name, new StringBuilder() }
+                    };
+                    SetSecurePasswords(passwordBox, passwords);
+                    SetSecurePasswords(passwordBoxConfirmation, passwords);
+                    passwordBox.PasswordChanged += PasswordBox_PasswordChanged;
+                    passwordBoxConfirmation.PasswordChanged += PasswordBox_PasswordChanged;
+                }
             }
         }
 
@@ -47,6 +59,13 @@ namespace ShelterVault.Tools
                 passwords[passwordBox.Name].Clear();
                 passwords[passwordBox.Name].Append(passwordBox.Password);
                 SetSecurePasswords(passwordBox, passwords);
+
+                ICommand passwordChangedToCommand = GetPasswordChangedToCommand(passwordBox);
+                if(passwordChangedToCommand != null)
+                {
+                    passwordChangedToCommand.Execute(passwords);
+                }
+
             }
         }
     }
