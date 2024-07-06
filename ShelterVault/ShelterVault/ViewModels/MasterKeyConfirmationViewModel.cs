@@ -13,10 +13,11 @@ namespace ShelterVault.ViewModels
             ConfirmMasterKeyCommand = new RelayCommand<object>(ConfirmMasterKey);
         }
 
-        private void ConfirmMasterKey(object parameter)
+        private async void ConfirmMasterKey(object parameter)
         {
-            if(ShelterVaultSqliteTool.IsMasterKeyValid(parameter?.ToString()))
+            if (ShelterVaultSqliteTool.IsMasterKeyValid(parameter?.ToString()))
                 UITools.LoadCredentialsView(Encoding.Unicode.GetBytes(parameter?.ToString()));
+            else await UITools.ShowConfirmationDialogAsync("Important", "Wrong master key!");
         }
     }
 }

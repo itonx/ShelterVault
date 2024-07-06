@@ -5,8 +5,8 @@ using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using System.IO;
-using System.Security.Cryptography;
 using ShelterVault.ViewModels;
+using System.Runtime.InteropServices;
 
 namespace ShelterVault.Tools
 {
@@ -76,6 +76,8 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
             if (mainWindow != null)
             {
+                IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
+                PInvoke.MaximizeWindow(hWnd);
                 if (ShelterVaultSqliteTool.DBExists()) mainWindow.AppContent.Content = new MasterKeyConfirmationView();
                 else mainWindow.AppContent.Content = new CreateMasterKeyView();
             }
@@ -88,6 +90,23 @@ namespace ShelterVault.Tools
             {
                 mainWindow.AppWindow.SetIcon(Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico"));
             }
+        }
+    }
+
+    class PInvoke
+    {
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
+
+        public enum WindowShowStyle : uint
+        {
+            MAXIMIZED = 3,
+        }
+
+        public static void MaximizeWindow(IntPtr hWnd)
+        {
+            ShowWindow(hWnd, WindowShowStyle.MAXIMIZED);
         }
     }
 }
