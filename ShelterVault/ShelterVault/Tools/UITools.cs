@@ -3,6 +3,10 @@ using Microsoft.UI.Xaml;
 using ShelterVault.Views;
 using System;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using System.IO;
+using System.Security.Cryptography;
+using ShelterVault.ViewModels;
 
 namespace ShelterVault.Tools
 {
@@ -11,7 +15,7 @@ namespace ShelterVault.Tools
         private static ContentDialog BuildDialog(string title, string message, string primaryButtonText = "Close")
         {
             ContentDialog dialog = new ContentDialog();
-            dialog.XamlRoot = ((Application.Current as App)?.m_window as MainWindow).Content.XamlRoot;
+            dialog.XamlRoot = ((Application.Current as App)?.m_window as MainWindow)?.Content.XamlRoot;
             dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
             dialog.Title = title;
             dialog.PrimaryButtonText = primaryButtonText;
@@ -38,19 +42,52 @@ namespace ShelterVault.Tools
         public static void LoadMasterKeyConfirmationView()
         {
             MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-            mainWindow?.LoadMasterKeyConfirmationView();
+            if (mainWindow != null) 
+            {
+                mainWindow.AppContent.Content = new MasterKeyConfirmationView();
+            } 
         }
 
         public static void LoadCredentialsView(byte[] password)
         {
             MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-            mainWindow?.LoadCredentialsView(password);
+            if(mainWindow != null)
+            {
+                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                viewModel.ProtectMasterKey(password);
+                mainWindow.AppContent.Content = new CredentialsView();
+            }
         }
 
         public static byte[] GetMasterKey()
         {
             MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
-            return mainWindow?.GetMasterKey();
+            if (mainWindow != null)
+            {
+                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                return viewModel.GetMasterKeyUnprotected();
+            }
+
+            return Array.Empty<byte>();
+        }
+
+        public static void LoadInitialView()
+        {
+            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            if (mainWindow != null)
+            {
+                if (ShelterVaultSqliteTool.DBExists()) mainWindow.AppContent.Content = new MasterKeyConfirmationView();
+                else mainWindow.AppContent.Content = new CreateMasterKeyView();
+            }
+        }
+
+        public static void LoadAppIcon()
+        {
+            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.AppWindow.SetIcon(Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico"));
+            }
         }
     }
 }

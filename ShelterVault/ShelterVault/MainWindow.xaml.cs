@@ -17,40 +17,9 @@ namespace ShelterVault
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private byte[] _encryptedPassword;
-
         public MainWindow()
         {
             this.InitializeComponent();
-            LoadInitialView();
-            LoadIcon();
-        }
-
-        public byte[] GetMasterKey()
-        {
-            return ProtectedData.Unprotect(_encryptedPassword, null, DataProtectionScope.CurrentUser);
-        }
-
-        public void LoadMasterKeyConfirmationView()
-        {
-            this.AppContent.Content = new MasterKeyConfirmationView();
-        }
-
-        public void LoadCredentialsView(byte[] password)
-        {
-            _encryptedPassword = ProtectedData.Protect(password, null, DataProtectionScope.CurrentUser);
-            this.AppContent.Content = new CredentialsView();
-        }
-
-        public void LoadInitialView()
-        {
-            if(ShelterVaultSqliteTool.DBExists()) this.AppContent.Content = new MasterKeyConfirmationView();
-            else this.AppContent.Content = new CreateMasterKeyView();
-        }
-
-        private void LoadIcon()
-        {
-            this.AppWindow.SetIcon(Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico"));
         }
     }
 }
