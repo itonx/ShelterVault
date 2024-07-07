@@ -47,9 +47,7 @@ namespace ShelterVault.Models
         public bool IsUpdatedCredentialValid(StringBuilder err)
         {
             if (err == null) throw new ArgumentNullException("Error while validating the new credential.");
-            if (string.IsNullOrWhiteSpace(Title)) err.AppendLine("[-] Title can't be empty");
-            if (Password != PasswordConfirmation) err.AppendLine("[-] Passwords don't match");
-            if (!Password.IsStrongPassword()) err.AppendLine("[-] Password doesn't meet minimum requirements.");
+            if (string.IsNullOrWhiteSpace(Title)) err.AppendLine("Title can't be empty");
 
             return err.Length == 0;
         }

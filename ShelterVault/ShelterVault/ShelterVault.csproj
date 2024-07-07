@@ -17,6 +17,7 @@
     <None Remove="Views\CreateMasterKeyView.xaml" />
     <None Remove="Views\CredentialsView.xaml" />
     <None Remove="Views\MasterKeyConfirmationView.xaml" />
+    <None Remove="Views\PasswordConfirmationView.xaml" />
     <None Remove="Views\ShelterVaultMessageView.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +33,12 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
     <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\PasswordConfirmationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

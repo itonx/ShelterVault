@@ -63,6 +63,12 @@ namespace ShelterVault.ViewModels
         public IRelayCommand ShowPasswordCommand { get; }
         public IRelayCommand SaveCredentialChangesCommand { get; }
         public IRelayCommand SelectedCredentialChangedCommand { get; }
+        private PasswordConfirmationViewModel _passwordRequirementsVM;
+        public PasswordConfirmationViewModel PasswordRequirementsVM
+        {
+            get => _passwordRequirementsVM;
+            set => SetProperty(ref _passwordRequirementsVM, value);
+        }
 
         public CredentialsViewModel()
         {
@@ -76,6 +82,8 @@ namespace ShelterVault.ViewModels
             ShowPasswordCommand = new RelayCommand(OnShowPassword);
             SaveCredentialChangesCommand = new RelayCommand(OnSaveCredentialChanges);
             SelectedCredentialChangedCommand = new RelayCommand<object>(OnSelectedCredentialChanged);
+            PasswordRequirementsVM = new PasswordConfirmationViewModel();
+            PasswordRequirementsVM.HeaderText = "Password must:";
         }
 
         private void OnCancelCredential()
@@ -131,16 +139,10 @@ namespace ShelterVault.ViewModels
 
         private async void OnSaveCredentialChanges()
         {
-            StringBuilder err = new StringBuilder();
-
-            if (SelectedCredential.IsUpdatedCredentialValid(err))
+            if (await PasswordRequirementsVM.AreCredentialsValid(SelectedCredential))
             {
                 if (State == CredentialsViewModelState.Default) await UpdateCredential();
                 else if(State == CredentialsViewModelState.Adding) await CreateCredential();
-            }
-            else
-            {
-                await UITools.ShowConfirmationDialogAsync("Important", err.ToString());
             }
         }
 

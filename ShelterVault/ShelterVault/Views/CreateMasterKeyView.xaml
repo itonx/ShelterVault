@@ -12,10 +12,6 @@
     <UserControl.DataContext>
         <viewmodels:CreateMasterKeyViewModel/>
     </UserControl.DataContext>
-    <UserControl.Resources>
-        <tools:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-        <SolidColorBrush x:Key="PasswordErrorForeground" Color="Red"/>
-    </UserControl.Resources>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="500">
         <TextBlock FontFamily="Cascadia Mono" Foreground="{StaticResource ShelterVaultForeground}" Text="
 ███████████████╗  &#x0a;
@@ -27,7 +23,7 @@
 ███████████████║    ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝   &#x0a;
 ╚══════════════╝  &#x0a;"  TextWrapping="Wrap" HorizontalAlignment="Center"/>
         <TextBlock Margin="0 0 0 5" Style="{ThemeResource ShelterVaultTextBlockStyle}">Create master key:</TextBlock>
-        <PasswordBox x:Name="password" Style="{ThemeResource ShelterVaultPasswordBoxStyle}" Margin="0 0 0 15" MaxLength="32" tools:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}" tools:MultiPasswordBoxValuesHelper.PasswordChangedToCommand="{Binding OnPasswordChangedCommand}" tools:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}" tools:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(tools:MultiPasswordBoxValuesHelper.SecurePasswords)}" tools:RequestFocusHelper.Focus="True">
+        <PasswordBox x:Name="password" Style="{ThemeResource ShelterVaultPasswordBoxStyle}" Margin="0 0 0 15" MaxLength="32" tools:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}" tools:MultiPasswordBoxValuesHelper.PasswordChangedToCommand="{Binding PasswordRequirementsVM.OnPasswordChangedCommand}" tools:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}" tools:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(tools:MultiPasswordBoxValuesHelper.SecurePasswords)}" tools:RequestFocusHelper.Focus="True">
             <PasswordBox.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
@@ -46,39 +42,8 @@
                 </ResourceDictionary>
             </PasswordBox.Resources>
         </PasswordBox>
-        <StackPanel Margin="0 15">
-            <TextBlock Text="Master key password must:"/>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="ForestGreen" Visibility="{Binding Is8Characters, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
-                <FontIcon Glyph="&#xEDAE;" FontSize="12" Foreground="{StaticResource PasswordErrorForeground}" Visibility="{Binding Is8Characters, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}"/>
-                <TextBlock Margin="8 0 0 0" Text="Be at least 8 characters"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="ForestGreen" Visibility="{Binding HasLowercase, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
-                <FontIcon Glyph="&#xEDAE;" FontSize="12" Foreground="{StaticResource PasswordErrorForeground}" Visibility="{Binding HasLowercase, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}"/>
-                <TextBlock Margin="8 0 0 0" Text="Have at least one lowercase letter (a-z)"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="ForestGreen" Visibility="{Binding HasUppercase, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
-                <FontIcon Glyph="&#xEDAE;" FontSize="12" Foreground="{StaticResource PasswordErrorForeground}" Visibility="{Binding HasUppercase, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}"/>
-                <TextBlock Margin="8 0 0 0" Text="Have at least one uppercase letter (A-Z)"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="ForestGreen" Visibility="{Binding HasNumber, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
-                <FontIcon Glyph="&#xEDAE;" FontSize="12" Foreground="{StaticResource PasswordErrorForeground}" Visibility="{Binding HasNumber, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}"/>
-                <TextBlock Margin="8 0 0 0" Text="Have at least one one number (0-9)"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="ForestGreen" Visibility="{Binding HasSpecialChars, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
-                <FontIcon Glyph="&#xEDAE;" FontSize="12" Foreground="{StaticResource PasswordErrorForeground}" Visibility="{Binding HasSpecialChars, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}"/>
-                <TextBlock Margin="8 0 0 0" Text="Have at least one special character"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="ForestGreen" Visibility="{Binding IsLessThan32Chars, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
-                <FontIcon Glyph="&#xEDAE;" FontSize="12" Foreground="{StaticResource PasswordErrorForeground}" Visibility="{Binding IsLessThan32Chars, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}"/>
-                <TextBlock Margin="8 0 0 0" Text="Not be grather than 32 characters"/>
-            </StackPanel>
-        </StackPanel>
+        <local:PasswordConfirmationView Margin="0 15" DataContext="{Binding PasswordRequirementsVM}">
+        </local:PasswordConfirmationView>
         <StackPanel Orientation="Horizontal">
             <FontIcon Glyph="&#xF167;" FontSize="12" Foreground="{StaticResource AccentAAFillColorDefaultBrush}"/>
             <TextBlock Grid.Column="1" Margin="8 0 0 0" TextWrapping="Wrap">This password will be used to encrypt your vault.</TextBlock>
