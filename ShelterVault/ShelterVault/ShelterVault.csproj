@@ -13,6 +13,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\OverrideDarkTheme.xaml" />
     <None Remove="Views\CreateMasterKeyView.xaml" />
     <None Remove="Views\CredentialsView.xaml" />
     <None Remove="Views\MasterKeyConfirmationView.xaml" />
@@ -53,6 +54,12 @@
 
   <ItemGroup>
     <Page Update="Views\CreateMasterKeyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Resources\OverrideDarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

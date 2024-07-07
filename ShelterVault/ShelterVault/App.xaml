@@ -13,29 +13,23 @@
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
-                            <SolidColorBrush x:Key="ShelterVaultForeground" Color="Black"/>
-                            <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="Black"/>
-                            <SolidColorBrush x:Key="TextControlButtonForeground" Color="Black"/>
-                            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="Black"/>
-                            <SolidColorBrush x:Key="TextControlForeground" Color="Black"/>
-                            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="Black"/>
-                            <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="Black"/>
-                            <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="Black"/>
-                            <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle">
+                            <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40"/>
+                            <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle" BasedOn="{StaticResource DefaultPasswordBoxStyle}">
+                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
                                 <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
                                 <Setter Property="Height" Value="50"/>
                                 <Setter Property="IsPasswordRevealButtonEnabled" Value="False"/>
                             </Style>
-                            <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle">
+                            <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle" BasedOn="{StaticResource TitleTextBlockStyle}">
                                 <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
-                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
+                                <Setter Property="Foreground" Value="{ThemeResource SystemColorWindowTextBrush}"/>
                             </Style>
                             <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush2" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
                                 <LinearGradientBrush.RelativeTransform>
                                     <ScaleTransform ScaleY="-1" CenterY="0.5"/>
                                 </LinearGradientBrush.RelativeTransform>
                                 <LinearGradientBrush.GradientStops>
-                                    <GradientStop Offset="1.0" Color="Black"/>
+                                    <GradientStop Offset="1.0" Color="#343a40"/>
                                     <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}"/>
                                 </LinearGradientBrush.GradientStops>
                             </LinearGradientBrush>
@@ -43,32 +37,16 @@
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05"/>
-                            <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="#00FF05"/>
-                            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#00FF05"/>
-                            <SolidColorBrush x:Key="TextControlButtonForeground" Color="#00FF05"/>
-                            <SolidColorBrush x:Key="TextControlForeground" Color="#D400FF05"/>
-                            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#00FF05"/>
-                            <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#00FF05"/>
-                            <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#00FF05"/>
-                            <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle">
+                            <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle" BasedOn="{StaticResource DefaultPasswordBoxStyle}">
+                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
                                 <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
                                 <Setter Property="Height" Value="50"/>
                                 <Setter Property="IsPasswordRevealButtonEnabled" Value="False"/>
                             </Style>
-                            <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle">
+                            <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle" BasedOn="{StaticResource TitleTextBlockStyle}">
                                 <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
                                 <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
                             </Style>
-                            <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush2" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
-                                <LinearGradientBrush.RelativeTransform>
-                                    <ScaleTransform ScaleY="-1" CenterY="0.5"/>
-                                </LinearGradientBrush.RelativeTransform>
-                                <LinearGradientBrush.GradientStops>
-                                    <GradientStop Offset="1.0" Color="#00FF05"/>
-                                    <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}"/>
-                                </LinearGradientBrush.GradientStops>
-                            </LinearGradientBrush>
-                            <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
