@@ -17,7 +17,7 @@ namespace ShelterVault.ViewModels
         private CancellationTokenSource _cancellationTokenSource;
         private Credential _lastSelectedItem;
         private bool _confirmationInProcess;
-        private bool _requestConfirmation => _lastSelectedItem == null || Credentials.First(c => c.UUID == _lastSelectedItem.UUID).Equals(_lastSelectedItem);
+        private bool _requestConfirmation => _lastSelectedItem != null && !Credentials.First(c => c.UUID == _lastSelectedItem.UUID).Equals(_lastSelectedItem);
         private Credential _selectedCredential;
         public Credential SelectedCredential
         {
@@ -92,15 +92,29 @@ namespace ShelterVault.ViewModels
             SelectedCredential = null;
         }
 
-        private void OnNewCredential()
+        private async void OnNewCredential()
         {
-            State = CredentialsViewModelState.Adding;
-            Credential newCredential = new Credential();
-            newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
-            SelectedCredential = null;
-            SelectedCredential = newCredential;
-            ShowPassword = false;
-            RequestFocusOnFirstField = true;
+            await ConfirmPendingChangesIfNeeded(() =>
+            {
+                ShowPassword = false;
+                RequestFocusOnFirstField = true;
+                State = CredentialsViewModelState.Adding;
+                Credential newCredential = new Credential();
+                newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
+                SelectedCredential = null;
+                SelectedCredential = newCredential;
+            });
+        }
+
+        private async Task ConfirmPendingChangesIfNeeded(Action action)
+        {
+            if (_requestConfirmation)
+            {
+                bool cancelNewSelection = await UITools.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?");
+                if (cancelNewSelection) return;
+            }
+
+            action.Invoke();
         }
 
         private void OnSetClipboard()
@@ -149,7 +163,7 @@ namespace ShelterVault.ViewModels
         private async void OnSelectedCredentialChanged(object parameter)
         {
             /* Pending changes not saved, ask for user confirmation before loosing changes */
-            if (!_requestConfirmation && !_confirmationInProcess)
+            if (_requestConfirmation && !_confirmationInProcess && State != CredentialsViewModelState.Adding)
             {
                 _confirmationInProcess = true;
                 SelectedCredential = Credentials.First(c => c.UUID == _lastSelectedItem.UUID);

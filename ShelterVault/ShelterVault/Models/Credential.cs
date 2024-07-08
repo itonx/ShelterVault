@@ -10,16 +10,8 @@ namespace ShelterVault.Models
         public string UUID { get; set; }
         public string Title { get; set; }
         public string Username { get; set; }
-        private string _password;
-        public string Password
-        {
-            get => _password; set => SetProperty(ref _password, value);
-        }
-        private string _passwordConfirmation;
-        public string PasswordConfirmation
-        {
-            get => _passwordConfirmation; set => SetProperty(ref _passwordConfirmation, value);
-        }
+        public string Password { get; set; }
+        public string PasswordConfirmation { get; set; }
         public string EncryptedPassword { get; set; }
         public string InitializationVector { get; set; }
         public string Url { get; set; }
