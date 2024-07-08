@@ -63,6 +63,7 @@ namespace ShelterVault.ViewModels
         public IRelayCommand ShowPasswordCommand { get; }
         public IRelayCommand SaveCredentialChangesCommand { get; }
         public IRelayCommand SelectedCredentialChangedCommand { get; }
+        public IRelayCommand HomeCommand { get; }
         private PasswordConfirmationViewModel _passwordRequirementsVM;
         public PasswordConfirmationViewModel PasswordRequirementsVM
         {
@@ -82,8 +83,18 @@ namespace ShelterVault.ViewModels
             ShowPasswordCommand = new RelayCommand(OnShowPassword);
             SaveCredentialChangesCommand = new RelayCommand(OnSaveCredentialChanges);
             SelectedCredentialChangedCommand = new RelayCommand<object>(OnSelectedCredentialChanged);
+            HomeCommand = new RelayCommand<object>(Home);
             PasswordRequirementsVM = new PasswordConfirmationViewModel();
             PasswordRequirementsVM.HeaderText = "Password must:";
+        }
+
+        private async void Home(object obj)
+        {
+            await ConfirmPendingChangesIfNeeded(() =>
+            {
+                State = CredentialsViewModelState.Empty;
+                SelectedCredential = null;
+            });
         }
 
         private void OnCancelCredential()
@@ -163,7 +174,7 @@ namespace ShelterVault.ViewModels
         private async void OnSelectedCredentialChanged(object parameter)
         {
             /* Pending changes not saved, ask for user confirmation before loosing changes */
-            if (_requestConfirmation && !_confirmationInProcess && State != CredentialsViewModelState.Adding)
+            if (_requestConfirmation && !_confirmationInProcess && State == CredentialsViewModelState.Default)
             {
                 _confirmationInProcess = true;
                 SelectedCredential = Credentials.First(c => c.UUID == _lastSelectedItem.UUID);
@@ -176,7 +187,7 @@ namespace ShelterVault.ViewModels
             {
                 ShowPassword = false;
                 _lastSelectedItem = SelectedCredential;
-                if(State == CredentialsViewModelState.Empty) State = CredentialsViewModelState.Default;
+                if(State == CredentialsViewModelState.Empty && SelectedCredential != null) State = CredentialsViewModelState.Default;
             }
         }
 
