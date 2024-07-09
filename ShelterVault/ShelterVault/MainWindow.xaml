@@ -11,7 +11,11 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d"
     Title="ShelterVault">
-    <Grid x:Name="WindowContent" x:FieldModifier="internal">
+    <Grid x:Name="WindowContent" x:FieldModifier="internal" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Grid.DataContext>
             <viewmodels:MainWindowViewModel x:Name="viewModel"/>
         </Grid.DataContext>
@@ -20,6 +24,11 @@
                 <behaviors:InvokeCommandAction Command="{Binding OnLoadedCommand}"/>
             </behaviors:EventTriggerBehavior>
         </interactivity:Interaction.Behaviors>
-        <ContentPresenter x:Name="AppContent" x:FieldModifier="internal"/>
+        <ContentPresenter x:Name="AppContent" x:FieldModifier="internal" Grid.RowSpan="2"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <ToggleButton Margin="10" Click="ToggleButton_Click">
+                <FontIcon Glyph="&#xE793;" Foreground="White"/>
+            </ToggleButton>
+        </StackPanel>
     </Grid>
 </Window>

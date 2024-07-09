@@ -64,6 +64,7 @@ namespace ShelterVault.ViewModels
         public IRelayCommand SaveCredentialChangesCommand { get; }
         public IRelayCommand SelectedCredentialChangedCommand { get; }
         public IRelayCommand HomeCommand { get; }
+        public IRelayCommand OnItemClickCommand { get; }
         private PasswordConfirmationViewModel _passwordRequirementsVM;
         public PasswordConfirmationViewModel PasswordRequirementsVM
         {
@@ -84,8 +85,14 @@ namespace ShelterVault.ViewModels
             SaveCredentialChangesCommand = new RelayCommand(OnSaveCredentialChanges);
             SelectedCredentialChangedCommand = new RelayCommand<object>(OnSelectedCredentialChanged);
             HomeCommand = new RelayCommand<object>(Home);
+            OnItemClickCommand = new RelayCommand<object>(OnItemClick);
             PasswordRequirementsVM = new PasswordConfirmationViewModel();
             PasswordRequirementsVM.HeaderText = "Password must:";
+        }
+
+        private void OnItemClick(object obj)
+        {
+            throw new NotImplementedException();
         }
 
         private async void Home(object obj)
