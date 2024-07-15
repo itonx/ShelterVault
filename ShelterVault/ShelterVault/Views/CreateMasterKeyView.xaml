@@ -13,7 +13,7 @@
         <viewmodels:CreateMasterKeyViewModel/>
     </UserControl.DataContext>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="500">
-        <TextBlock FontFamily="Cascadia Mono" Foreground="{StaticResource ShelterVaultForeground}" Text="
+        <TextBlock FontFamily="Cascadia Mono" Foreground="{ThemeResource ShelterVaultForeground}" Text="
 ███████████████╗  &#x0a;
 ██           ██║  ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗&#x0a;
 ██    ███    ██║  ██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝&#x0a;
@@ -45,7 +45,7 @@
         <local:PasswordConfirmationView Margin="0 15" DataContext="{Binding PasswordRequirementsVM}">
         </local:PasswordConfirmationView>
         <StackPanel Orientation="Horizontal">
-            <FontIcon Glyph="&#xF167;" FontSize="12" Foreground="{StaticResource AccentAAFillColorDefaultBrush}"/>
+            <FontIcon Glyph="&#xF167;" FontSize="12" Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"/>
             <TextBlock Grid.Column="1" Margin="8 0 0 0" TextWrapping="Wrap">This password will be used to encrypt your vault.</TextBlock>
         </StackPanel>
     </StackPanel>
