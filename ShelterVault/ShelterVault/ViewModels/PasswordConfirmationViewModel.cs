@@ -28,7 +28,7 @@ namespace ShelterVault.ViewModels
         private string _headerText = "Master key password must:";
 
         [RelayCommand]
-        private void OnPasswordChanged(string password)
+        private void PasswordChanged(string password)
         {
             IsValidPassword(password);
         }

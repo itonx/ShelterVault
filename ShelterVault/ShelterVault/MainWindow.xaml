@@ -27,7 +27,7 @@
         </Grid.DataContext>
         <interactivity:Interaction.Behaviors>
             <behaviors:EventTriggerBehavior EventName="Loaded" >
-                <behaviors:InvokeCommandAction Command="{Binding OnLoadedCommand}"/>
+                <behaviors:InvokeCommandAction Command="{Binding LoadedCommand}"/>
             </behaviors:EventTriggerBehavior>
         </interactivity:Interaction.Behaviors>
         <ProgressBar x:Name="Spinner" x:FieldModifier="internal" IsIndeterminate="{Binding IsProgressBarVisible, Mode=OneWay}" ShowPaused="False" ShowError="False" Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>

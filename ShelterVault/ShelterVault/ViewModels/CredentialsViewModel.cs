@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public class CredentialsViewModel : ObservableObject
+    public partial class CredentialsViewModel : ObservableObject
     {
         private CancellationTokenSource _cancellationTokenSource;
         private Credential _lastSelectedItem;
@@ -32,70 +32,31 @@ namespace ShelterVault.ViewModels
                 SetProperty(ref _selectedCredential, value == null ? null : value.Clone());
             }
         }
-        private bool _togglePasswordVisibility;
-        public bool ShowPassword
-        {
-            get => _togglePasswordVisibility;
-            set => SetProperty(ref _togglePasswordVisibility, value);
-        }
+        [ObservableProperty]
+        private bool _showPassword = false;
+        [ObservableProperty]
         private ObservableCollection<Credential> _credentials;
-        public ObservableCollection<Credential> Credentials
-        {
-            get => _credentials;
-            set => SetProperty(ref _credentials, value);
-        }
-        private CredentialsViewModelState _state;
-        public CredentialsViewModelState State
-        {
-            get => _state;
-            set => SetProperty(ref _state, value);
-        }
+        [ObservableProperty]
+        private CredentialsViewModelState _state = CredentialsViewModelState.Empty;
+        [ObservableProperty]
         private bool _requestFocusOnFirstField;
-        public bool RequestFocusOnFirstField
-        {
-            get => _requestFocusOnFirstField;
-            set => SetProperty(ref _requestFocusOnFirstField, value);
-        }
-        public IRelayCommand NewCredentialCommand { get; }
-        public IRelayCommand CancelCredentialCommand { get; }
-        public IRelayCommand DeleteCredentialCommand { get; }
-        public IRelayCommand SetClipboardCommand { get; }
-        public IRelayCommand ShowPasswordCommand { get; }
-        public IRelayCommand SaveCredentialChangesCommand { get; }
-        public IRelayCommand SelectedCredentialChangedCommand { get; }
-        public IRelayCommand HomeCommand { get; }
-        public IRelayCommand ChangeThemeCommand { get; }
-        private PasswordConfirmationViewModel _passwordRequirementsVM;
-        public PasswordConfirmationViewModel PasswordRequirementsVM
-        {
-            get => _passwordRequirementsVM;
-            set => SetProperty(ref _passwordRequirementsVM, value);
-        }
+        [ObservableProperty]
+        private PasswordConfirmationViewModel _passwordRequirementsVM = new PasswordConfirmationViewModel();
 
         public CredentialsViewModel()
         {
-            State = CredentialsViewModelState.Empty;
-            ShowPassword = false;
             Credentials = new ObservableCollection<Credential>(ShelterVaultSqliteTool.GetAllCredentials());
-            NewCredentialCommand = new RelayCommand(OnNewCredential);
-            CancelCredentialCommand = new RelayCommand(OnCancelCredential);
-            DeleteCredentialCommand = new RelayCommand(OnDeleteCredential);
-            SetClipboardCommand = new RelayCommand(OnSetClipboard);
-            ShowPasswordCommand = new RelayCommand(OnShowPassword);
-            SaveCredentialChangesCommand = new RelayCommand(OnSaveCredentialChanges);
-            SelectedCredentialChangedCommand = new RelayCommand<object>(OnSelectedCredentialChanged);
-            HomeCommand = new RelayCommand<object>(Home);
-            ChangeThemeCommand = new RelayCommand<object>(ChangeTheme);
-            PasswordRequirementsVM = new PasswordConfirmationViewModel();
             PasswordRequirementsVM.HeaderText = "Password must:";
         }
 
+        [RelayCommand]
         private void ChangeTheme(object obj)
         {
             UITools.ChangeTheme(autoFlip: false);
         }
 
-        private async void Home(object obj)
+        [RelayCommand]
+        private async Task Home(object obj)
         {
             await ConfirmPendingChangesIfNeeded(() =>
             {
@@ -104,13 +65,15 @@ namespace ShelterVault.ViewModels
             });
         }
 
-        private void OnCancelCredential()
+        [RelayCommand]
+        private void CancelCredential()
         {
             State = CredentialsViewModelState.Empty;
             SelectedCredential = null;
         }
 
-        private async void OnNewCredential()
+        [RelayCommand]
+        private async Task NewCredential()
         {
             await ConfirmPendingChangesIfNeeded(() =>
             {
@@ -124,18 +87,8 @@ namespace ShelterVault.ViewModels
             });
         }
 
-        private async Task ConfirmPendingChangesIfNeeded(Action action)
-        {
-            if (_requestConfirmation)
-            {
-                bool cancelNewSelection = await UITools.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?");
-                if (cancelNewSelection) return;
-            }
-
-            action.Invoke();
-        }
-
-        private void OnSetClipboard()
+        [RelayCommand]
+        private void SetClipboard()
         {
             if(_cancellationTokenSource != null)
             {
@@ -164,21 +117,32 @@ namespace ShelterVault.ViewModels
 
         }
 
-        private void OnShowPassword()
+        [RelayCommand]
+        private void ChangePasswordVisibility()
         {
             ShowPassword = !ShowPassword;
         }
 
-        private async void OnSaveCredentialChanges()
+        [RelayCommand]
+        private async Task SaveCredentialChanges()
         {
-            if (await PasswordRequirementsVM.AreCredentialsValid(SelectedCredential))
+            try
             {
-                if (State == CredentialsViewModelState.Default) await UpdateCredential();
-                else if(State == CredentialsViewModelState.Adding) await CreateCredential();
+                await UITools.ShowSpinner();
+                if (await PasswordRequirementsVM.AreCredentialsValid(SelectedCredential))
+                {
+                    if (State == CredentialsViewModelState.Default) await UpdateCredential();
+                    else if (State == CredentialsViewModelState.Adding) await CreateCredential();
+                }
+            }
+            finally
+            {
+                await UITools.HideSpinner();
             }
         }
 
-        private async void OnSelectedCredentialChanged(object parameter)
+        [RelayCommand]
+        private async Task SelectedCredentialChanged(object parameter)
         {
             /* Pending changes not saved, ask for user confirmation before loosing changes */
             if (_requestConfirmation && !_confirmationInProcess && State == CredentialsViewModelState.Default)
@@ -198,22 +162,31 @@ namespace ShelterVault.ViewModels
             }
         }
 
-        private async void OnDeleteCredential()
+        [RelayCommand]
+        private async Task DeleteCredential()
         {
-            if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
-            string uuid = SelectedCredential.UUID;
-            if (ShelterVaultSqliteTool.DeleteCredential(uuid))
+            try
             {
-                SelectedCredential = null;
-                SelectedCredential = new Credential();
-                SelectedCredential.Password = SelectedCredential.PasswordConfirmation = string.Empty;
-                Credential credential = Credentials.First(c => c.UUID == uuid);
-                Credentials.Remove(credential);
-                await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential was deleted.", "OK");
-            }
-            else await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential couldn't be deleted.", "OK");
+                await UITools.ShowSpinner();
+                if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
+                string uuid = SelectedCredential.UUID;
+                if (ShelterVaultSqliteTool.DeleteCredential(uuid))
+                {
+                    SelectedCredential = null;
+                    SelectedCredential = new Credential();
+                    SelectedCredential.Password = SelectedCredential.PasswordConfirmation = string.Empty;
+                    Credential credential = Credentials.First(c => c.UUID == uuid);
+                    Credentials.Remove(credential);
+                    await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential was deleted.", "OK");
+                }
+                else await UITools.ShowConfirmationDialogAsync("Shelter Vault", "Your credential couldn't be deleted.", "OK");
 
-            State = CredentialsViewModelState.Empty;
+                State = CredentialsViewModelState.Empty;
+            }
+            finally
+            {
+                await UITools.HideSpinner();
+            }
         }
 
         private async Task UpdateCredential()
@@ -258,6 +231,17 @@ namespace ShelterVault.ViewModels
             else await UITools.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
 
             RequestFocusOnFirstField = true;
+        }
+
+        private async Task ConfirmPendingChangesIfNeeded(Action action)
+        {
+            if (_requestConfirmation)
+            {
+                bool cancelNewSelection = await UITools.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?");
+                if (cancelNewSelection) return;
+            }
+
+            action.Invoke();
         }
     }
 }

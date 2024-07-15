@@ -19,7 +19,7 @@ namespace ShelterVault.ViewModels
         private byte[] _masterKeyProtected;
 
         [RelayCommand]
-        private void OnLoaded()
+        private void Loaded()
         {
             InitialSetUp();
         }
