@@ -10,56 +10,27 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public class PasswordConfirmationViewModel : ObservableObject
+    public partial class PasswordConfirmationViewModel : ObservableObject
     {
-        public IRelayCommand OnPasswordChangedCommand { get; }
+        [ObservableProperty]
         private bool _is8Characters;
-        public bool Is8Characters
-        {
-            get => _is8Characters;
-            set => SetProperty(ref _is8Characters, value);
-        }
+        [ObservableProperty]
         private bool _hasLowercase;
-        public bool HasLowercase
-        {
-            get => _hasLowercase;
-            set => SetProperty(ref _hasLowercase, value);
-        }
+        [ObservableProperty]
         private bool _hasUppercase;
-        public bool HasUppercase
-        {
-            get => _hasUppercase;
-            set => SetProperty(ref _hasUppercase, value);
-        }
+        [ObservableProperty]
         private bool _hasNumber;
-        public bool HasNumber
-        {
-            get => _hasNumber;
-            set => SetProperty(ref _hasNumber, value);
-        }
+        [ObservableProperty]
         private bool _hasSpecialChars;
-        public bool HasSpecialChars
-        {
-            get => _hasSpecialChars;
-            set => SetProperty(ref _hasSpecialChars, value);
-        }
+        [ObservableProperty]
         private bool _isLessThan32Chars;
-        public bool IsLessThan32Chars
-        {
-            get => _isLessThan32Chars;
-            set => SetProperty(ref _isLessThan32Chars, value);
-        }
-        private string _headerText;
-        public string HeaderText
-        {
-            get => _headerText;
-            set => SetProperty(ref _headerText, value);
-        }
+        [ObservableProperty]
+        private string _headerText = "Master key password must:";
 
-        public PasswordConfirmationViewModel()
+        [RelayCommand]
+        private void OnPasswordChanged(string password)
         {
-            OnPasswordChangedCommand = new RelayCommand<string>(OnPasswordChanged);
-            HeaderText = "Master key password must:";
+            IsValidPassword(password);
         }
 
         public async Task<bool> AreCredentialsValid(Credential credential)
@@ -87,11 +58,6 @@ namespace ShelterVault.ViewModels
             }
 
             return true;
-        }
-
-        private void OnPasswordChanged(string password)
-        {
-            IsValidPassword(password);
         }
 
         private bool IsValidPassword(string password)

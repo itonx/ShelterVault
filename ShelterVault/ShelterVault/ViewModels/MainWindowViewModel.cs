@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShelterVault.Tools;
-using ShelterVault.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,26 +8,23 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 
 namespace ShelterVault.ViewModels
 {
     public partial class MainWindowViewModel : ObservableObject
     {
         [ObservableProperty]
-        private bool _isProgressBarVisible;
+        private bool _isProgressBarVisible = false;
 
         private byte[] _masterKeyProtected;
-        public IRelayCommand OnLoadedCommand { get; }
-        public IRelayCommand ChangeThemeCommand { get; }
 
-        public MainWindowViewModel()
+        [RelayCommand]
+        private void OnLoaded()
         {
-            IsProgressBarVisible = false;
-            OnLoadedCommand = new RelayCommand(OnLoaded);
-            ChangeThemeCommand = new RelayCommand(ChangeTheme);
+            InitialSetUp();
         }
 
+        [RelayCommand]
         private void ChangeTheme()
         {
             UITools.ChangeTheme();
@@ -42,11 +38,6 @@ namespace ShelterVault.ViewModels
         internal void ProtectMasterKey(byte[] masterKey)
         {
             _masterKeyProtected = ProtectedData.Protect(masterKey, null, DataProtectionScope.CurrentUser);
-        }
-
-        private void OnLoaded()
-        {
-            InitialSetUp();
         }
 
         private void InitialSetUp()
