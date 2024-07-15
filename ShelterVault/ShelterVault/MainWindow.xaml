@@ -7,12 +7,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:viewmodels="using:ShelterVault.ViewModels" 
+    xmlns:tools="using:ShelterVault.Tools" 
     xmlns:behaviors="using:Microsoft.Xaml.Interactions.Core" 
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d"
     Title="ShelterVault">
     <Grid x:Name="WindowContent" x:FieldModifier="internal" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.Resources>
+            <tools:VisibilityToBoolConverter x:Key="VisibilityToBool"/>
+            <tools:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -24,8 +30,9 @@
                 <behaviors:InvokeCommandAction Command="{Binding OnLoadedCommand}"/>
             </behaviors:EventTriggerBehavior>
         </interactivity:Interaction.Behaviors>
-        <ContentPresenter x:Name="AppContent" x:FieldModifier="internal" Grid.RowSpan="2"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+        <ProgressBar x:Name="Spinner" x:FieldModifier="internal" IsIndeterminate="{Binding IsProgressBarVisible, Mode=OneWay}" ShowPaused="False" ShowError="False" Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
+        <ContentPresenter x:Name="AppContent" x:FieldModifier="internal" Grid.RowSpan="3"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <ToggleButton x:Name="ThemeToggle" x:FieldModifier="internal" Margin="10" Command="{Binding ChangeThemeCommand}">
                 <FontIcon Glyph="&#xE793;"/>
             </ToggleButton>

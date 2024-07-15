@@ -5,31 +5,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public class CreateMasterKeyViewModel : ObservableObject
+    public partial class CreateMasterKeyViewModel : ObservableObject
     {
-        public IRelayCommand CreateMasterKeyCommand { get; }
-        private PasswordConfirmationViewModel _passwordRequirementsVM;
-        public PasswordConfirmationViewModel PasswordRequirementsVM
-        {
-            get => _passwordRequirementsVM;
-            set => SetProperty(ref _passwordRequirementsVM, value);
-        }
+        [ObservableProperty]
+        private PasswordConfirmationViewModel _passwordRequirementsVM = new PasswordConfirmationViewModel();
 
-        public CreateMasterKeyViewModel()
+        [RelayCommand]
+        private async Task CreateMasterKey(Dictionary<string, StringBuilder> masterKeyPasswords)
         {
-            CreateMasterKeyCommand = new RelayCommand<Dictionary<string, StringBuilder>>(CreateMasterKey);
-            PasswordRequirementsVM = new PasswordConfirmationViewModel();
-        }
-
-        private async void CreateMasterKey(Dictionary<string, StringBuilder> masterKeyPasswords)
-        {
-            if (await PasswordRequirementsVM.ArePasswordsValid(masterKeyPasswords.Values.First().ToString(), masterKeyPasswords.Values.Last().ToString()))
+            try
             {
-                bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(masterKeyPasswords.Values.First().ToString());
-                if (wasVaultCreated) UITools.LoadMasterKeyConfirmationView();
+                await UITools.ShowSpinner();
+                if (await PasswordRequirementsVM.ArePasswordsValid(masterKeyPasswords.Values.First().ToString(), masterKeyPasswords.Values.Last().ToString()))
+                {
+                    bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(masterKeyPasswords.Values.First().ToString());
+                    if (wasVaultCreated) UITools.LoadMasterKeyConfirmationView();
+                }
+            }
+            finally
+            {
+                await UITools.HideSpinner();
             }
         }
     }

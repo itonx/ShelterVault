@@ -132,6 +132,28 @@ namespace ShelterVault.Tools
 
         }
 
+        public static async Task ShowSpinner()
+        {
+            MainWindow mainWindow = GetMainWindow();
+            if (mainWindow != null)
+            {
+                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                viewModel.IsProgressBarVisible = true;
+            }
+            await Task.Delay(100);
+        }
+
+        public static async Task HideSpinner()
+        {
+            MainWindow mainWindow = GetMainWindow();
+            if (mainWindow != null)
+            {
+                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                viewModel.IsProgressBarVisible = false;
+            }
+            await Task.Delay(100);
+        }
+
         private static MainWindow GetMainWindow()
         {
             return (Application.Current as App)?.m_window as MainWindow;

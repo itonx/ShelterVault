@@ -1,23 +1,27 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ShelterVault.Tools;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public class MasterKeyConfirmationViewModel
+    public partial class MasterKeyConfirmationViewModel : ObservableObject
     {
-        public IRelayCommand ConfirmMasterKeyCommand { get; }
-
-        public MasterKeyConfirmationViewModel()
+        [RelayCommand]
+        private async Task ConfirmMasterKey(object parameter)
         {
-            ConfirmMasterKeyCommand = new RelayCommand<object>(ConfirmMasterKey);
-        }
-
-        private async void ConfirmMasterKey(object parameter)
-        {
-            if (ShelterVaultSqliteTool.IsMasterKeyValid(parameter?.ToString()))
-                UITools.LoadCredentialsView(Encoding.Unicode.GetBytes(parameter?.ToString()));
-            else await UITools.ShowConfirmationDialogAsync("Important", "Wrong master key!");
+            try
+            {
+                await UITools.ShowSpinner();
+                if (ShelterVaultSqliteTool.IsMasterKeyValid(parameter?.ToString()))
+                    UITools.LoadCredentialsView(Encoding.Unicode.GetBytes(parameter?.ToString()));
+                else await UITools.ShowConfirmationDialogAsync("Important", "Wrong master key!");
+            }
+            finally
+            {
+                await UITools.HideSpinner();
+            }
         }
     }
 }
