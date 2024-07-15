@@ -5,25 +5,29 @@ ShelterVault helps you to save your passwords in your local machine. All passwor
 - A database with all your passwords will be saved at user's profile directory.
 - All passwords are encrypted using AES and a random initial vector.
 
-![image](https://github.com/itonx/ShelterVault/assets/47309081/cdc1371c-941e-4a9c-9702-26dccff4e06c)
+![image](https://github.com/user-attachments/assets/d7982ac7-52fd-44b0-b59e-cc1e57b74e3d)
 
 # Log in
-![image](https://github.com/itonx/ShelterVault/assets/47309081/82327452-4231-437f-b4fb-6c82de815c5e)
+![image](https://github.com/user-attachments/assets/34647d85-bdf6-4a01-9b80-db457ec7660d)
 
 # Initial screen
-![image](https://github.com/itonx/ShelterVault/assets/47309081/34db4925-9de8-4116-8b6e-90ef92996c51)
+![image](https://github.com/user-attachments/assets/f219e6b6-4699-420c-929a-64793e37f48e)
 
 # Add new credentials
-![image](https://github.com/itonx/ShelterVault/assets/47309081/58e1274b-821a-4821-84a0-87ac904bcf69)
+![image](https://github.com/user-attachments/assets/3ef0c5e2-94c2-4a1c-b78f-93bba3cac021)
 
 # View, edit or delete
-![image](https://github.com/itonx/ShelterVault/assets/47309081/99b5d33d-20d8-432a-abc0-d0bd0cad8211)
+![image](https://github.com/user-attachments/assets/87e09fae-733b-423f-bcac-1b3c6de119e1)
 
 # Themes
 ShelterVault is available in Light and Dark mode. It detects and uses your current Windows theme.
 
 ### Dark mode
-![image](https://github.com/itonx/ShelterVault/assets/47309081/a49c9ac6-cffc-43b9-8d3d-d1f51793a35f) ![image](https://github.com/itonx/ShelterVault/assets/47309081/780c2a15-e6de-4452-ae10-2a3a2fc37461) ![image](https://github.com/itonx/ShelterVault/assets/47309081/b1069cf5-fb7e-44d5-b7ea-49f65a3cb682) ![image](https://github.com/itonx/ShelterVault/assets/47309081/1f0c6fc2-e0ae-4610-9507-7086e297e4ea) ![image](https://github.com/itonx/ShelterVault/assets/47309081/9649e065-1ec2-4a95-9998-68e904143d6d)
+![image](https://github.com/user-attachments/assets/6d000fbd-da25-4908-a759-eccc37afa3ed)
+![image](https://github.com/user-attachments/assets/51be8bcc-060a-475c-9be0-7a305ada39f4)
+![image](https://github.com/user-attachments/assets/36d3d4da-a72c-4bd1-ae35-7a9934358025)
+![image](https://github.com/user-attachments/assets/d10b210f-f300-46dc-9934-9ee022dd1559)
+![image](https://github.com/user-attachments/assets/4b5674a7-50d3-4efc-b64d-67da7347bd29)
 
 
 
