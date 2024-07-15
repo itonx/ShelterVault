@@ -47,6 +47,7 @@ namespace ShelterVault.ViewModels
         private void InitialSetUp()
         {
             UITools.LoadAppIcon();
+            UITools.LoadTheme();
             UITools.LoadInitialView();
         }
     }

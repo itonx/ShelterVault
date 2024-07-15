@@ -9,6 +9,7 @@
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+	<!--<WindowsPackageType>None</WindowsPackageType>-->
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\OverrideDarkTheme.xaml" />

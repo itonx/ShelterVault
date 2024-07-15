@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using System.IO;
 using ShelterVault.ViewModels;
 using System.Runtime.InteropServices;
+using Windows.Storage;
 
 namespace ShelterVault.Tools
 {
@@ -93,6 +94,30 @@ namespace ShelterVault.Tools
             }
         }
 
+        public static void LoadTheme()
+        {
+            MainWindow mainWindow = GetMainWindow();
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            string theme = localSettings.Values[SETTINGS_THEME_KEY] as string;
+            
+            if (mainWindow != null)
+            {
+                ElementTheme elementTheme = theme == null ? ElementTheme.Default : (ElementTheme)Enum.Parse(typeof(ElementTheme), theme);
+
+                if(elementTheme == ElementTheme.Default)
+                {
+                    bool isDarkMode = PInvoke.ShouldSystemUseDarkMode();
+                    mainWindow.ThemeToggle.IsChecked = !isDarkMode;
+
+                }
+                else
+                {
+                    ((FrameworkElement)mainWindow.Content).RequestedTheme = elementTheme;
+                    mainWindow.ThemeToggle.IsChecked = elementTheme == ElementTheme.Light;
+                }
+            }
+        }
+
         public static void ChangeTheme(bool autoFlip = true)
         {
             MainWindow mainWindow = GetMainWindow();
@@ -100,6 +125,9 @@ namespace ShelterVault.Tools
             {
                 if(!autoFlip) mainWindow.ThemeToggle.IsChecked = !mainWindow.ThemeToggle.IsChecked;
                 ((FrameworkElement)mainWindow.Content).RequestedTheme = mainWindow.ThemeToggle.IsChecked == true ? ElementTheme.Light : ElementTheme.Dark;
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                string currentTheme = ((FrameworkElement)mainWindow.Content).RequestedTheme.ToString();
+                localSettings.Values[SETTINGS_THEME_KEY] = currentTheme;
             }
 
         }
@@ -108,6 +136,8 @@ namespace ShelterVault.Tools
         {
             return (Application.Current as App)?.m_window as MainWindow;
         }
+
+        private static string SETTINGS_THEME_KEY = "ShelterVault.Theme";
     }
 
     class PInvoke
@@ -115,6 +145,9 @@ namespace ShelterVault.Tools
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
+
+        [DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#138")]
+        public static extern bool ShouldSystemUseDarkMode();
 
         public enum WindowShowStyle : uint
         {
