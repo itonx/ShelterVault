@@ -12,17 +12,25 @@ namespace ShelterVault.Tools
     public static class ItemClickToCommandHelper
     {
         public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(ItemClickToCommandHelper), new PropertyMetadata(null, OnCommandChanged));
+            DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(ItemClickToCommandHelper), new PropertyMetadata(null));
 
         public static ICommand GetCommand(DependencyObject obj) => (ICommand)obj.GetValue(CommandProperty);
 
         public static void SetCommand(DependencyObject obj, ICommand value) => obj.SetValue(CommandProperty, value);
 
-        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public static readonly DependencyProperty EnableItemClickProperty =
+            DependencyProperty.RegisterAttached("EnableItemClick", typeof(bool), typeof(ItemClickToCommandHelper), new PropertyMetadata(false, OnEnableItemClickChanged));
+
+        public static bool GetEnableItemClick(DependencyObject obj) => (bool)obj.GetValue(EnableItemClickProperty);
+
+        public static void SetEnableItemClick(DependencyObject obj, bool value) => obj.SetValue(EnableItemClickProperty, value);
+
+        private static void OnEnableItemClickChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue == null && d is ListView)
+            if (d is ListView && e.NewValue is bool val && val)
             {
                 ListView control = d as ListView;
+                control.IsItemClickEnabled = true;
                 d.SetValue(CommandProperty, e.NewValue);
                 control.SelectionChanged += Control_SelectionChanged;
             }

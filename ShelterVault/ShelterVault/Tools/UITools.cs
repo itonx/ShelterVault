@@ -41,7 +41,7 @@ namespace ShelterVault.Tools
 
         public static void LoadMasterKeyConfirmationView()
         {
-            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null) 
             {
                 mainWindow.AppContent.Content = new MasterKeyConfirmationView();
@@ -50,9 +50,10 @@ namespace ShelterVault.Tools
 
         public static void LoadCredentialsView(byte[] password)
         {
-            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            MainWindow mainWindow = GetMainWindow();
             if(mainWindow != null)
             {
+                mainWindow.ThemeToggle.Visibility = Visibility.Collapsed;
                 MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
                 viewModel.ProtectMasterKey(password);
                 mainWindow.AppContent.Content = new CredentialsView();
@@ -61,7 +62,7 @@ namespace ShelterVault.Tools
 
         public static byte[] GetMasterKey()
         {
-            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
                 MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
@@ -73,7 +74,7 @@ namespace ShelterVault.Tools
 
         public static void LoadInitialView()
         {
-            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
                 IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
@@ -85,11 +86,27 @@ namespace ShelterVault.Tools
 
         public static void LoadAppIcon()
         {
-            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
                 mainWindow.AppWindow.SetIcon(Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico"));
             }
+        }
+
+        public static void ChangeTheme(bool autoFlip = true)
+        {
+            MainWindow mainWindow = GetMainWindow();
+            if (mainWindow != null)
+            {
+                if(!autoFlip) mainWindow.ThemeToggle.IsChecked = !mainWindow.ThemeToggle.IsChecked;
+                ((FrameworkElement)mainWindow.Content).RequestedTheme = mainWindow.ThemeToggle.IsChecked == true ? ElementTheme.Light : ElementTheme.Dark;
+            }
+
+        }
+
+        private static MainWindow GetMainWindow()
+        {
+            return (Application.Current as App)?.m_window as MainWindow;
         }
     }
 

@@ -26,8 +26,8 @@
         </interactivity:Interaction.Behaviors>
         <ContentPresenter x:Name="AppContent" x:FieldModifier="internal" Grid.RowSpan="2"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <ToggleButton Margin="10" Click="ToggleButton_Click">
-                <FontIcon Glyph="&#xE793;" Foreground="White"/>
+            <ToggleButton x:Name="ThemeToggle" x:FieldModifier="internal" Margin="10" Command="{Binding ChangeThemeCommand}">
+                <FontIcon Glyph="&#xE793;"/>
             </ToggleButton>
         </StackPanel>
     </Grid>

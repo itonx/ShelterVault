@@ -16,10 +16,17 @@ namespace ShelterVault.ViewModels
     {
         private byte[] _masterKeyProtected;
         public IRelayCommand OnLoadedCommand { get; }
+        public IRelayCommand ChangeThemeCommand { get; }
 
         public MainWindowViewModel()
         {
             OnLoadedCommand = new RelayCommand(OnLoaded);
+            ChangeThemeCommand = new RelayCommand(ChangeTheme);
+        }
+
+        private void ChangeTheme()
+        {
+            UITools.ChangeTheme();
         }
 
         internal byte[] GetMasterKeyUnprotected()

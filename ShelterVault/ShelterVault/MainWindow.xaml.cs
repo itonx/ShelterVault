@@ -16,11 +16,5 @@ namespace ShelterVault
         {
             this.InitializeComponent();
         }
-
-        private void ToggleButton_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleButton tb = (ToggleButton)sender;
-            if (this._contentLoaded) ((FrameworkElement)this.Content).RequestedTheme = tb.IsChecked == true ? ElementTheme.Light : ElementTheme.Dark;
-        }
     }
 }
