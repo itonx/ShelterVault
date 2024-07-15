@@ -140,7 +140,7 @@ namespace ShelterVault.Tools
                 MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
                 viewModel.IsProgressBarVisible = true;
             }
-            await Task.Delay(500);
+            await Task.Delay(50);
         }
 
         public static async Task HideSpinner()
@@ -151,7 +151,7 @@ namespace ShelterVault.Tools
                 MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
                 viewModel.IsProgressBarVisible = false;
             }
-            await Task.Delay(100);
+            await Task.Delay(0);
         }
 
         private static MainWindow GetMainWindow()

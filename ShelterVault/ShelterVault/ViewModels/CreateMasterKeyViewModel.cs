@@ -19,9 +19,9 @@ namespace ShelterVault.ViewModels
         {
             try
             {
-                await UITools.ShowSpinner();
                 if (await PasswordRequirementsVM.ArePasswordsValid(masterKeyPasswords.Values.First().ToString(), masterKeyPasswords.Values.Last().ToString()))
                 {
+                    await UITools.ShowSpinner();
                     bool wasVaultCreated = ShelterVaultSqliteTool.CreateShelterVault(masterKeyPasswords.Values.First().ToString());
                     if (wasVaultCreated) UITools.LoadMasterKeyConfirmationView();
                 }

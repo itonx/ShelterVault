@@ -128,9 +128,9 @@ namespace ShelterVault.ViewModels
         {
             try
             {
-                await UITools.ShowSpinner();
                 if (await PasswordRequirementsVM.AreCredentialsValid(SelectedCredential))
                 {
+                    await UITools.ShowSpinner();
                     if (State == CredentialsViewModelState.Default) await UpdateCredential();
                     else if (State == CredentialsViewModelState.Adding) await CreateCredential();
                 }

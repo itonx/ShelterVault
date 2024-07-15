@@ -12,6 +12,9 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d"
     Title="ShelterVault">
+    <Window.SystemBackdrop>
+        <DesktopAcrylicBackdrop />
+    </Window.SystemBackdrop>
     <Grid x:Name="WindowContent" x:FieldModifier="internal" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.Resources>
             <tools:VisibilityToBoolConverter x:Key="VisibilityToBool"/>
@@ -32,9 +35,10 @@
         </interactivity:Interaction.Behaviors>
         <ProgressBar x:Name="Spinner" x:FieldModifier="internal" IsIndeterminate="{Binding IsProgressBarVisible, Mode=OneWay}" ShowPaused="False" ShowError="False" Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
         <ContentPresenter x:Name="AppContent" x:FieldModifier="internal" Grid.RowSpan="3"/>
+        <Grid Grid.Row="1" Grid.RowSpan="2" Opacity="0.6" Background="Black" Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <ToggleButton x:Name="ThemeToggle" x:FieldModifier="internal" Margin="10" Command="{Binding ChangeThemeCommand}">
-                <FontIcon Glyph="&#xE793;"/>
+            <ToggleButton x:Name="ThemeToggle" x:FieldModifier="internal" Margin="10" Command="{Binding ChangeThemeCommand}" IsEnabled="{Binding ElementName=Spinner, Path=Visibility, Converter={StaticResource VisibilityToBool}, ConverterParameter=Collapsed}">
+                <FontIcon Glyph="&#xE793;" Foreground="{ThemeResource ShelterVaultForeground}"/>
             </ToggleButton>
         </StackPanel>
     </Grid>

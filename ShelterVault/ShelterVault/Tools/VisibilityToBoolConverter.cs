@@ -12,7 +12,18 @@ namespace ShelterVault.Tools
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value is Visibility val && val == Visibility.Visible;
+            if( value is Visibility val)
+            {
+                if(parameter != null)
+                {
+                    return (Visibility)Enum.Parse(typeof(Visibility), parameter.ToString()) == val;
+                }
+                else
+                {
+                    return val == Visibility.Visible;
+                }
+            }
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

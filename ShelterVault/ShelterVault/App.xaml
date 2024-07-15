@@ -12,6 +12,8 @@
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="LightGray" />
+                            <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="Gray" />
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40"/>
                             <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle" BasedOn="{StaticResource DefaultPasswordBoxStyle}">
                                 <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
