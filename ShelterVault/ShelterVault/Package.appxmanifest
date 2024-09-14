@@ -9,7 +9,7 @@
 
   <Identity
     Name="446da4ae-09fa-440c-acba-0aef4d88a1fc"
-    Publisher="CN=Ayrton E."
+    Publisher="CN=Ayrton"
     Version="1.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="446da4ae-09fa-440c-acba-0aef4d88a1fc" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
