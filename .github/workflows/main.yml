@@ -67,7 +67,7 @@ jobs:
     # Fix Add-AppDevPackage.ps1 script to install app dependencies
     - name: Workaround for Add-AppDevPackage.ps1
       run: |
-        $artifactBaseDir = Join-Path -Path $Project_Directory Packages ${{ matrix.platform }}
+        $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages ${{ matrix.platform }}
         echo "Artifact base dir: $artifactBaseDir"
         $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
         echo "Artifact platform dir: $artifactPlatformDir"
@@ -85,4 +85,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ShelterVault MSIX Package ${{ matrix.platform }}
-        path: $Project_Directory\Packages\${{ matrix.platform }}\
+        path: $env:Project_Directory\Packages\${{ matrix.platform }}\
