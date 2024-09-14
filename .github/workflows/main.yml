@@ -67,10 +67,16 @@ jobs:
     # Fix Add-AppDevPackage.ps1 script to install app dependencies
     - name: Workaround for Add-AppDevPackage.ps1
       run: |
-          $artifactBaseDir = "${{ env:Project_Directory }}\Packages\${{ matrix.platform }}"
-          $artifactPlarformDir = Get-ChildItem -Path "$artifactBaseDir\" -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
-          $artifactAddAppDevPackageScriptPath = "$$artifactBaseDir\$artifactPlatformDir\Add-AppDevPackage.ps1"
+          $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages $env:Platform
+          echo "Artifact base dir: $artifactBaseDir"
+          $artifactPlarformDir = Get-ChildItem -Path "$artifactBaseDir\" -Directory | Where-Object { $_.Name -like "*$env:Platform*" } | Select-Object -ExpandProperty Name
+          echo "Artifact platform dir: $artifactPlarformDir"
+          $artifactAddAppDevPackageScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir -ChildPath Add-AppDevPackage.ps1
+          echo "Artifact Add-AppDevPackage.ps1 path: $artifactAddAppDevPackageScriptPath"
           (Get-Content $artifactAddAppDevPackageScriptPath).Replace('$DependencyPackages = @()', '[string[]] $DependencyPackages = @()') | Set-Content $artifactAddAppDevPackageScriptPath
+          echo "Script updated"
+      env:
+          Platform: ${{ matrix.platform }}
 
     # Remove the pfx
     - name: Remove the pfx
