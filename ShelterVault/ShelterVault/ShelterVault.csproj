@@ -11,6 +11,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <EnableMsixTooling>true</EnableMsixTooling>
     <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
+    <PackageCertificateThumbprint>3C9318C3BFB67212D63268CBF5FE84CF63A5D9AE</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>ShelterVault_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\LargeTile.scale-100.png" />
