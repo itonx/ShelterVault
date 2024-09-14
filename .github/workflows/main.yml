@@ -85,4 +85,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ShelterVault MSIX Package ${{ matrix.platform }}
-        path: $env:Project_Directory\Packages\${{ matrix.platform }}\
+        path: ${{ env:Project_Directory }}\Packages\${{ matrix.platform }}\
