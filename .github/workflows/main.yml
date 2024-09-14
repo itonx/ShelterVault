@@ -5,9 +5,9 @@ name: WinUI 3 MSIX app
 
 on:
   push:
-    branches: [ ayrton/make-single-project-msix ]
+    branches: [ main ]
   pull_request:
-    branches: [ ayrton/make-single-project-msix ]
+    branches: [ main ]
 
 jobs:
 
