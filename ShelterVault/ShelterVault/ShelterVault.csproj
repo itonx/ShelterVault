@@ -10,7 +10,7 @@
     <UseWinUI>true</UseWinUI>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
+    <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\LargeTile.scale-100.png" />
