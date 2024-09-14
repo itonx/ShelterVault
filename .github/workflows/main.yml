@@ -67,16 +67,16 @@ jobs:
     # Fix Add-AppDevPackage.ps1 script to install app dependencies
     - name: Workaround for Add-AppDevPackage.ps1
       run: |
-          echo "Artifact base dir: $env:Appx_Package_Dir"
-          $artifactPlatformDir = Get-ChildItem -Path $env:Appx_Package_Dir -Directory | Where-Object { $_.Name -like "*$env:Platform*" } | Select-Object -ExpandProperty Name
-          echo "Artifact platform dir: $artifactPlatformDir"
-          $artifactAddAppDevPackageScriptPath = Join-Path $env:Appx_Package_Dir $artifactPlatformDir -ChildPath Add-AppDevPackage.ps1
-          echo "Artifact Add-AppDevPackage.ps1 path: $artifactAddAppDevPackageScriptPath"
-          (Get-Content $artifactAddAppDevPackageScriptPath).Replace('$DependencyPackages = @()', '[string[]] $DependencyPackages = @()') | Set-Content $artifactAddAppDevPackageScriptPath
-          echo "Script updated"
+        $artifactBaseDir = Get-ChildItem -Path $env:Project_Directory Packages $env:Platform
+        echo "Artifact base dir: $artifactBaseDir"
+        $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*$env:Platform*" } | Select-Object -ExpandProperty Name
+        echo "Artifact platform dir: $artifactPlatformDir"
+        $artifactAddAppDevPackageScriptPath = Join-Path $env:Appx_Package_Dir $artifactPlatformDir -ChildPath Add-AppDevPackage.ps1
+        echo "Artifact Add-AppDevPackage.ps1 path: $artifactAddAppDevPackageScriptPath"
+        (Get-Content $artifactAddAppDevPackageScriptPath).Replace('$DependencyPackages = @()', '[string[]] $DependencyPackages = @()') | Set-Content $artifactAddAppDevPackageScriptPath
+        echo "Script updated"
       env:
-          Appx_Package_Dir: ${{ env:Project_Directory }}\Packages\${{ matrix.platform }}\
-          Platform: ${{ matrix.platform }}
+        Platform: ${{ matrix.platform }}
 
     # Remove the pfx
     - name: Remove the pfx
