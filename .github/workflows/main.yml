@@ -64,6 +64,18 @@ jobs:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
 
+    # Fix Add-AppDevPackage.ps1 script to install app dependencies
+    - name: Workaround for Add-AppDevPackage.ps1
+      run: |
+        $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages ${{ matrix.platform }}
+        echo "Artifact base dir: $artifactBaseDir"
+        $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
+        echo "Artifact platform dir: $artifactPlatformDir"
+        $artifactAddAppDevPackageScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir Add-AppDevPackage.ps1
+        echo "Artifact Add-AppDevPackage.ps1 path: $artifactAddAppDevPackageScriptPath"
+        (Get-Content $artifactAddAppDevPackageScriptPath).Replace('$DependencyPackages = @()', '[string[]]$DependencyPackages = @()') | Set-Content $artifactAddAppDevPackageScriptPath
+        echo "Script updated"
+
     # Remove the pfx
     - name: Remove the pfx
       run: Remove-Item -path $env:Project_Directory\ShelterVault_TemporaryKey.pfx
