@@ -74,7 +74,7 @@ jobs:
         echo "Artifact platform dir: $artifactPlatformDir"
         $installShelterVaultScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir Install_ShelterVault.ps1
         echo "Install_ShelterVault.ps1 path: $installShelterVaultScriptPath"
-        echo "#Run this script as: pwsh.exe --ExecutionPolicy Bypass -File .\Install_ShelterVault.ps1`nWrite-Output 'Fixing Add-AppDevPackage.ps1...'`n(Get-Content .\Add-AppDevPackage.ps1).Replace('`$DependencyPackages = @()', '[string[]]`$DependencyPackages = @()') | Set-Content .\Add-AppDevPackage.ps1`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps1" > $installShelterVaultScriptPath
+        echo "#Run this script as: pwsh.exe --ExecutionPolicy Bypass -File .\Install_ShelterVault.ps1`n`$expectedText = '[string[]]`$DependencyPackages = @()'`n`$filePath = '.\Add-AppDevPackage.ps1'`nif (Select-String -Pattern `$expectedText -Path `$filePath -SimpleMatch) {`n    Write-Output 'Add-AppDevPackage.ps1 is patched'`n} else {`n    Write-Output 'Fixing Add-AppDevPackage.ps1...'`n    (Get-Content `$filePath).Replace('`$DependencyPackages = @()', `$expectedText) | Set-Content `$filePath`n}`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps1" > $installShelterVaultScriptPath
       env:
         Platform: ${{ matrix.platform }}
 
