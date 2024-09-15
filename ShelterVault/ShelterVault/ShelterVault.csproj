@@ -177,16 +177,5 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-
-	<Target Name="CopyCustomFiles" AfterTargets="Build">
-		<!-- Define where your custom files are located -->
-		<ItemGroup>
-			<CustomFiles Include="Install_ShelterVault.ps1" />
-		</ItemGroup>
-
-		<!-- Copy the custom files to the output directory -->
-		<Copy
-		  SourceFiles="@(CustomFiles)"
-		  DestinationFolder="Packages\x64\ShelterVault_1.0.1.0_x64_Test\" />
-	</Target>
+	
 </Project>

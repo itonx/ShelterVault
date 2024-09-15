@@ -65,6 +65,19 @@ jobs:
         Configuration: ${{ matrix.configuration }}
         Platform: ${{ matrix.platform }}
 
+    # Workaround for Add-AppDevPackage.ps1
+    - name: Workaround for Add-AppDevPackage.ps1
+      run: |
+        $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages ${{ matrix.platform }}
+        echo "Artifact base dir: $artifactBaseDir"
+        $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
+        echo "Artifact platform dir: $artifactPlatformDir"
+        $installShelterVaultScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir Install_ShelterVault.ps1
+        echo "Install_ShelterVault.ps1 path: $installShelterVaultScriptPath"
+        echo "#Run this script as: pwsh.exe --ExecutionPolicy Bypass -File .\Install_ShelterVault.ps1`nWrite-Output 'Fixing Add-AppDevPackage.ps1...'`n(Get-Content .\Add-AppDevPackage.ps1).Replace('`$DependencyPackages = @()', '[string[]]`$DependencyPackages = @()') | Set-Content .\Add-AppDevPackage.ps1`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps" > $artifactAddAppDevPackageScriptPath
+      env:
+        Platform: ${{ matrix.platform }}
+
     # Remove the pfx
     - name: Remove the pfx
       run: Remove-Item -path $env:Project_Directory\ShelterVault_TemporaryKey.pfx
