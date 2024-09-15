@@ -58,7 +58,13 @@ jobs:
     - name: Create the app package
       run: |
         msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=ShelterVault_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
-        echo "Write-Output 'Fixing Add-AppDevPackage.ps1...'`n(Get-Content .\Add-AppDevPackage.ps1).Replace('`$DependencyPackages = @()', '[string[]]`$DependencyPackages = @()') | Set-Content\n.\Add-AppDevPackage.ps1`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps" > Install_ShelterVault.ps1
+        $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages ${{ matrix.platform }}
+        echo "Artifact base dir: $artifactBaseDir"
+        $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
+        echo "Artifact platform dir: $artifactPlatformDir"
+        $artifactAddAppDevPackageScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir Install_ShelterVault.ps1
+        echo "Artifact Add-AppDevPackage.ps1 path: $artifactAddAppDevPackageScriptPath"
+        echo "Write-Output 'Fixing Add-AppDevPackage.ps1...'`n(Get-Content .\Add-AppDevPackage.ps1).Replace('`$DependencyPackages = @()', '[string[]]`$DependencyPackages = @()') | Set-Content\n.\Add-AppDevPackage.ps1`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps" > $artifactAddAppDevPackageScriptPath
       env:
         Appx_Bundle: Never
         Appx_Package_Build_Mode: SideloadOnly
