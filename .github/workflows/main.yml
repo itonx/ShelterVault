@@ -73,7 +73,7 @@ jobs:
         echo "Artifact platform dir: $artifactPlatformDir"
         $artifactAddAppDevPackageScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir Add-AppDevPackage.ps1
         echo "Artifact Add-AppDevPackage.ps1 path: $artifactAddAppDevPackageScriptPath"
-        (Get-Content $artifactAddAppDevPackageScriptPath).Replace('`$DependencyPackages = @()', '[string[]]`$DependencyPackages = @()') | Set-Content $artifactAddAppDevPackageScriptPath
+        (Get-Content $artifactAddAppDevPackageScriptPath).Replace('$DependencyPackages = @()', '[string[]]$DependencyPackages = @()') | Set-Content $artifactAddAppDevPackageScriptPath
         echo "Script updated"
 
     # Remove the pfx
