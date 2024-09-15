@@ -56,17 +56,8 @@ jobs:
 
     # Create the app package by building and packaging the project
     - name: Create the app package
-      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=ShelterVault_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
-      env:
-        Appx_Bundle: Never
-        Appx_Package_Build_Mode: SideloadOnly
-        Appx_Package_Dir: Packages\${{ matrix.platform }}\
-        Configuration: ${{ matrix.configuration }}
-        Platform: ${{ matrix.platform }}
-
-    # Fix Add-AppDevPackage.ps1 script to install app dependencies
-    - name: Workaround for Add-AppDevPackage.ps1
       run: |
+        msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=ShelterVault_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
         $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages ${{ matrix.platform }}
         echo "Artifact base dir: $artifactBaseDir"
         $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
@@ -75,6 +66,12 @@ jobs:
         echo "Artifact Add-AppDevPackage.ps1 path: $artifactAddAppDevPackageScriptPath"
         (Get-Content $artifactAddAppDevPackageScriptPath).Replace('$DependencyPackages = @()', '[string[]]$DependencyPackages = @()') | Set-Content $artifactAddAppDevPackageScriptPath
         echo "Script updated"
+      env:
+        Appx_Bundle: Never
+        Appx_Package_Build_Mode: SideloadOnly
+        Appx_Package_Dir: Packages\${{ matrix.platform }}\
+        Configuration: ${{ matrix.configuration }}
+        Platform: ${{ matrix.platform }}
 
     # Remove the pfx
     - name: Remove the pfx
