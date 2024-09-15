@@ -59,6 +59,7 @@ jobs:
       run: |
         msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=ShelterVault_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
         echo "Write-Output 'Fixing Add-AppDevPackage.ps1...'`n(Get-Content .\Add-AppDevPackage.ps1).Replace('`$DependencyPackages = @()', '[string[]]`$DependencyPackages = @()') | Set-Content\n.\Add-AppDevPackage.ps1`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps" > Install_ShelterVault.ps1
+      env:
         Appx_Bundle: Never
         Appx_Package_Build_Mode: SideloadOnly
         Appx_Package_Dir: Packages\${{ matrix.platform }}\
