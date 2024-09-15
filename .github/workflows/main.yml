@@ -23,6 +23,7 @@ jobs:
 
     env:
       Solution_Name: ShelterVault.sln                         # Replace with your solution name, i.e. App1.sln.
+      Project_Directory: .\ShelterVault\ShelterVault
 
     steps:
     - name: Checkout
@@ -50,26 +51,40 @@ jobs:
     - name: Decode the pfx
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
-        $certificatePath = "GitHubActionsWorkflow.pfx"
+        $certificatePath = Join-Path -Path $env:Project_Directory -ChildPath ShelterVault_TemporaryKey.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
     # Create the app package by building and packaging the project
     - name: Create the app package
-      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
+      run: |
+        msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=ShelterVault_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
       env:
         Appx_Bundle: Never
         Appx_Package_Build_Mode: SideloadOnly
-        Appx_Package_Dir: Packages\
+        Appx_Package_Dir: Packages\${{ matrix.platform }}\
         Configuration: ${{ matrix.configuration }}
+        Platform: ${{ matrix.platform }}
+
+    # Workaround for Add-AppDevPackage.ps1
+    - name: Workaround for Add-AppDevPackage.ps1
+      run: |
+        $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages ${{ matrix.platform }}
+        echo "Artifact base dir: $artifactBaseDir"
+        $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
+        echo "Artifact platform dir: $artifactPlatformDir"
+        $installShelterVaultScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir Install_ShelterVault.ps1
+        echo "Install_ShelterVault.ps1 path: $installShelterVaultScriptPath"
+        echo "#Run this script as: pwsh.exe --ExecutionPolicy Bypass -File .\Install_ShelterVault.ps1`nWrite-Output 'Fixing Add-AppDevPackage.ps1...'`n(Get-Content .\Add-AppDevPackage.ps1).Replace('`$DependencyPackages = @()', '[string[]]`$DependencyPackages = @()') | Set-Content .\Add-AppDevPackage.ps1`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps1" > $installShelterVaultScriptPath
+      env:
         Platform: ${{ matrix.platform }}
 
     # Remove the pfx
     - name: Remove the pfx
-      run: Remove-Item -path GitHubActionsWorkflow.pfx
+      run: Remove-Item -path $env:Project_Directory\ShelterVault_TemporaryKey.pfx
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload MSIX package
       uses: actions/upload-artifact@v4
       with:
-        name: MSIX Package
-        path: ${{ env.Solution_Name }}\\Packages
+        name: ShelterVault MSIX Package ${{ matrix.platform }}
+        path: ${{ env.Project_Directory }}\Packages\${{ matrix.platform }}\
