@@ -49,14 +49,14 @@ namespace ShelterVault.Tools
             } 
         }
 
-        public static void LoadCredentialsView(byte[] password)
+        public static void LoadCredentialsView(byte[] password, byte[] salt)
         {
             MainWindow mainWindow = GetMainWindow();
             if(mainWindow != null)
             {
                 mainWindow.ThemeToggle.Visibility = Visibility.Collapsed;
                 MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
-                viewModel.ProtectMasterKey(password);
+                viewModel.ProtectMasterKey(password, salt);
                 mainWindow.AppContent.Content = new CredentialsView();
             }
         }
@@ -68,6 +68,18 @@ namespace ShelterVault.Tools
             {
                 MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
                 return viewModel.GetMasterKeyUnprotected();
+            }
+
+            return Array.Empty<byte>();
+        }
+
+        public static byte[] GetMasterKeySalt()
+        {
+            MainWindow mainWindow = GetMainWindow();
+            if (mainWindow != null)
+            {
+                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                return viewModel.GetMasterKeySaltUnprotected();
             }
 
             return Array.Empty<byte>();
