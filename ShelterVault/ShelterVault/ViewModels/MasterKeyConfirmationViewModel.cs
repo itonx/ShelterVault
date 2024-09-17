@@ -15,7 +15,10 @@ namespace ShelterVault.ViewModels
             {
                 await UITools.ShowSpinner();
                 if (ShelterVaultSqliteTool.IsMasterKeyValid(parameter?.ToString()))
-                    UITools.LoadCredentialsView(Encoding.Unicode.GetBytes(parameter?.ToString()));
+                {
+                    string salt = ShelterVaultSqliteTool.GetMasterKeySalt();
+                    UITools.LoadCredentialsView(Encoding.Unicode.GetBytes(parameter?.ToString()), Encoding.Unicode.GetBytes(salt));
+                }
                 else await UITools.ShowConfirmationDialogAsync("Important", "Wrong master key!");
             }
             finally

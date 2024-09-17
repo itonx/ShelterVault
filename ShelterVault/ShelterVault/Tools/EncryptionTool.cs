@@ -1,28 +1,27 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace ShelterVault.Tools
 {
     public static class EncryptionTool
     {
-        public static (byte[], byte[]) EncryptAes(string plainText, byte[] key)
+        public static (byte[], byte[]) EncryptAes(string plainText, byte[] key, byte[] salt)
         {
+            string kpt = Encoding.Unicode.GetString(key, 0, key.Length);
+
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException(nameof(plainText));
-            if (key == null || key.Length <= 0)
+            if (key == null || key.Length == 0)
                 throw new ArgumentNullException(nameof(key));
 
             byte[] encrypted;
             byte[] lastIV;
+
             using (Aes aesAlg = Aes.Create())
             {
-                byte[] finalKey = new byte[aesAlg.Key.Length];
-                for(int i = 0; i < key.Length; i++)
-                {
-                    finalKey[i] = key[i];
-                }
-                aesAlg.Key = finalKey;
+                aesAlg.Key = DeriveKeyFromPassword(Encoding.Unicode.GetString(key), salt);
                 lastIV = aesAlg.IV;
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
@@ -42,45 +41,50 @@ namespace ShelterVault.Tools
             return (encrypted, lastIV);
         }
 
-        public static (string, string) EncryptAesWithBase64(string plainText, byte[] key)
+        public static string DecryptAes(byte[] cipherText, byte[] key, byte[] iv, byte[] salt)
         {
-            (byte[], byte[]) encryptedBytes = EncryptAes(plainText, key);
-            return (Convert.ToBase64String(encryptedBytes.Item1), Convert.ToBase64String(encryptedBytes.Item2));
-        }
-
-        public static string DecryptAes(byte[] cipherText, byte[] key, byte[] iv)
-        {
-            if (cipherText == null || cipherText.Length <= 0)
-                throw new ArgumentNullException(nameof(cipherText));
-            if (key == null || key.Length <= 0)
-                throw new ArgumentNullException(nameof(key));
-
-            string plaintext = null;
-
-            using (Aes aesAlg = Aes.Create())
+            try
             {
-                byte[] finalKey = new byte[aesAlg.Key.Length];
-                for (int i = 0; i < key.Length; i++)
-                {
-                    finalKey[i] = key[i];
-                }
-                aesAlg.Key = finalKey;
-                aesAlg.IV = iv;
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                if (cipherText == null || cipherText.Length <= 0)
+                    throw new ArgumentNullException(nameof(cipherText));
+                if (key == null || key.Length <= 0)
+                    throw new ArgumentNullException(nameof(key));
 
-                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                string plaintext = null;
+
+                using (Aes aesAlg = Aes.Create())
                 {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    aesAlg.Key = DeriveKeyFromPassword(Encoding.Unicode.GetString(key), salt);
+                    aesAlg.IV = iv;
+                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                    using (MemoryStream msDecrypt = new MemoryStream(cipherText))
                     {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                         {
-                            plaintext = srDecrypt.ReadToEnd();
+                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                plaintext = srDecrypt.ReadToEnd();
+                            }
                         }
                     }
                 }
+
+                return plaintext;
+            }
+            catch (Exception)
+            {
+                return "Password could not be decrypted";
             }
 
-            return plaintext;
+        }
+
+        public static byte[] DeriveKeyFromPassword(string password, byte[] salt, int keyLength = 32)
+        {
+            using (var keyDerivationFunction = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256))
+            {
+                return keyDerivationFunction.GetBytes(keyLength);
+            }
         }
     }
 }

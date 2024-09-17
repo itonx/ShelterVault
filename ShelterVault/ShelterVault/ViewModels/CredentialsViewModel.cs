@@ -26,7 +26,7 @@ namespace ShelterVault.ViewModels
             {
                 if (!_confirmationInProcess && value != null && value.Password == null && value.EncryptedPassword != null)
                 {
-                    value.Password = EncryptionTool.DecryptAes(Convert.FromBase64String(value.EncryptedPassword), UITools.GetMasterKey(), Convert.FromBase64String(value.InitializationVector));
+                    value.Password = EncryptionTool.DecryptAes(Convert.FromBase64String(value.EncryptedPassword), UITools.GetMasterKey(), Convert.FromBase64String(value.InitializationVector), UITools.GetMasterKeySalt());
                     value.PasswordConfirmation = value.Password;
                 }
                 SetProperty(ref _selectedCredential, value == null ? null : value.Clone());
@@ -195,7 +195,7 @@ namespace ShelterVault.ViewModels
             Credential credentialUpdated = SelectedCredential;
             if (credential.Password != SelectedCredential.Password)
             {
-                (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
+                (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey(), UITools.GetMasterKeySalt());
                 credentialUpdated = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
             }
 
@@ -216,7 +216,7 @@ namespace ShelterVault.ViewModels
         private async Task CreateCredential()
         {
             Credential newCredential = SelectedCredential;
-            (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey());
+            (byte[], byte[]) encryptedValues = EncryptionTool.EncryptAes(SelectedCredential.Password, UITools.GetMasterKey(), UITools.GetMasterKeySalt());
             newCredential = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
 
             bool inserted = ShelterVaultSqliteTool.InsertCredential(newCredential);

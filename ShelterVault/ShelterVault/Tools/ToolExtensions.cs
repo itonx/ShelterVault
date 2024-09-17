@@ -14,9 +14,21 @@ namespace ShelterVault.Tools
         {
             using (SHA256 sha256 = SHA256.Create())
             {
-                byte[] hashValueBytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(value));
+                byte[] hashValueBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(value));
                 return Convert.ToBase64String(hashValueBytes);
             }
+        }
+
+        public static string ToBase64Encoded(this string value)
+        {
+            byte[] valueBytes = Encoding.UTF8.GetBytes(value);
+            return Convert.ToBase64String(valueBytes);
+        }
+
+        public static string ToBase64Decoded(this string base64Value)
+        {
+            byte[] base64Bytes = Convert.FromBase64String(base64Value);
+            return Encoding.UTF8.GetString(base64Bytes);
         }
 
         public static bool IsStrongPassword(this string value) => Regex.IsMatch(value, _passwordPattern);

@@ -16,7 +16,17 @@ namespace ShelterVault.Tools
 
         public static bool DBExists() => File.Exists(_dbPath);
 
-        public static bool CreateShelterVault(string masterKey)
+        private static string _createShelterVaultMasterKeySaltTableQuery = @"
+            CREATE TABLE IF NOT EXISTS shelter_vault_master_key_salt (
+            salt TEXT NOT NULL
+        )";
+
+        private static string _insertMasterKeySaltQuery = @"
+            INSERT INTO shelter_vault_master_key_salt
+            VALUES ($salt)
+        ";
+
+        public static bool CreateShelterVault(string masterKey, string salt)
         {
             try
             {
@@ -50,6 +60,11 @@ namespace ShelterVault.Tools
                         command.ExecuteNonQuery();
                     }
 
+                    using (var command = new SqliteCommand(_createShelterVaultMasterKeySaltTableQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
                     using (var command = new SqliteCommand(createShelterVaultEncryptedCredentialsTableQuery, connection))
                     {
                         command.ExecuteNonQuery();
@@ -58,6 +73,12 @@ namespace ShelterVault.Tools
                     using (var command = new SqliteCommand(insertMasterKeyQuery, connection))
                     {
                         command.Parameters.AddWithValue("$hash", masterKey.ToSHA256Base64());
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = new SqliteCommand(_insertMasterKeySaltQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("$salt", salt.ToBase64Encoded());
                         command.ExecuteNonQuery();
                     }
                 }
@@ -190,6 +211,54 @@ namespace ShelterVault.Tools
 
                 Credential result = connection.QueryFirst<Credential>(query, new { uuid });
                 return result;
+            }
+        }
+
+        public static string GetMasterKeySalt()
+        {
+            CreateMasterKeySaltTableIfNotExists();
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT salt FROM shelter_vault_master_key_salt LIMIT 1
+                ";
+
+                string result = connection.QueryFirstOrDefault<string>(query);
+                if (result == null)
+                {
+                    InsertMasterKeySalt();
+                    result = connection.QueryFirstOrDefault<string>(query);
+                }
+                return result.ToBase64Decoded();
+            }
+        }
+
+        private static void CreateMasterKeySaltTableIfNotExists()
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqliteCommand(_createShelterVaultMasterKeySaltTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private static void InsertMasterKeySalt()
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqliteCommand(_insertMasterKeySaltQuery, connection))
+                {
+                    command.Parameters.AddWithValue("$salt", Guid.NewGuid().ToString().ToBase64Encoded());
+                    command.ExecuteNonQuery();
+                }
             }
         }
     }

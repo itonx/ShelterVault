@@ -17,6 +17,7 @@ namespace ShelterVault.ViewModels
         private bool _isProgressBarVisible = false;
 
         private byte[] _masterKeyProtected;
+        private byte[] _masterKeySaltProtected;
 
         [RelayCommand]
         private void Loaded()
@@ -35,9 +36,15 @@ namespace ShelterVault.ViewModels
             return ProtectedData.Unprotect(_masterKeyProtected, null, DataProtectionScope.CurrentUser);
         }
 
-        internal void ProtectMasterKey(byte[] masterKey)
+        internal byte[] GetMasterKeySaltUnprotected()
+        {
+            return ProtectedData.Unprotect(_masterKeySaltProtected, null, DataProtectionScope.CurrentUser);
+        }
+
+        internal void ProtectMasterKey(byte[] masterKey, byte[] masterKeySalt)
         {
             _masterKeyProtected = ProtectedData.Protect(masterKey, null, DataProtectionScope.CurrentUser);
+            _masterKeySaltProtected = ProtectedData.Protect(masterKeySalt, null, DataProtectionScope.CurrentUser);
         }
 
         private void InitialSetUp()
