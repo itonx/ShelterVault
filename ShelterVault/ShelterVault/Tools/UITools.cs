@@ -45,7 +45,7 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null) 
             {
-                mainWindow.AppContent.Content = new MasterKeyConfirmationView();
+                //mainWindow.AppContent.Content = new MasterKeyConfirmationView();
             } 
         }
 
@@ -54,10 +54,10 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = GetMainWindow();
             if(mainWindow != null)
             {
-                mainWindow.ThemeToggle.Visibility = Visibility.Collapsed;
+                /*mainWindow.ThemeToggle.Visibility = Visibility.Collapsed;
                 MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
                 viewModel.ProtectMasterKey(password, salt);
-                mainWindow.AppContent.Content = new CredentialsView();
+                mainWindow.AppContent.Content = new CredentialsView();*/
             }
         }
 
@@ -66,8 +66,8 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
-                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
-                return viewModel.GetMasterKeyUnprotected();
+                //MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                //return viewModel.GetMasterKeyUnprotected();
             }
 
             return Array.Empty<byte>();
@@ -78,8 +78,8 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
-                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
-                return viewModel.GetMasterKeySaltUnprotected();
+                //MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                //return viewModel.GetMasterKeySaltUnprotected();
             }
 
             return Array.Empty<byte>();
@@ -92,8 +92,8 @@ namespace ShelterVault.Tools
             {
                 IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
                 PInvoke.MaximizeWindow(hWnd);
-                if (ShelterVaultSqliteTool.DBExists()) mainWindow.AppContent.Content = new MasterKeyConfirmationView();
-                else mainWindow.AppContent.Content = new CreateMasterKeyView();
+                //if (ShelterVaultSqliteTool.DBExists()) mainWindow.AppContent.Content = new MasterKeyConfirmationView();
+                //else mainWindow.AppContent.Content = new CreateMasterKeyView();
             }
         }
 
@@ -119,13 +119,13 @@ namespace ShelterVault.Tools
                 if(elementTheme == ElementTheme.Default)
                 {
                     bool isDarkMode = PInvoke.ShouldSystemUseDarkMode();
-                    mainWindow.ThemeToggle.IsChecked = !isDarkMode;
+                    //mainWindow.ThemeToggle.IsChecked = !isDarkMode;
 
                 }
                 else
                 {
                     ((FrameworkElement)mainWindow.Content).RequestedTheme = elementTheme;
-                    mainWindow.ThemeToggle.IsChecked = elementTheme == ElementTheme.Light;
+                    //mainWindow.ThemeToggle.IsChecked = elementTheme == ElementTheme.Light;
                 }
             }
         }
@@ -135,11 +135,11 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
-                if(!autoFlip) mainWindow.ThemeToggle.IsChecked = !mainWindow.ThemeToggle.IsChecked;
+                /*if(!autoFlip) mainWindow.ThemeToggle.IsChecked = !mainWindow.ThemeToggle.IsChecked;
                 ((FrameworkElement)mainWindow.Content).RequestedTheme = mainWindow.ThemeToggle.IsChecked == true ? ElementTheme.Light : ElementTheme.Dark;
                 ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
                 string currentTheme = ((FrameworkElement)mainWindow.Content).RequestedTheme.ToString();
-                localSettings.Values[SETTINGS_THEME_KEY] = currentTheme;
+                localSettings.Values[SETTINGS_THEME_KEY] = currentTheme;*/
             }
 
         }
@@ -149,8 +149,8 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
-                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
-                viewModel.IsProgressBarVisible = true;
+                /*MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                viewModel.IsProgressBarVisible = true;*/
             }
             await Task.Delay(50);
         }
@@ -160,8 +160,8 @@ namespace ShelterVault.Tools
             MainWindow mainWindow = GetMainWindow();
             if (mainWindow != null)
             {
-                MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
-                viewModel.IsProgressBarVisible = false;
+                /*MainWindowViewModel viewModel = mainWindow.WindowContent.DataContext as MainWindowViewModel;
+                viewModel.IsProgressBarVisible = false;*/
             }
             await Task.Delay(0);
         }

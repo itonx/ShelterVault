@@ -12,7 +12,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d"
     Title="ShelterVault">
-    <Window.SystemBackdrop>
+    <!--<Window.SystemBackdrop>
         <DesktopAcrylicBackdrop />
     </Window.SystemBackdrop>
     <Grid x:Name="WindowContent" x:FieldModifier="internal" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -41,5 +41,42 @@
                 <FontIcon Glyph="&#xE793;" Foreground="{ThemeResource ShelterVaultForeground}"/>
             </ToggleButton>
         </StackPanel>
+    </Grid>-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border x:Name="AppTitleBar" Margin="50 0 0 0">
+            <TextBlock x:Name="AppTitle" Text=""/>
+        </Border>
+        <NavigationView x:Name="nvSample8"
+                        PaneDisplayMode="Left" CompactPaneLength="50"
+                        IsTabStop="False" Grid.Row="0" Grid.RowSpan="2"
+                        OpenPaneLength="280"
+                        SelectionChanged="NavigationView_SelectionChanged8" 
+                        AlwaysShowHeader="False" 
+                        IsBackEnabled="False" 
+                        IsBackButtonVisible="Collapsed">
+            <NavigationView.PaneHeader>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="ShelterVault" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                </StackPanel>
+            </NavigationView.PaneHeader>
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Home" Icon="Home" ToolTipService.ToolTip="Home" Tag="HomePage"/>
+                <NavigationViewItem Content="Add credentials" Icon="Add" ToolTipService.ToolTip="Add credentials" Tag="SamplePage1"/>
+                <NavigationViewItem Content="Vault" ToolTipService.ToolTip="Vault" IsExpanded="True">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE705;" />
+                    </NavigationViewItem.Icon>
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Content="Mail" Icon="Mail" ToolTipService.ToolTip="Mail" Tag="SamplePage2"/>
+                        <NavigationViewItem Content="Calendar" Icon="Calendar" ToolTipService.ToolTip="Calendar" Tag="SamplePage1"/>
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="contentFrame8"/>
+        </NavigationView>
     </Grid>
 </Window>
