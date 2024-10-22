@@ -6,6 +6,9 @@
     xmlns:local="using:ShelterVault">
     <Application.Resources>
         <ResourceDictionary>
+            <Thickness x:Key="NavigationViewContentMargin">0,35,0,0</Thickness>
+            <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
