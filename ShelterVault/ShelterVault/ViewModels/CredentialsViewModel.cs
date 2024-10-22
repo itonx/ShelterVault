@@ -37,7 +37,7 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private ObservableCollection<Credential> _credentials;
         [ObservableProperty]
-        private CredentialsViewModelState _state = CredentialsViewModelState.Empty;
+        private CredentialsViewModelState _state = CredentialsViewModelState.Adding;
         [ObservableProperty]
         private bool _requestFocusOnFirstField;
         [ObservableProperty]
