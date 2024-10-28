@@ -135,11 +135,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Dapper" Version="2.1.35" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.6" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
     <Manifest Include="$(ApplicationManifest)" />
