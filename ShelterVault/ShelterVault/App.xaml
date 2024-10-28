@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Application
     x:Class="ShelterVault.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,51 +11,63 @@
             <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <!-- Other merged dictionaries here -->
+                <!--  Other merged dictionaries here  -->
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
                             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="White" />
                             <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="LightGray" />
-                            <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40"/>
-                            <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle" BasedOn="{StaticResource DefaultPasswordBoxStyle}">
-                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
-                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
-                                <Setter Property="Height" Value="50"/>
-                                <Setter Property="IsPasswordRevealButtonEnabled" Value="False"/>
+                            <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40" />
+                            <Style
+                                x:Key="ShelterVaultPasswordBoxStyle"
+                                BasedOn="{StaticResource DefaultPasswordBoxStyle}"
+                                TargetType="PasswordBox">
+                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+                                <Setter Property="Height" Value="50" />
+                                <Setter Property="IsPasswordRevealButtonEnabled" Value="False" />
                             </Style>
-                            <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle" BasedOn="{StaticResource TitleTextBlockStyle}">
-                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
-                                <Setter Property="Foreground" Value="{ThemeResource SystemColorWindowTextBrush}"/>
+                            <Style
+                                x:Key="ShelterVaultTextBlockStyle"
+                                BasedOn="{StaticResource TitleTextBlockStyle}"
+                                TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+                                <Setter Property="Foreground" Value="{ThemeResource SystemColorWindowTextBrush}" />
                             </Style>
                             <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush2" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
                                 <LinearGradientBrush.RelativeTransform>
-                                    <ScaleTransform ScaleY="-1" CenterY="0.5"/>
+                                    <ScaleTransform CenterY="0.5" ScaleY="-1" />
                                 </LinearGradientBrush.RelativeTransform>
                                 <LinearGradientBrush.GradientStops>
-                                    <GradientStop Offset="1.0" Color="#343a40"/>
-                                    <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}"/>
+                                    <GradientStop Offset="1.0" Color="#343a40" />
+                                    <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}" />
                                 </LinearGradientBrush.GradientStops>
                             </LinearGradientBrush>
                             <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
-                            <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05"/>
-                            <Style TargetType="PasswordBox" x:Key="ShelterVaultPasswordBoxStyle" BasedOn="{StaticResource DefaultPasswordBoxStyle}">
-                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
-                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
-                                <Setter Property="Height" Value="50"/>
-                                <Setter Property="IsPasswordRevealButtonEnabled" Value="False"/>
+                            <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
+                            <Style
+                                x:Key="ShelterVaultPasswordBoxStyle"
+                                BasedOn="{StaticResource DefaultPasswordBoxStyle}"
+                                TargetType="PasswordBox">
+                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+                                <Setter Property="Height" Value="50" />
+                                <Setter Property="IsPasswordRevealButtonEnabled" Value="False" />
                             </Style>
-                            <Style TargetType="TextBlock" x:Key="ShelterVaultTextBlockStyle" BasedOn="{StaticResource TitleTextBlockStyle}">
-                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}"/>
-                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}"/>
+                            <Style
+                                x:Key="ShelterVaultTextBlockStyle"
+                                BasedOn="{StaticResource TitleTextBlockStyle}"
+                                TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+                                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
                             </Style>
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
+            <!--  Other app resources here  -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>
