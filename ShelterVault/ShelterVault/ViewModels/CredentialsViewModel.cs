@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using ShelterVault.DataLayer;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Extensions;
+using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -62,6 +64,7 @@ namespace ShelterVault.ViewModels
             Credentials = new ObservableCollection<Credential>(_shelterVaultLocalStorage.GetAllCredentials());
             PasswordRequirementsVM.HeaderText = "Password must:";
             RequestFocusOnFirstField = true;
+            NewCredentialInternal();
         }
 
         [RelayCommand]
@@ -79,6 +82,7 @@ namespace ShelterVault.ViewModels
         {
             State = CredentialsViewModelState.Empty;
             SelectedCredential = null;
+            WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
         }
 
         [RelayCommand]
@@ -86,14 +90,19 @@ namespace ShelterVault.ViewModels
         {
             await ConfirmPendingChangesIfNeeded(() =>
             {
-                ShowPassword = false;
-                RequestFocusOnFirstField = true;
-                State = CredentialsViewModelState.Adding;
-                Credential newCredential = new Credential();
-                newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
-                SelectedCredential = null;
-                SelectedCredential = newCredential;
+                NewCredentialInternal();
             });
+        }
+
+        private void NewCredentialInternal()
+        {
+            ShowPassword = false;
+            RequestFocusOnFirstField = true;
+            State = CredentialsViewModelState.Adding;
+            Credential newCredential = new Credential();
+            newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
+            SelectedCredential = null;
+            SelectedCredential = newCredential;
         }
 
         [RelayCommand]

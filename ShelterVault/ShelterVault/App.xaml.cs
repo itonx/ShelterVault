@@ -83,6 +83,7 @@ namespace ShelterVault
             services.AddSingleton<MainWindowViewModel>();
 
             // Viewmodels
+            services.AddTransient<NavigationViewModel>();
             services.AddTransient<PasswordConfirmationViewModel>();
             services.AddTransient<CredentialsViewModel>();
             services.AddTransient<CreateMasterKeyViewModel>();
