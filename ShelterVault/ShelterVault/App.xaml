@@ -8,16 +8,12 @@
     <Application.Resources>
         <ResourceDictionary>
             <converters:ShelterVaultThemeConverter x:Key="ThemeConverter" />
-            <!--<Thickness x:Key="NavigationViewContentMargin">0,35,0,0</Thickness>-->
-            <!--<SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
-            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>-->
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!--  Other merged dictionaries here  -->
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
-
                             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="White" />
                             <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="LightGray" />
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40" />
@@ -49,7 +45,6 @@
                             <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
-
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
                             <Style
                                 x:Key="ShelterVaultPasswordBoxStyle"
