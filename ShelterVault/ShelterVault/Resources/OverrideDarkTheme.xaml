@@ -2,6 +2,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32000000" />
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40" />
             <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="#343a40" />
             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#343a40" />
@@ -22,6 +23,7 @@
             <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32FFFFFF" />
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
             <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="#00FF05" />
             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#00FF05" />

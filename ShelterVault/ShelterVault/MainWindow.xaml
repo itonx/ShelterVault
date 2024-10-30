@@ -27,7 +27,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid x:Name="AppTitleBar" Canvas.ZIndex="1">
+        <Grid
+            x:Name="AppTitleBar"
+            x:FieldModifier="public"
+            Canvas.ZIndex="1">
             <interactivity:Interaction.Behaviors>
                 <behaviors:AutoAdjustAppTitleBarCaptionsBehavior />
                 <behaviors:ThemeAppTitleBehavior />
@@ -37,14 +40,15 @@
                 <ColumnDefinition />
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
             </Grid.ColumnDefinitions>
-            <!--  Background="{ThemeResource WindowCaptionButtonBackground}"  -->
-            <!--  Style="{ThemeResource WindowCaptionButton}"  -->
-            <StackPanel Grid.Column="1" VerticalAlignment="Stretch">
+            <StackPanel
+                Grid.Column="1"
+                Margin="0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
                 <Button
                     x:Name="AppTitleBarThemeButton"
                     Width="{Binding ElementName=AppTitleBar, Path=Height}"
                     Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                    HorizontalAlignment="Right"
                     Background="Transparent"
                     BorderThickness="0"
                     Command="{Binding ChangeThemeCommand}"
@@ -53,6 +57,13 @@
                         <behaviors:InteractiveAppTitleBarBehavior />
                     </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="&#xE793;" />
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="../Resources/OverrideDarkTheme.xaml" />
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </Button.Resources>
                 </Button>
             </StackPanel>
         </Grid>

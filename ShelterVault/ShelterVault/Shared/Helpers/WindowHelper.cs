@@ -13,14 +13,25 @@ namespace ShelterVault.Shared.Helpers
 {
     public static class WindowHelper
     {
+        private static AppWindow _currentAppWindow;
+        private static MainWindow _mainWindow;
         public static AppWindow CurrentAppWindow => GetAppWindow();
-        public static MainWindow CurrentMainWindow => (Application.Current as App)?.m_window as MainWindow;
+        public static MainWindow CurrentMainWindow => GetMainWindow();
 
-        public static AppWindow GetAppWindow()
+        private static AppWindow GetAppWindow()
         {
+            if (_currentAppWindow != null) return _currentAppWindow;
             IntPtr hWnd = WindowNative.GetWindowHandle(CurrentMainWindow);
             WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            return AppWindow.GetFromWindowId(wndId);
+            _currentAppWindow = AppWindow.GetFromWindowId(wndId);
+            return _currentAppWindow;
+        }
+
+        private static MainWindow GetMainWindow()
+        {
+            if (_mainWindow != null) return _mainWindow;
+            _mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            return _mainWindow;
         }
     }
 }
