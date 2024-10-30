@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Messages
 {
-    public class ShowPageRequestMessage : ValueChangedMessage<ShelterVaultPage>
+    public class RefreshCredentialListRequestMessage : ValueChangedMessage<bool>
     {
-        public ShowPageRequestMessage(ShelterVaultPage value) : base(value)
+        public RefreshCredentialListRequestMessage(bool value) : base(value)
         {
         }
     }
