@@ -34,7 +34,7 @@
                 behaviors:PageLoaderBehavior.PageType="views:HomePage"
                 Content="Home"
                 Icon="Home"
-                IsSelected="True"
+                IsSelected="{Binding IsHomeSelected, Mode=TwoWay, FallbackValue=true}"
                 ToolTipService.ToolTip="Home" />
             <NavigationViewItem
                 behaviors:PageLoaderBehavior.PageType="views:CredentialsPage"
@@ -42,24 +42,13 @@
                 Icon="Add"
                 ToolTipService.ToolTip="New credentials" />
             <NavigationViewItem
+                behaviors:CredentialItemsGeneratorBehavior.ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 Content="Vault"
                 IsExpanded="True"
                 ToolTipService.ToolTip="Vault">
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xE705;" />
                 </NavigationViewItem.Icon>
-                <NavigationViewItem.MenuItems>
-                    <NavigationViewItem
-                        Content="Gmail"
-                        Icon="Mail"
-                        Tag="SamplePage2"
-                        ToolTipService.ToolTip="Mail" />
-                    <NavigationViewItem
-                        Content="Outlook"
-                        Icon="Mail"
-                        Tag="SamplePage1"
-                        ToolTipService.ToolTip="Calendar" />
-                </NavigationViewItem.MenuItems>
             </NavigationViewItem>
         </NavigationView.MenuItems>
         <Frame />
