@@ -18,27 +18,34 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private IList<Credential> _credentials;
         [ObservableProperty]
-        private bool _isHomeSelected = false;
+        private object _selectedMenuItem;
 
         public NavigationViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage)
         {
             RegisterMessages();
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             Credentials = (IList<Credential>)_shelterVaultLocalStorage.GetAllCredentials();
+            SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
         }
 
         private void RegisterMessages()
         {
             WeakReferenceMessenger.Default.Register<NavigationViewModel, ShowPageRequestMessage>(this, (receiver, message) =>
             {
-                if (message.Value == Shared.Enums.ShelterVaultPage.HOME) receiver.IsHomeSelected = true;
+                if (message.Value == Shared.Enums.ShelterVaultPage.HOME) receiver.SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
             });
             WeakReferenceMessenger.Default.Register<NavigationViewModel, RefreshCredentialListRequestMessage>(this, (receiver, message) =>
             {
                 if (message.Value)
                 {
                     receiver.Credentials = (IList<Credential>)receiver._shelterVaultLocalStorage.GetAllCredentials();
-                    receiver.IsHomeSelected = true;
+                }
+            });
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, SelectCredentialRequestMessage>(this, (receiver, message) =>
+            {
+                if (message.Value != null)
+                {
+                    receiver.SelectedMenuItem = message.Value;
                 }
             });
         }

@@ -18,6 +18,7 @@
         <x:Double x:Key="ShelterVaultOpenPaneLength">280</x:Double>
     </Page.Resources>
     <NavigationView
+        behaviors:SelectItemByTagBehavior.SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}"
         AlwaysShowHeader="True"
         CompactPaneLength="{StaticResource ShelterVaultCompactPaneLength}"
         Header=" "
@@ -28,13 +29,14 @@
         PaneDisplayMode="Left">
         <interactivity:Interaction.Behaviors>
             <behaviors:PageLoaderBehavior SettingsPage="views:SettingsPage" />
+            <behaviors:SelectItemByTagBehavior />
         </interactivity:Interaction.Behaviors>
         <NavigationView.MenuItems>
             <NavigationViewItem
                 behaviors:PageLoaderBehavior.PageType="views:HomePage"
                 Content="Home"
                 Icon="Home"
-                IsSelected="{Binding IsHomeSelected, Mode=TwoWay, FallbackValue=true}"
+                Tag="HOME"
                 ToolTipService.ToolTip="Home" />
             <NavigationViewItem
                 behaviors:PageLoaderBehavior.PageType="views:CredentialsPage"

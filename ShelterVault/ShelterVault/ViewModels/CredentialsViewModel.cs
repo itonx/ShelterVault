@@ -152,6 +152,7 @@ namespace ShelterVault.ViewModels
                     if (State == CredentialsViewModelState.Default) await UpdateCredential();
                     else if (State == CredentialsViewModelState.Adding) await CreateCredential();
                     WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
+                    WeakReferenceMessenger.Default.Send(new SelectCredentialRequestMessage(SelectedCredential));
                 }
             }
             finally
