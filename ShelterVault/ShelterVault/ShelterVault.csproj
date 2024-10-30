@@ -15,7 +15,7 @@
     <PackageCertificateKeyFile>ShelterVault_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup> 
     <None Remove="Images\LargeTile.scale-100.png" />
     <None Remove="Images\LargeTile.scale-125.png" />
     <None Remove="Images\LargeTile.scale-150.png" />
@@ -69,11 +69,11 @@
     <None Remove="Images\Wide310x150Logo.scale-200.png" />
     <None Remove="Images\Wide310x150Logo.scale-400.png" />
     <None Remove="Resources\OverrideDarkTheme.xaml" />
-    <None Remove="Views\CreateMasterKeyView.xaml" />
+    <None Remove="Views\ConfirmMasterKeyPage.xaml" />
+    <None Remove="Views\CreateMasterKeyPage.xaml" />
     <None Remove="Views\CredentialsPage.xaml" />
-    <None Remove="Views\CredentialsView.xaml" />
     <None Remove="Views\HomePage.xaml" />
-    <None Remove="Views\MasterKeyConfirmationView.xaml" />
+    <None Remove="Views\NavigationViewPage.xaml" />
     <None Remove="Views\PasswordConfirmationView.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
     <None Remove="Views\ShelterVaultMessageView.xaml" />
@@ -138,6 +138,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
@@ -176,27 +177,31 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\CredentialsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\MasterKeyConfirmationView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\CreateMasterKeyView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Update="Resources\OverrideDarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ConfirmMasterKeyPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\CreateMasterKeyPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\NavigationViewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Shared\Services\" />
   </ItemGroup>
 	
 </Project>

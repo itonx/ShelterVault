@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
+ 
     <Grid>
         <Viewbox MaxWidth="1200" Margin="10,0">
             <StackPanel>

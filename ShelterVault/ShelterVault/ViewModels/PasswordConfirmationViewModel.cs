@@ -1,17 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShelterVault.Models;
-using ShelterVault.Tools;
+using ShelterVault.Services;
+using ShelterVault.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+ 
 namespace ShelterVault.ViewModels
 {
     public partial class PasswordConfirmationViewModel : ObservableObject
     {
+        private readonly IDialogService _dialogService;
         [ObservableProperty]
         private bool _is8Characters;
         [ObservableProperty]
@@ -27,6 +29,11 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _headerText = "Master key password must:";
 
+        public PasswordConfirmationViewModel(IDialogService dialogService)
+        {
+            _dialogService = dialogService;
+        }
+
         [RelayCommand]
         private void PasswordChanged(string password)
         {
@@ -37,7 +44,7 @@ namespace ShelterVault.ViewModels
         {
             if (string.IsNullOrWhiteSpace(credential.Title)) 
             {
-                await UITools.ShowConfirmationDialogAsync("Important", "Title can't be empty");
+                await _dialogService.ShowConfirmationDialogAsync("Important", "Title can't be empty");
                 return false;
             }
 
@@ -48,12 +55,12 @@ namespace ShelterVault.ViewModels
         {
             if (!IsValidPassword(password))
             {
-                await UITools.ShowConfirmationDialogAsync("Important", "Password doesn't meet minimum requirements.");
+                await _dialogService.ShowConfirmationDialogAsync("Important", "Password doesn't meet minimum requirements.");
                 return false;
             }
             else if (password != passwordConfirmation)
             {
-                await UITools.ShowConfirmationDialogAsync("Important", "Passwords don't match.");
+                await _dialogService.ShowConfirmationDialogAsync("Important", "Passwords don't match.");
                 return false;
             }
 
