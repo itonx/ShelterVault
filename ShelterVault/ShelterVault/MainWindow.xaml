@@ -12,7 +12,7 @@
     xmlns:views="using:ShelterVault.Views"
     Title="ShelterVault"
     mc:Ignorable="d">
-    <Grid 
+    <Grid
         x:Name="WindowContainer"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         RequestedTheme="{Binding CurrentTheme, Converter={StaticResource ThemeConverter}, Mode=OneWay}">
@@ -28,6 +28,10 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid x:Name="AppTitleBar" Canvas.ZIndex="1">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:AutoAdjustAppTitleBarCaptionsBehavior />
+                <behaviors:ThemeAppTitleBehavior />
+            </interactivity:Interaction.Behaviors>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
                 <ColumnDefinition />

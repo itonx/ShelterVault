@@ -10,7 +10,7 @@
     xmlns:viewmodels="using:ShelterVault.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
- 
+
     <StackPanel
         Width="500"
         HorizontalAlignment="Center"

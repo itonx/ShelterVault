@@ -7,7 +7,7 @@
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
- 
+
     <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <TextBlock
             x:Name="Message"
