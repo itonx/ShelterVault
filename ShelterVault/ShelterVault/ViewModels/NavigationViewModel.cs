@@ -33,6 +33,14 @@ namespace ShelterVault.ViewModels
             {
                 if (message.Value == Shared.Enums.ShelterVaultPage.HOME) receiver.IsHomeSelected = true;
             });
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, RefreshCredentialListRequestMessage>(this, (receiver, message) =>
+            {
+                if (message.Value)
+                {
+                    receiver.Credentials = (IList<Credential>)receiver._shelterVaultLocalStorage.GetAllCredentials();
+                    receiver.IsHomeSelected = true;
+                }
+            });
         }
     }
 }

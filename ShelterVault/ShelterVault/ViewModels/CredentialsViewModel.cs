@@ -151,6 +151,7 @@ namespace ShelterVault.ViewModels
                     await _progressBarService.Show();
                     if (State == CredentialsViewModelState.Default) await UpdateCredential();
                     else if (State == CredentialsViewModelState.Adding) await CreateCredential();
+                    WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                 }
             }
             finally
