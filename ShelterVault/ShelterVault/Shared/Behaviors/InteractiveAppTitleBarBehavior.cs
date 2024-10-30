@@ -1,7 +1,10 @@
 ﻿using Microsoft.UI.Input;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
+using ShelterVault.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,28 +27,32 @@ namespace ShelterVault.Shared.Behaviors
         {
             base.OnDetaching();
             AssociatedObject.Loaded -= AssociatedObject_Loaded;
+            MainWindow mainWindow = WindowHelper.CurrentMainWindow;
+            mainWindow.AppTitleBar.SizeChanged -= AppTitleBar_SizeChanged;
         }
 
         private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
         {
-            FrameworkElement frameworkElementNonClientArea = sender as FrameworkElement;
-            Window window = (Application.Current as App)?.m_window;
-            if (window == null || frameworkElementNonClientArea == null) return;
-            setupElement(frameworkElementNonClientArea, window);
+            MainWindow mainWindow = WindowHelper.CurrentMainWindow;
+            mainWindow.AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
         }
 
-        private void setupElement(FrameworkElement frameworkElement, Window window)
+        private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            GeneralTransform transformFrameworkElement = frameworkElement.TransformToVisual(null);
-            Rect bounds = transformFrameworkElement.TransformBounds(new Rect(0, 0, frameworkElement.ActualWidth, frameworkElement.ActualHeight));
-            double scale = window.Content.XamlRoot.RasterizationScale;
+            setupElement(AssociatedObject);
+        }
 
-            RectInt32 transparentRect = new (
-                _X: (int)Math.Round(bounds.X * scale),
-                _Y: (int)Math.Round(bounds.Y * scale),
-                _Width: (int)Math.Round(bounds.Width * scale),
-                _Height: (int)Math.Round(bounds.Height * scale)
-            );
+        private void setupElement(FrameworkElement interactiveControl)
+        {
+            MainWindow window = WindowHelper.CurrentMainWindow;
+            if (window == null || interactiveControl == null) return;
+
+            double scale = window.AppTitleBar.XamlRoot.RasterizationScale;
+
+            GeneralTransform transformInteractiveControl = interactiveControl.TransformToVisual(null);
+            Rect boundsInteractiveControl = transformInteractiveControl.TransformBounds(new Rect(0, 0, interactiveControl.ActualWidth, interactiveControl.ActualHeight));
+
+            RectInt32 transparentRect = GetRect(boundsInteractiveControl, scale);
             RectInt32[] rectArr = { transparentRect };
             setupClickRegion(rectArr, window);
         }
@@ -54,6 +61,16 @@ namespace ShelterVault.Shared.Behaviors
         {
             InputNonClientPointerSource nonClientInputSrc = InputNonClientPointerSource.GetForWindowId(window.AppWindow.Id);
             nonClientInputSrc.SetRegionRects(NonClientRegionKind.Passthrough, rects);
+        }
+
+        private RectInt32 GetRect(Rect bounds, double scale)
+        {
+            return new (
+                _X: (int)Math.Round(bounds.X * scale),
+                _Y: (int)Math.Round(bounds.Y * scale),
+                _Width: (int)Math.Round(bounds.Width * scale),
+                _Height: (int)Math.Round(bounds.Height * scale)
+            );
         }
     }
 }
