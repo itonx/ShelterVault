@@ -35,7 +35,7 @@
             <PasswordBox.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="../Resources/OverrideDarkTheme.xaml" />
+                        <ResourceDictionary Source="../Resources/OverrideThemes.xaml" />
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </PasswordBox.Resources>
@@ -50,7 +50,7 @@
             <PasswordBox.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="../Resources/OverrideDarkTheme.xaml" />
+                        <ResourceDictionary Source="../Resources/OverrideThemes.xaml" />
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </PasswordBox.Resources>
