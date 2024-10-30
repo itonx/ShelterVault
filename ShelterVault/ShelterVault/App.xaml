@@ -3,10 +3,12 @@
     x:Class="ShelterVault.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:ShelterVault.Shared.Converters"
     xmlns:local="using:ShelterVault">
     <Application.Resources>
         <ResourceDictionary>
-            <Thickness x:Key="NavigationViewContentMargin">0,35,0,0</Thickness>
+            <converters:ShelterVaultThemeConverter x:Key="ThemeConverter" />
+            <!--<Thickness x:Key="NavigationViewContentMargin">0,35,0,0</Thickness>-->
             <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
             <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
             <ResourceDictionary.MergedDictionaries>
@@ -15,6 +17,7 @@
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32000000" />
                             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="White" />
                             <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="LightGray" />
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40" />
@@ -46,6 +49,7 @@
                             <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32FFFFFF" />
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
                             <Style
                                 x:Key="ShelterVaultPasswordBoxStyle"

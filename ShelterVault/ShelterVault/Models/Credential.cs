@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ShelterVault.Tools;
 using System;
 using System.Text;
-
+ 
 namespace ShelterVault.Models
 {
     public class Credential : ObservableObject
