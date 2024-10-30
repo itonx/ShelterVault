@@ -68,7 +68,7 @@
     <None Remove="Images\Wide310x150Logo.scale-150.png" />
     <None Remove="Images\Wide310x150Logo.scale-200.png" />
     <None Remove="Images\Wide310x150Logo.scale-400.png" />
-    <None Remove="Resources\OverrideDarkTheme.xaml" />
+    <None Remove="Resources\OverrideThemes.xaml" />
     <None Remove="Views\ConfirmMasterKeyPage.xaml" />
     <None Remove="Views\CreateMasterKeyPage.xaml" />
     <None Remove="Views\CredentialsPage.xaml" />
@@ -177,7 +177,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Resources\OverrideDarkTheme.xaml">
+    <Page Update="Resources\OverrideThemes.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

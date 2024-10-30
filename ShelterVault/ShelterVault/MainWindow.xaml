@@ -60,7 +60,7 @@
                     <Button.Resources>
                         <ResourceDictionary>
                             <ResourceDictionary.MergedDictionaries>
-                                <ResourceDictionary Source="../Resources/OverrideDarkTheme.xaml" />
+                                <ResourceDictionary Source="../Resources/OverrideThemes.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                         </ResourceDictionary>
                     </Button.Resources>
