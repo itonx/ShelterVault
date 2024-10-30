@@ -14,6 +14,9 @@
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
+                            <Thickness x:Key="ShelterVaultPageContentThickness">100, 0</Thickness>
+                            <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
+                            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
                             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="White" />
                             <SolidColorBrush x:Key="ToggleButtonBackgroundCheckedPointerOver" Color="LightGray" />
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40" />
@@ -45,6 +48,9 @@
                             <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
+                            <Thickness x:Key="ShelterVaultPageContentThickness">100, 0</Thickness>
+                            <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
+                            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
                             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
                             <Style
                                 x:Key="ShelterVaultPasswordBoxStyle"

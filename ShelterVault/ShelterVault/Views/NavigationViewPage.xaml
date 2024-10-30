@@ -18,8 +18,9 @@
         <x:Double x:Key="ShelterVaultOpenPaneLength">280</x:Double>
     </Page.Resources>
     <NavigationView
-        AlwaysShowHeader="False"
+        AlwaysShowHeader="True"
         CompactPaneLength="{StaticResource ShelterVaultCompactPaneLength}"
+        Header=" "
         IsBackButtonVisible="Collapsed"
         IsBackEnabled="False"
         IsTabStop="False"
