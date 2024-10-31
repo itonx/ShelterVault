@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
+using ShelterVault.Shared.Interfaces;
 using ShelterVault.Views;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,23 @@ namespace ShelterVault.Shared.Behaviors
             return (Type)obj.GetValue(PageTypeProperty);
         }
 
+        public static readonly DependencyProperty SkipSelectionLoginProperty =
+            DependencyProperty.RegisterAttached(
+            "SkipSelectionLogin",
+            typeof(bool),
+            typeof(PageLoaderBehavior),
+            new PropertyMetadata(false));
+
+        public static void SetSkipSelectionLogin(NavigationView obj, bool value)
+        {
+            obj.SetValue(SkipSelectionLoginProperty, value);
+        }
+
+        public static bool GetSkipSelectionLogin(NavigationView obj)
+        {
+            return (bool)obj.GetValue(SkipSelectionLoginProperty);
+        }
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -56,9 +74,27 @@ namespace ShelterVault.Shared.Behaviors
             AssociatedObject.SelectionChanged -= AssociatedObject_SelectionChanged;
         }
 
-        private void AssociatedObject_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private async void AssociatedObject_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
+            bool? skip = (bool?)sender.GetValue(SkipSelectionLoginProperty);
+            if (skip == true) return;
             if (AssociatedObject.Content is not Frame pageContainer) throw new InvalidOperationException("The NavigationView must contain a Frame.");
+
+            NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
+            object lastSelectedItemByTag = AssociatedObject.GetValue(SelectItemByTagBehavior.SelectedItemProperty);
+
+            if(pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted)
+            {
+                bool discardChanges = await pendingChangesChallenge.DiscardChangesAsync();
+                if(!discardChanges)
+                {
+                    NavigationViewItem itemFound = SelectItemByTagBehavior.RecursiveLookup(sender.MenuItems, lastSelectedItemByTag);
+                    sender.SetValue(SkipSelectionLoginProperty, true);
+                    sender.SelectedItem = itemFound;
+                    sender.SetValue(SkipSelectionLoginProperty, false);
+                    return;
+                }
+            }
 
             if (args.IsSettingsSelected)
             {
@@ -66,10 +102,8 @@ namespace ShelterVault.Shared.Behaviors
             }
             else
             {
-                if (args.SelectedItem == null) return;
-                NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
-                object navigationParameter = selectedItem.Tag as object;
                 Type selectedPageType = (Type)selectedItem.GetValue(PageTypeProperty);
+                object navigationParameter = selectedItem.Tag;
                 if (selectedPageType == null) return;
                 pageContainer.Navigate(selectedPageType, navigationParameter);
             }

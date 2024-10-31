@@ -29,7 +29,7 @@ namespace ShelterVault.Shared.Behaviors
             if (itemFound != null) navigationView.SelectedItem = itemFound;
         }
 
-        private static NavigationViewItem RecursiveLookup(IList<object> menuItems, object tag)
+        public static NavigationViewItem RecursiveLookup(IList<object> menuItems, object tag)
         {
             foreach (var item in menuItems)
             {

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public partial class CredentialsViewModel : ObservableObject, INavigation
+    public partial class CredentialsViewModel : ObservableObject, INavigation, IPendingChangesChallenge
     {
         private readonly IMasterKeyService _masterKeyService;
         private readonly IDialogService _dialogService;
@@ -38,6 +38,8 @@ namespace ShelterVault.ViewModels
         private bool _requestFocusOnFirstField;
         [ObservableProperty]
         private PasswordConfirmationViewModel _passwordRequirementsVM;
+
+        public bool ChallengeCompleted { get; private set; } = false;
 
         public CredentialsViewModel(IMasterKeyService masterKeyService, IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService)
         {
@@ -61,15 +63,25 @@ namespace ShelterVault.ViewModels
             State = CredentialsViewModelState.Updating;
         }
 
-        [RelayCommand]
-        private async Task CancelCredential()
+        public async Task<bool> DiscardChangesAsync(bool completeChallenge = false)
         {
             if (!_selectedCredentialBackup.Equals(SelectedCredential))
             {
-                bool cancelNewSelection = await _dialogService.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?");
-                if (cancelNewSelection) return;
+                bool discard = await _dialogService.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?", expectedResult: ContentDialogResult.Secondary);
+                if (completeChallenge && discard) ChallengeCompleted = true;
+                return discard;
             }
+            else
+            {
+                if (completeChallenge) ChallengeCompleted = true;
+                return true;
+            }
+        }
 
+        [RelayCommand]
+        private async Task CancelCredential()
+        {
+            if (!await DiscardChangesAsync(completeChallenge: true)) return;
             WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
         }
 
