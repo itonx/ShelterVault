@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
+using ShelterVault.Models;
 using ShelterVault.Shared.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace ShelterVault.Shared.Behaviors
 
             if(e.Parameter != null && pageRequested.DataContext is INavigation navigate)
             {
-                navigate.OnNavigateTo(e.Parameter);
+                if (e.Parameter is not string) navigate.OnNavigateTo(e.Parameter);
             }
         }
     }

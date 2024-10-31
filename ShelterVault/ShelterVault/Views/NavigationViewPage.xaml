@@ -42,11 +42,14 @@
                 behaviors:PageLoaderBehavior.PageType="views:CredentialsPage"
                 Content="New credentials"
                 Icon="Add"
+                Tag="NEW_CREDENTIALS"
                 ToolTipService.ToolTip="New credentials" />
             <NavigationViewItem
                 behaviors:CredentialItemsGeneratorBehavior.ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 Content="Vault"
                 IsExpanded="True"
+                SelectsOnInvoked="False"
+                Tag="VAULT"
                 ToolTipService.ToolTip="Vault">
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xE705;" />
