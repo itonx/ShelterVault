@@ -68,9 +68,10 @@ namespace ShelterVault.Shared.Behaviors
             {
                 if (args.SelectedItem == null) return;
                 NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
+                object navigationParameter = selectedItem.Tag as object;
                 Type selectedPageType = (Type)selectedItem.GetValue(PageTypeProperty);
                 if (selectedPageType == null) return;
-                pageContainer.Navigate(selectedPageType);
+                pageContainer.Navigate(selectedPageType, navigationParameter);
             }
         }
     }
