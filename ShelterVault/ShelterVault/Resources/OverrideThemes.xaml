@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ResourceDictionary.ThemeDictionaries>
+    <!--<ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32000000" />
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40" />
@@ -43,5 +43,5 @@
             </LinearGradientBrush>
             <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
         </ResourceDictionary>
-    </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary.ThemeDictionaries>-->
 </ResourceDictionary>

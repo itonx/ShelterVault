@@ -1,6 +1,8 @@
 ﻿using Microsoft.UI.Xaml;
+using ShelterVault.Shared.Attributes;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
+using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interop;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
- 
+
 namespace ShelterVault.Services
 {
     public interface IShelterVaultThemeService
@@ -23,18 +25,27 @@ namespace ShelterVault.Services
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             string theme = localSettings.Values[ShelterVaultConstants.SETTINGS_THEME_KEY] as string;
-            ElementTheme elementTheme = theme == null ? ElementTheme.Default : (ElementTheme)Enum.Parse(typeof(ElementTheme), theme);
+            Enum.TryParse(typeof(ShelterVaultTheme), theme, true, out object? shelterVaultThemeObj);
+            ShelterVaultTheme? shelterVaultTheme = (ShelterVaultTheme?)shelterVaultThemeObj;
 
-            if (elementTheme == ElementTheme.Default && PInvoke.ShouldSystemUseDarkMode()) return ShelterVaultTheme.DARK;
+            if (shelterVaultTheme == null && PInvoke.ShouldSystemUseDarkMode()) return ShelterVaultTheme.DARK;
 
-            return elementTheme == ElementTheme.Light ? ShelterVaultTheme.LIGHT : ShelterVaultTheme.DARK;
+            return (ShelterVaultTheme)shelterVaultTheme;
         }
 
         public ShelterVaultTheme GetNextTheme(ShelterVaultTheme currentShelterVaultTheme)
         {
-            ElementTheme newTheme = currentShelterVaultTheme == ShelterVaultTheme.LIGHT ? ElementTheme.Dark : ElementTheme.Light;
+            ShelterVaultTheme[] shelterVaultThemeValues = (ShelterVaultTheme[])Enum.GetValues(typeof(ShelterVaultTheme));
+            int currentIndex = Array.IndexOf(shelterVaultThemeValues, currentShelterVaultTheme);
+            ShelterVaultTheme nextShelterVaultTheme = shelterVaultThemeValues[0];
+
+            if (currentIndex + 1 < shelterVaultThemeValues.Length)
+            {
+                nextShelterVaultTheme = shelterVaultThemeValues[currentIndex + 1];
+            }
+
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            localSettings.Values[ShelterVaultConstants.SETTINGS_THEME_KEY] = newTheme.ToString();
+            localSettings.Values[ShelterVaultConstants.SETTINGS_THEME_KEY] = nextShelterVaultTheme.ToString();
             return GetTheme();
         }
     }
