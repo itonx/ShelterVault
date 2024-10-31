@@ -6,15 +6,15 @@ using ShelterVault.DataLayer;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Extensions;
+using ShelterVault.Shared.Interfaces;
 using ShelterVault.Shared.Messages;
-using ShelterVault.Shared.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
- 
+
 namespace ShelterVault.ViewModels
 {
     public partial class CredentialsViewModel : ObservableObject, INavigation

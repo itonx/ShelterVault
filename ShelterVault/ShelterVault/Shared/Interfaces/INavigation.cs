@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShelterVault.Shared.Services
+namespace ShelterVault.Shared.Interfaces
 {
     public interface INavigation
     {
