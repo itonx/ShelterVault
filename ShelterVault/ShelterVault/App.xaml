@@ -8,7 +8,6 @@
     xmlns:local="using:ShelterVault">
     <Application.Resources>
         <ResourceDictionary>
-            <converters:ShelterVaultThemeConverter x:Key="ThemeConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!--  Other merged dictionaries here  -->
