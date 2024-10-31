@@ -26,7 +26,19 @@ namespace ShelterVault.Shared.Behaviors
             if (navigationView.MenuItems.Count == 0) return;
 
             NavigationViewItem itemFound = RecursiveLookup(navigationView.MenuItems, e.NewValue);
-            if (itemFound != null) navigationView.SelectedItem = itemFound;
+            if (itemFound != null)
+            {
+                navigationView.SelectedItem = itemFound;
+                if(itemFound.Tag is Credential)
+                {
+                    var menuItem = navigationView.MenuItems[2] as NavigationViewItem;
+                    if (!menuItem.IsExpanded)
+                    {
+                        menuItem.IsExpanded = true;
+                        menuItem.IsExpanded = false;
+                    }
+                }
+            }
         }
 
         public static NavigationViewItem RecursiveLookup(IList<object> menuItems, object tag)
