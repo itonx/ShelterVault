@@ -8,8 +8,7 @@ namespace ShelterVault.Models
 {
     public enum CredentialsViewModelState
     {
-        Default = 0,
-        Adding = 1,
-        Empty = 2
+        Updating = 0,
+        New = 1
     }
 }

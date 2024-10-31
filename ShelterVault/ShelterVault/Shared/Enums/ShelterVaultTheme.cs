@@ -9,9 +9,9 @@ namespace ShelterVault.Shared.Enums
 {
     public enum ShelterVaultTheme
     {
-        [ThemeStyle(Microsoft.UI.Xaml.ElementTheme.Light, "Default")]
+        [ThemeStyle(Microsoft.UI.Xaml.ElementTheme.Light, "Updating")]
         LIGHT,
-        [ThemeStyle(Microsoft.UI.Xaml.ElementTheme.Dark, "Default")]
+        [ThemeStyle(Microsoft.UI.Xaml.ElementTheme.Dark, "Updating")]
         DARK,
         [ThemeStyle(Microsoft.UI.Xaml.ElementTheme.Dark, "NeuromancerTheme")]
         NEUROMANCER,

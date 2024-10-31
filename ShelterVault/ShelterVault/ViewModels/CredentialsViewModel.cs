@@ -26,17 +26,14 @@ namespace ShelterVault.ViewModels
         private readonly IEncryptionService _encryptionService;
 
         private CancellationTokenSource _cancellationTokenSource;
-        private Credential _lastSelectedItem;
-        private bool _confirmationInProcess;
-        private bool _requestConfirmation => _lastSelectedItem != null && !Credentials.First(c => c.UUID == _lastSelectedItem.UUID).Equals(_lastSelectedItem);
+        private Credential _selectedCredentialBackup;
+
         [ObservableProperty]
         private Credential _selectedCredential;
         [ObservableProperty]
         private bool _showPassword = false;
         [ObservableProperty]
-        private ObservableCollection<Credential> _credentials;
-        [ObservableProperty]
-        private CredentialsViewModelState _state = CredentialsViewModelState.Adding;
+        private CredentialsViewModelState _state = CredentialsViewModelState.New;
         [ObservableProperty]
         private bool _requestFocusOnFirstField;
         [ObservableProperty]
@@ -50,57 +47,41 @@ namespace ShelterVault.ViewModels
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _encryptionService = encryptionService;
             PasswordRequirementsVM = passwordConfirmationViewModel;
-            Credentials = new ObservableCollection<Credential>(_shelterVaultLocalStorage.GetAllCredentials());
             PasswordRequirementsVM.HeaderText = "Password must:";
             RequestFocusOnFirstField = true;
-            NewCredentialInternal();
+            NewCredentials();
         }
 
         public void OnNavigateTo(object parameter)
         {
-            Credential selectedCredential = ((Credential)parameter);
-            selectedCredential.Password = _encryptionService.DecryptAes(Convert.FromBase64String(selectedCredential.EncryptedPassword), _masterKeyService.GetMasterKeyUnprotected(), Convert.FromBase64String(selectedCredential.InitializationVector), _masterKeyService.GetMasterKeySaltUnprotected());
-            selectedCredential.PasswordConfirmation = selectedCredential.Password;
-            SelectedCredential = selectedCredential.Clone();
-            State = CredentialsViewModelState.Default;
+            Credential credentialParameter = ((Credential)parameter);
+            credentialParameter.Password = credentialParameter.PasswordConfirmation = _encryptionService.DecryptAes(Convert.FromBase64String(credentialParameter.EncryptedPassword), _masterKeyService.GetMasterKeyUnprotected(), Convert.FromBase64String(credentialParameter.InitializationVector), _masterKeyService.GetMasterKeySaltUnprotected());
+            SelectedCredential = credentialParameter.Clone();
+            _selectedCredentialBackup = credentialParameter.Clone();
+            State = CredentialsViewModelState.Updating;
         }
 
         [RelayCommand]
-        private async Task Home(object obj)
+        private async Task CancelCredential()
         {
-            await ConfirmPendingChangesIfNeeded(() =>
+            if (!_selectedCredentialBackup.Equals(SelectedCredential))
             {
-                State = CredentialsViewModelState.Empty;
-                SelectedCredential = null;
-            });
-        }
+                bool cancelNewSelection = await _dialogService.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?");
+                if (cancelNewSelection) return;
+            }
 
-        [RelayCommand]
-        private void CancelCredential()
-        {
-            State = CredentialsViewModelState.Empty;
-            SelectedCredential = null;
             WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
         }
 
-        [RelayCommand]
-        private async Task NewCredential()
-        {
-            await ConfirmPendingChangesIfNeeded(() =>
-            {
-                NewCredentialInternal();
-            });
-        }
-
-        private void NewCredentialInternal()
+        private void NewCredentials()
         {
             ShowPassword = false;
             RequestFocusOnFirstField = true;
-            State = CredentialsViewModelState.Adding;
+            State = CredentialsViewModelState.New;
             Credential newCredential = new Credential();
             newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
-            SelectedCredential = null;
             SelectedCredential = newCredential;
+            _selectedCredentialBackup = newCredential.Clone();
         }
 
         [RelayCommand]
@@ -134,10 +115,7 @@ namespace ShelterVault.ViewModels
         }
 
         [RelayCommand]
-        private void ChangePasswordVisibility()
-        {
-            ShowPassword = !ShowPassword;
-        }
+        private void ChangePasswordVisibility() => ShowPassword = !ShowPassword;
 
         [RelayCommand]
         private async Task SaveCredentialChanges()
@@ -147,8 +125,8 @@ namespace ShelterVault.ViewModels
                 if (await PasswordRequirementsVM.AreCredentialsValid(SelectedCredential))
                 {
                     await _progressBarService.Show();
-                    if (State == CredentialsViewModelState.Default) await UpdateCredential();
-                    else if (State == CredentialsViewModelState.Adding) await CreateCredential();
+                    if (State == CredentialsViewModelState.Updating) await UpdateCredential();
+                    else if (State == CredentialsViewModelState.New) await CreateCredential();
                     WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                     WeakReferenceMessenger.Default.Send(new SelectCredentialRequestMessage(SelectedCredential));
                 }
@@ -156,27 +134,6 @@ namespace ShelterVault.ViewModels
             finally
             {
                 await _progressBarService.Hide();
-            }
-        }
-
-        [RelayCommand]
-        private async Task SelectedCredentialChanged(object parameter)
-        {
-            /* Pending changes not saved, ask for user confirmation before loosing changes */
-            if (_requestConfirmation && !_confirmationInProcess && State == CredentialsViewModelState.Default)
-            {
-                _confirmationInProcess = true;
-                SelectedCredential = Credentials.First(c => c.UUID == _lastSelectedItem.UUID);
-                SelectedCredential = _lastSelectedItem;
-                bool cancelNewSelection = await _dialogService.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?");
-                if(!cancelNewSelection) SelectedCredential = (Credential)(parameter as SelectionChangedEventArgs).AddedItems[0];
-                _confirmationInProcess = false;
-            }
-            if (!_confirmationInProcess)
-            {
-                ShowPassword = false;
-                _lastSelectedItem = SelectedCredential;
-                if(State == CredentialsViewModelState.Empty && SelectedCredential != null) State = CredentialsViewModelState.Default;
             }
         }
 
@@ -190,16 +147,11 @@ namespace ShelterVault.ViewModels
                 string uuid = SelectedCredential.UUID;
                 if (_shelterVaultLocalStorage.DeleteCredential(uuid))
                 {
-                    SelectedCredential = null;
-                    SelectedCredential = new Credential();
-                    SelectedCredential.Password = SelectedCredential.PasswordConfirmation = string.Empty;
-                    Credential credential = Credentials.First(c => c.UUID == uuid);
-                    Credentials.Remove(credential);
-                    await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Your credential was deleted.", "OK");
+                    WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
+                    WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
+                    await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Credentials deleted.", "OK");
                 }
-                else await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Your credential couldn't be deleted.", "OK");
-
-                State = CredentialsViewModelState.Empty;
+                else await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Your credentials couldn't be deleted.", "OK");
             }
             finally
             {
@@ -209,21 +161,18 @@ namespace ShelterVault.ViewModels
 
         private async Task UpdateCredential()
         {
-            Credential credential = Credentials.First(c => c.UUID == SelectedCredential.UUID);
             Credential credentialUpdated = SelectedCredential;
-            if (credential.Password != SelectedCredential.Password)
+            if (_selectedCredentialBackup.Password != SelectedCredential.Password)
             {
                 (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(SelectedCredential.Password, _masterKeyService.GetMasterKeyUnprotected(), _masterKeyService.GetMasterKeySaltUnprotected());
-                credentialUpdated = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
+                credentialUpdated = SelectedCredential.GenerateBase64EncryptedValues(encryptedValues);
             }
 
             bool updated = _shelterVaultLocalStorage.UpdateCredential(credentialUpdated);
             if (updated)
             {
-                Credential credentialUpdatedInView = Credentials.First(c => c.UUID == credentialUpdated.UUID);
-                Credentials[Credentials.IndexOf(credentialUpdatedInView)] = credentialUpdated;
-                SelectedCredential = null;
-                SelectedCredential = Credentials.First(c => c.UUID == credentialUpdated.UUID);
+                SelectedCredential = credentialUpdated;
+                _selectedCredentialBackup = credentialUpdated.Clone();
                 await _dialogService.ShowConfirmationDialogAsync("Important", "Chages were saved.");
             }
             else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential could't be updated.");
@@ -233,33 +182,20 @@ namespace ShelterVault.ViewModels
 
         private async Task CreateCredential()
         {
-            Credential newCredential = SelectedCredential;
             (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(SelectedCredential.Password, _masterKeyService.GetMasterKeyUnprotected(), _masterKeyService.GetMasterKeySaltUnprotected());
-            newCredential = SelectedCredential.GetUpdatedCredentialValues(encryptedValues);
+            Credential newCredential = SelectedCredential.GenerateBase64EncryptedValues(encryptedValues);
 
             bool inserted = _shelterVaultLocalStorage.InsertCredential(newCredential);
             if (inserted)
             {
-                Credentials.Add(newCredential);
-                SelectedCredential = null;
-                SelectedCredential = Credentials.First(c => c.UUID == newCredential.UUID);
+                SelectedCredential = newCredential;
+                _selectedCredentialBackup = newCredential.Clone();
                 await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential was saved.");
-                State = CredentialsViewModelState.Default;
+                State = CredentialsViewModelState.Updating;
             }
             else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
 
             RequestFocusOnFirstField = true;
-        }
-
-        private async Task ConfirmPendingChangesIfNeeded(Action action)
-        {
-            if (_requestConfirmation)
-            {
-                bool cancelNewSelection = await _dialogService.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?");
-                if (cancelNewSelection) return;
-            }
-
-            action.Invoke();
         }
     }
 }
