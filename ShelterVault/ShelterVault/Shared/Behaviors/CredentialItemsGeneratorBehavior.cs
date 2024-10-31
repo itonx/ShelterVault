@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Models;
+using ShelterVault.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace ShelterVault.Shared.Behaviors
             {
                 NavigationViewItem navigationViewItem = new() { Content = credential.Title, Icon = new FontIcon() { Glyph= "\uE72E" }, Tag = credential };
                 navigationViewItem.SetValue(ToolTipService.ToolTipProperty, credential.Title);
+                navigationViewItem.SetValue(PageLoaderBehavior.PageTypeProperty, typeof(CredentialsPage));
                 item.MenuItems.Add(navigationViewItem);
             }
             if(item.MenuItems.Count == 0) item.Visibility = Visibility.Collapsed;

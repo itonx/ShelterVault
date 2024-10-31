@@ -7,6 +7,7 @@ using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
+using ShelterVault.Shared.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    public partial class CredentialsViewModel : ObservableObject
+    public partial class CredentialsViewModel : ObservableObject, INavigation
     {
         private readonly IMasterKeyService _masterKeyService;
         private readonly IDialogService _dialogService;
@@ -65,6 +66,12 @@ namespace ShelterVault.ViewModels
             PasswordRequirementsVM.HeaderText = "Password must:";
             RequestFocusOnFirstField = true;
             NewCredentialInternal();
+        }
+
+        public void OnNavigateTo(object parameter)
+        {
+            SelectedCredential = ((Credential)parameter).Clone();
+            State = CredentialsViewModelState.Default;
         }
 
         [RelayCommand]

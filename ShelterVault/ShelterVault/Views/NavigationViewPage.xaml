@@ -53,6 +53,10 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>
-        <Frame />
+        <Frame>
+            <interactivity:Interaction.Behaviors>
+                <behaviors:EnableNavigationViewModelBehavior />
+            </interactivity:Interaction.Behaviors>
+        </Frame>
     </NavigationView>
 </Page>

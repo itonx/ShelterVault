@@ -202,10 +202,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Shared\Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Update="Resources\NeuromancerTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
