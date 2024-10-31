@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
- 
+using System.Windows.Input;
+
 namespace ShelterVault.Shared.Helpers
 {
     public static class PasswordBoxHelper
@@ -18,6 +19,8 @@ namespace ShelterVault.Shared.Helpers
             if (d is PasswordBox passwordBox && e.NewValue != null && (string)e.NewValue != passwordBox.Password)
             {
                 passwordBox.Password = (string)e.NewValue;
+                ICommand passwordChangedToCommand = (ICommand)passwordBox.GetValue(MultiPasswordBoxValuesHelper.PasswordChangedToCommandProperty);
+                if (passwordChangedToCommand != null) passwordChangedToCommand.Execute(passwordBox.Password);
             }
         }
 
@@ -32,15 +35,15 @@ namespace ShelterVault.Shared.Helpers
         {
             if (d is PasswordBox passwordBox && (bool)e.NewValue)
             {
-                passwordBox.PasswordChanged += PasswordBox_PasswordChanged;
+                passwordBox.PasswordChanged += PasswordBoxCredentials_PasswordChanged;
             }
             else if(d is PasswordBox passwordBoxTmp)
             {
-                passwordBoxTmp.PasswordChanged -= PasswordBox_PasswordChanged;
+                passwordBoxTmp.PasswordChanged -= PasswordBoxCredentials_PasswordChanged;
             }
         }
 
-        private static void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        private static void PasswordBoxCredentials_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox passwordBox)
             {

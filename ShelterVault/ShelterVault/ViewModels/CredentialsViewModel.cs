@@ -29,20 +29,8 @@ namespace ShelterVault.ViewModels
         private Credential _lastSelectedItem;
         private bool _confirmationInProcess;
         private bool _requestConfirmation => _lastSelectedItem != null && !Credentials.First(c => c.UUID == _lastSelectedItem.UUID).Equals(_lastSelectedItem);
+        [ObservableProperty]
         private Credential _selectedCredential;
-        public Credential SelectedCredential
-        {
-            get => _selectedCredential;
-            set
-            {
-                if (!_confirmationInProcess && value != null && value.Password == null && value.EncryptedPassword != null)
-                {
-                    value.Password = _encryptionService.DecryptAes(Convert.FromBase64String(value.EncryptedPassword), _masterKeyService.GetMasterKeyUnprotected(), Convert.FromBase64String(value.InitializationVector), _masterKeyService.GetMasterKeySaltUnprotected());
-                    value.PasswordConfirmation = value.Password;
-                }
-                SetProperty(ref _selectedCredential, value == null ? null : value.Clone());
-            }
-        }
         [ObservableProperty]
         private bool _showPassword = false;
         [ObservableProperty]
@@ -70,7 +58,10 @@ namespace ShelterVault.ViewModels
 
         public void OnNavigateTo(object parameter)
         {
-            SelectedCredential = ((Credential)parameter).Clone();
+            Credential selectedCredential = ((Credential)parameter);
+            selectedCredential.Password = _encryptionService.DecryptAes(Convert.FromBase64String(selectedCredential.EncryptedPassword), _masterKeyService.GetMasterKeyUnprotected(), Convert.FromBase64String(selectedCredential.InitializationVector), _masterKeyService.GetMasterKeySaltUnprotected());
+            selectedCredential.PasswordConfirmation = selectedCredential.Password;
+            SelectedCredential = selectedCredential.Clone();
             State = CredentialsViewModelState.Default;
         }
 

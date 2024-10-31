@@ -17,16 +17,7 @@ namespace ShelterVault.Shared.Helpers
         public static void SetSecurePasswords(DependencyObject obj, Dictionary<string, StringBuilder> value) => obj.SetValue(SecurePasswordsProperty, value);
 
         public static readonly DependencyProperty PasswordChangedToCommandProperty =
-            DependencyProperty.RegisterAttached("PasswordChangedToCommand", typeof(ICommand), typeof(MultiPasswordBoxValuesHelper), new PropertyMetadata(null, OnPasswordChangedToCommandChanged));
-
-        private static void OnPasswordChangedToCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            object passwordBoxConfirmation = GetPasswordBoxConfirmation(d);
-            if(passwordBoxConfirmation == null && d is PasswordBox passwordBox && e.OldValue == null)
-            {
-                passwordBox.PasswordChanged += PasswordBox_PasswordChanged;
-            }
-        }
+            DependencyProperty.RegisterAttached("PasswordChangedToCommand", typeof(ICommand), typeof(MultiPasswordBoxValuesHelper), new PropertyMetadata(null));
 
         public static ICommand GetPasswordChangedToCommand(DependencyObject obj) => (ICommand)obj.GetValue(PasswordChangedToCommandProperty);
 
