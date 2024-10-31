@@ -68,6 +68,7 @@
     <None Remove="Images\Wide310x150Logo.scale-150.png" />
     <None Remove="Images\Wide310x150Logo.scale-200.png" />
     <None Remove="Images\Wide310x150Logo.scale-400.png" />
+    <None Remove="Resources\NeuromancerTheme.xaml" />
     <None Remove="Resources\OverrideThemes.xaml" />
     <None Remove="Views\ConfirmMasterKeyPage.xaml" />
     <None Remove="Views\CreateMasterKeyPage.xaml" />
@@ -202,6 +203,12 @@
 
   <ItemGroup>
     <Folder Include="Shared\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Resources\NeuromancerTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 	
 </Project>

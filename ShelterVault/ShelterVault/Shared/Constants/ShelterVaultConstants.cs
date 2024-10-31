@@ -9,5 +9,6 @@ namespace ShelterVault.Shared.Constants
     public static class ShelterVaultConstants
     {
         public const string SETTINGS_THEME_KEY = "ShelterVault.Theme";
+        public const string SETTINGS_THEME_NAME_KEY = "ShelterVault.ThemeName";
     }
 }

@@ -14,8 +14,8 @@
     mc:Ignorable="d">
     <Grid
         x:Name="WindowContainer"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        RequestedTheme="{Binding CurrentTheme, Converter={StaticResource ThemeConverter}, Mode=OneWay}">
+        behaviors:ShelterVaultThemeBehavior.CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}"
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <interactivity:Interaction.Behaviors>
             <behaviors:AppStateLoaderBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
             <behaviors:MaximizeWindowAtStartupBehavior />
