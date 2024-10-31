@@ -1,8 +1,5 @@
-﻿using Microsoft.UI.Xaml;
-using ShelterVault.Shared.Attributes;
-using ShelterVault.Shared.Constants;
+﻿using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interop;
 using System;
 using System.Collections.Generic;
