@@ -43,7 +43,7 @@ namespace ShelterVault.Models
             return err.Length == 0;
         }
 
-        public Credential GetUpdatedCredentialValues((byte[], byte[]) encryptedValues)
+        public Credential GenerateBase64EncryptedValues((byte[], byte[]) encryptedValues)
         {
             Credential newCredential = this.Clone();
             newCredential.EncryptedPassword = Convert.ToBase64String(encryptedValues.Item1);
