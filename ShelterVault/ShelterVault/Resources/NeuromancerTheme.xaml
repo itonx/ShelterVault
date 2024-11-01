@@ -8,6 +8,11 @@
         <ResourceDictionary x:Key="Dark">
             <!--  Override ShelterVault styles  -->
             <Color x:Key="ShelterVaultMainForeground">#00FF05</Color>
+            <SolidColorBrush x:Key="ShelterVaultCredentialsButtonCancelIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ShelterVaultCredentialsButtonCopyIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ShelterVaultCredentialsButtonShowIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ShelterVaultCredentialsButtonHideIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ShelterVaultCredentialsButtonSavelIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush
                 x:Key="ShelterVaultButtonBackgroundTransparent"
                 Opacity=".01"

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ShelterVault.Shared.Helpers;
+using ShelterVault.Shared.Constants;
 
 namespace ShelterVault.Services
 {
@@ -36,7 +37,7 @@ namespace ShelterVault.Services
             ContentDialog dialog = new ContentDialog();
             dialog.XamlRoot = WindowHelper.CurrentMainWindow.Content.XamlRoot;
             dialog.RequestedTheme = (WindowHelper.CurrentMainWindow.Content as FrameworkElement).RequestedTheme;
-            dialog.Style = Application.Current.Resources["ShelterVaultContentDialog"] as Style;
+            dialog.Style = Application.Current.Resources[ShelterVaultConstants.DIALOG_STYLE_KEY] as Style;
             dialog.Title = title;
             dialog.PrimaryButtonText = primaryButtonText;
             dialog.DefaultButton = ContentDialogButton.Primary;
