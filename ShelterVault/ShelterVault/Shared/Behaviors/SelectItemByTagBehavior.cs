@@ -28,7 +28,9 @@ namespace ShelterVault.Shared.Behaviors
             NavigationViewItem itemFound = RecursiveLookup(navigationView.MenuItems, e.NewValue);
             if (itemFound != null)
             {
+                navigationView.SetValue(PageLoaderBehavior.SkipSelectionByTagProperty, true); 
                 navigationView.SelectedItem = itemFound;
+                navigationView.SetValue(PageLoaderBehavior.SkipSelectionByTagProperty, false);
                 if(itemFound.Tag is Credential)
                 {
                     var menuItem = navigationView.MenuItems[2] as NavigationViewItem;
@@ -91,6 +93,8 @@ namespace ShelterVault.Shared.Behaviors
 
         private void AssociatedObject_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
+            bool? skipByTag = (bool?)sender.GetValue(PageLoaderBehavior.SkipSelectionByTagProperty);
+            if (skipByTag == true) return;
             sender.SetValue(SelectedItemProperty, (sender.SelectedItem as NavigationViewItem).Tag);
         }
     }
