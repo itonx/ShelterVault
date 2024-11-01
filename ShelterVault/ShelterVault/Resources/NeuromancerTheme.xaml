@@ -4,11 +4,42 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ShelterVault.Resources">
     <ResourceDictionary.ThemeDictionaries>
-        <ResourceDictionary x:Key="Light">
-            <!--<SolidColorBrush x:Key="ShelterVaultForeground" Color="DarkBlue" />-->
-        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light" />
+
         <ResourceDictionary x:Key="Dark">
+            <!--  Override ShelterVault styles  -->
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
+            <Style
+                x:Key="ShelterVaultLoginBannerStyle"
+                BasedOn="{StaticResource ShelterVaultLoginBannerStyle}"
+                TargetType="TextBlock">
+                <Setter Property="Text" Value="         ⣠⣴⣾⣿⣿⣿⣿⣷⣦⣄          &#x0a;        ⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆         &#x0a;        ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇         &#x0a; ⣄      ⠈⢿⡇ ⠈⣿⣿⠁ ⢸⡿⠁      ⣠  &#x0a; ⢹⣦      ⠻⣷⣤⣴⢏⡹⣦⣤⣾⠟      ⣴⡏  &#x0a;  ⢿⣷⣄      ⠙⠛⠛⠛⠛⠋      ⣠⣾⡿   &#x0a;  ⠈⢿⣿⣧⡀   ⢸⣧⡀  ⢀⣼⡇   ⢀⣼⣿⡿⠁   &#x0a;   ⠈⠻⣿⣿⣦⣀  ⠙⠿⣷⣾⠿⠋  ⣀⣴⣿⣿⠟⠁    &#x0a;     ⠈⠻⣿⣿⣷⣄⡀    ⢀⣠⣾⣿⣿⠟⠁      &#x0a;       ⠈⠻⢿⣿⠿⠒⢀⣠⣶⣿⣿⡿⠛⠁        &#x0a;      ⠰⢶⡄ ⣠⣴⣾⣿⣿⡿⠟⠋ ⢠⡶⠆       &#x0a;   ⣀ ⣀⣤⡈⢻⣆⠸⠿⠟⠋⠁⠠⠶⠇⣰⡟⢁⣤⣀ ⣀    &#x0a;  ⢸⣿⡇⠘⠛⠁ ⠻⠆      ⠰⠟ ⠈⠛⠃⢸⣿⡇   &#x0a;                         " />
+                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+                <Setter Property="Margin" Value="0,0,11,10" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontStretch" Value="Normal" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+
+            <!--  Override Default styles  -->
+            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Black" />
+            <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="#00FF05" />
+            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#00FF05" />
+            <SolidColorBrush x:Key="TextControlButtonForeground" Color="#00FF05" />
+            <SolidColorBrush x:Key="TextControlForeground" Color="#00FF05" />
+            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#00FF05" />
+            <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#00FF05" />
+            <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#00FF05" />
+            <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush2" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
+                <LinearGradientBrush.RelativeTransform>
+                    <ScaleTransform CenterY="0.5" ScaleY="-1" />
+                </LinearGradientBrush.RelativeTransform>
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="1.0" Color="#00FF05" />
+                    <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+            <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

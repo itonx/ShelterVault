@@ -15,14 +15,10 @@
         Width="500"
         HorizontalAlignment="Center"
         VerticalAlignment="Center">
-        <TextBlock
-            Margin="0,0,0,10"
-            HorizontalAlignment="Center"
-            FontFamily="Cascadia Mono"
-            Foreground="{ThemeResource ShelterVaultForeground}"
-            Text=" ███████████████╗                         ▐█████▌  &#x0a; ██░░░░░░░░░░░██║                        ██  ▄  ██ &#x0a; ██░░░░███░░░░██║  ███████████████████████  ▐▐  ██ &#x0a; ██░░░░░█░░░░░██║   ██ ▀ ▀ ▀ █ ▀   ▀ █   ██  ▀  ██ &#x0a; ██░░░░░█░░░░░██║   █        ▀            ▐█████▌  &#x0a; ██░░░░░░░░░░░██║                                  &#x0a; ███████████████║                                  &#x0a; ╚══════════════╝                                  &#x0a;                    "
-            TextWrapping="Wrap" />
-        <TextBlock Margin="0,0,0,5" Style="{ThemeResource ShelterVaultTextBlockStyle}">Master key:</TextBlock>
+        <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+        <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">
+            Master key:
+        </TextBlock>
         <PasswordBox
             x:Name="password"
             Margin="0,0,0,15"
@@ -30,14 +26,6 @@
             helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             helpers:RequestFocusHelper.Focus="True"
             MaxLength="32"
-            Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
-            <PasswordBox.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="../Resources/OverrideThemes.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
-            </PasswordBox.Resources>
-        </PasswordBox>
+            Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
     </StackPanel>
 </Page>
