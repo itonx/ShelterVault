@@ -62,6 +62,23 @@ namespace ShelterVault.Shared.Behaviors
             return (bool)obj.GetValue(SkipSelectionLoginProperty);
         }
 
+        public static readonly DependencyProperty SkipSelectionByTagProperty =
+            DependencyProperty.RegisterAttached(
+            "SkipSelectionByTag",
+            typeof(bool),
+            typeof(PageLoaderBehavior),
+            new PropertyMetadata(false));
+
+        public static void SetSkipSelectionByTag(NavigationView obj, bool value)
+        {
+            obj.SetValue(SkipSelectionByTagProperty, value);
+        }
+
+        public static bool GetSkipSelectionByTag(NavigationView obj)
+        {
+            return (bool)obj.GetValue(SkipSelectionByTagProperty); 
+        }
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -76,6 +93,7 @@ namespace ShelterVault.Shared.Behaviors
 
         private async void AssociatedObject_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
+            if (args.SelectedItem == null) return;
             bool? skip = (bool?)sender.GetValue(SkipSelectionLoginProperty);
             if (skip == true) return;
             if (AssociatedObject.Content is not Frame pageContainer) throw new InvalidOperationException("The NavigationView must contain a Frame.");

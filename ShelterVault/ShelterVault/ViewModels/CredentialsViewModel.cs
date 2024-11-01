@@ -56,7 +56,7 @@ namespace ShelterVault.ViewModels
 
         public void OnNavigateTo(object parameter)
         {
-            Credential credentialParameter = ((Credential)parameter);
+            Credential credentialParameter = ((Credential)parameter).Clone(); 
             credentialParameter.Password = credentialParameter.PasswordConfirmation = _encryptionService.DecryptAes(Convert.FromBase64String(credentialParameter.EncryptedPassword), _masterKeyService.GetMasterKeyUnprotected(), Convert.FromBase64String(credentialParameter.InitializationVector), _masterKeyService.GetMasterKeySaltUnprotected());
             SelectedCredential = credentialParameter.Clone();
             _selectedCredentialBackup = credentialParameter.Clone();
