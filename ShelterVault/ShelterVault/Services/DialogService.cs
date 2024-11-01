@@ -35,12 +35,11 @@ namespace ShelterVault.Services
         {
             ContentDialog dialog = new ContentDialog();
             dialog.XamlRoot = WindowHelper.CurrentMainWindow.Content.XamlRoot;
-            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            dialog.RequestedTheme = (WindowHelper.CurrentMainWindow.Content as FrameworkElement).RequestedTheme;
+            dialog.Style = Application.Current.Resources["ShelterVaultContentDialog"] as Style;
             dialog.Title = title;
             dialog.PrimaryButtonText = primaryButtonText;
             dialog.DefaultButton = ContentDialogButton.Primary;
-            ElementTheme theme = (WindowHelper.CurrentMainWindow.Content as FrameworkElement).ActualTheme;
-            dialog.RequestedTheme = theme;
             dialog.Content = new ShelterVaultMessageView(message);
 
             return dialog;

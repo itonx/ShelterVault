@@ -5,10 +5,14 @@
     xmlns:local="using:ShelterVault.Resources">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light" />
-
         <ResourceDictionary x:Key="Dark">
             <!--  Override ShelterVault styles  -->
-            <SolidColorBrush x:Key="ShelterVaultForeground" Color="#00FF05" />
+            <Color x:Key="ShelterVaultMainForeground">#00FF05</Color>
+            <SolidColorBrush
+                x:Key="ShelterVaultButtonBackgroundTransparent"
+                Opacity=".01"
+                Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ShelterVaultForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <Style
                 x:Key="ShelterVaultLoginBannerStyle"
                 BasedOn="{StaticResource ShelterVaultLoginBannerStyle}"
@@ -20,26 +24,71 @@
                 <Setter Property="FontStretch" Value="Normal" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
+            <Style
+                x:Key="ShelterVaultContentDialog"
+                BasedOn="{StaticResource ShelterVaultContentDialog}"
+                TargetType="ContentDialog">
+                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+                <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource ShelterVaultForeground}" />
+            </Style>
 
             <!--  Override Default styles  -->
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Black" />
-            <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="#00FF05" />
-            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#00FF05" />
-            <SolidColorBrush x:Key="TextControlButtonForeground" Color="#00FF05" />
-            <SolidColorBrush x:Key="TextControlForeground" Color="#00FF05" />
-            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#00FF05" />
-            <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="#00FF05" />
-            <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="#00FF05" />
+            <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="TextControlButtonForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="TextControlButtonForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <LinearGradientBrush x:Key="TextControlElevationBorderFocusedBrush2" MappingMode="Absolute" StartPoint="0,0" EndPoint="0,2">
                 <LinearGradientBrush.RelativeTransform>
                     <ScaleTransform CenterY="0.5" ScaleY="-1" />
                 </LinearGradientBrush.RelativeTransform>
                 <LinearGradientBrush.GradientStops>
-                    <GradientStop Offset="1.0" Color="#00FF05" />
+                    <GradientStop Offset="1.0" Color="{StaticResource ShelterVaultMainForeground}" />
                     <GradientStop Offset="1.0" Color="{StaticResource ControlStrokeColorDefault}" />
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
             <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="TextControlElevationBorderFocusedBrush2" />
+            <SolidColorBrush
+                x:Key="AccentButtonBackground"
+                Opacity=".1"
+                Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush
+                x:Key="AccentButtonBackgroundPointerOver"
+                Opacity=".2"
+                Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush
+                x:Key="AccentButtonBackgroundPressed"
+                Opacity=".21"
+                Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="AccentButtonForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="AccentButtonBorderBrush" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="AccentButtonBorderBrushPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+
+            <SolidColorBrush
+                x:Key="ButtonBackground"
+                Opacity=".01"
+                Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush
+                x:Key="ButtonBackgroundPointerOver"
+                Opacity=".2"
+                Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush
+                x:Key="ButtonBackgroundPressed"
+                Opacity=".21"
+                Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="{StaticResource ShelterVaultMainForeground}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

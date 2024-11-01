@@ -49,7 +49,7 @@
                     x:Name="AppTitleBarThemeButton"
                     Width="{Binding ElementName=AppTitleBar, Path=Height}"
                     Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                    Background="Transparent"
+                    Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
                     BorderThickness="0"
                     Command="{Binding ChangeThemeCommand}"
                     CornerRadius="0">
