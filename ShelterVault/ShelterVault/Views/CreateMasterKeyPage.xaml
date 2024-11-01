@@ -11,38 +11,40 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <StackPanel
-        Width="500"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center">
-        <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
-        <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Create master key:</TextBlock>
-        <PasswordBox
-            x:Name="password"
-            helpers:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}"
-            helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
-            helpers:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}"
-            helpers:MultiPasswordBoxValuesHelper.PasswordChangedToCommand="{Binding PasswordRequirementsVM.PasswordChangedCommand}"
-            helpers:RequestFocusHelper.Focus="True"
-            Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
-        <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Confirm master key:</TextBlock>
-        <PasswordBox
-            x:Name="passwordConfirmation"
-            helpers:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}"
-            helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
-            Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
-        <local:PasswordConfirmationView DataContext="{Binding PasswordRequirementsVM}" />
-        <StackPanel Margin="0,15" Orientation="Horizontal">
-            <FontIcon
-                FontSize="12"
-                Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"
-                Glyph="&#xF167;" />
-            <TextBlock
-                Grid.Column="1"
-                Margin="8,0,0,0"
-                TextWrapping="Wrap">
-                This password will be used to encrypt your vault.
-            </TextBlock>
+    <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto">
+        <StackPanel
+            Width="500"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Create master key:</TextBlock>
+            <PasswordBox
+                x:Name="password"
+                helpers:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}"
+                helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
+                helpers:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}"
+                helpers:MultiPasswordBoxValuesHelper.PasswordChangedToCommand="{Binding PasswordRequirementsVM.PasswordChangedCommand}"
+                helpers:RequestFocusHelper.Focus="True"
+                Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
+            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Confirm master key:</TextBlock>
+            <PasswordBox
+                x:Name="passwordConfirmation"
+                helpers:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}"
+                helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
+                Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
+            <local:PasswordConfirmationView DataContext="{Binding PasswordRequirementsVM}" />
+            <StackPanel Margin="0,15" Orientation="Horizontal">
+                <FontIcon
+                    FontSize="12"
+                    Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"
+                    Glyph="&#xF167;" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    TextWrapping="Wrap">
+                    This password will be used to encrypt your vault.
+                </TextBlock>
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </Page>

@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
- 
+using ShelterVault.Shared.Helpers;
+
 namespace ShelterVault.Services
 {
     public interface IDialogService
@@ -33,11 +34,13 @@ namespace ShelterVault.Services
         private ContentDialog BuildDialog(string title, string message, string primaryButtonText = "Close")
         {
             ContentDialog dialog = new ContentDialog();
-            dialog.XamlRoot = ((Application.Current as App)?.m_window as MainWindow)?.Content.XamlRoot;
+            dialog.XamlRoot = WindowHelper.CurrentMainWindow.Content.XamlRoot;
             dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
             dialog.Title = title;
             dialog.PrimaryButtonText = primaryButtonText;
             dialog.DefaultButton = ContentDialogButton.Primary;
+            ElementTheme theme = (WindowHelper.CurrentMainWindow.Content as FrameworkElement).ActualTheme;
+            dialog.RequestedTheme = theme;
             dialog.Content = new ShelterVaultMessageView(message);
 
             return dialog;

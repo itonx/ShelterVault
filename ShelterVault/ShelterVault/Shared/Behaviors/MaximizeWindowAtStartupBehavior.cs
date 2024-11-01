@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
+using ShelterVault.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace ShelterVault.Shared.Behaviors
         private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
         {
             AssociatedObject.Loaded -= AssociatedObject_Loaded;
-            MainWindow mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            MainWindow mainWindow = WindowHelper.CurrentMainWindow;
             IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
             PInvoke.MaximizeWindow(hWnd);
         }

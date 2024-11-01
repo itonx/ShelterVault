@@ -22,7 +22,7 @@ namespace ShelterVault.Services
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             string theme = localSettings.Values[ShelterVaultConstants.SETTINGS_THEME_KEY] as string;
-            Enum.TryParse(typeof(ShelterVaultTheme), theme, true, out object? shelterVaultThemeObj);
+            Enum.TryParse(typeof(ShelterVaultTheme), theme, true, out object shelterVaultThemeObj);
             ShelterVaultTheme? shelterVaultTheme = (ShelterVaultTheme?)shelterVaultThemeObj;
 
             if (shelterVaultTheme == null && PInvoke.ShouldSystemUseDarkMode()) return ShelterVaultTheme.DARK;

@@ -11,21 +11,23 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <StackPanel
-        Width="500"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center">
-        <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
-        <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">
-            Master key:
-        </TextBlock>
-        <PasswordBox
-            x:Name="password"
-            Margin="0,0,0,15"
-            helpers:EnterToCommandHelper.Command="{Binding ConfirmMasterKeyCommand}"
-            helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            helpers:RequestFocusHelper.Focus="True"
-            MaxLength="32"
-            Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
-    </StackPanel>
+    <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto">
+        <StackPanel
+            Width="500"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">
+                Master key:
+            </TextBlock>
+            <PasswordBox
+                x:Name="password"
+                Margin="0,0,0,15"
+                helpers:EnterToCommandHelper.Command="{Binding ConfirmMasterKeyCommand}"
+                helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                helpers:RequestFocusHelper.Focus="True"
+                MaxLength="32"
+                Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
+        </StackPanel>
+    </ScrollViewer>
 </Page>
