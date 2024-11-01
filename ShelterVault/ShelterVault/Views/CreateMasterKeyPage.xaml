@@ -15,48 +15,24 @@
         Width="500"
         HorizontalAlignment="Center"
         VerticalAlignment="Center">
-        <TextBlock
-            HorizontalAlignment="Center"
-            FontFamily="Cascadia Mono"
-            Foreground="{ThemeResource ShelterVaultForeground}"
-            Text=" ███████████████╗  &#x0a; ██           ██║  ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗&#x0a; ██    ███    ██║  ██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝&#x0a; ██     █     ██║  ██║   ██║███████║██║   ██║██║     ██║   &#x0a; ██     █     ██║  ╚██╗ ██╔╝██╔══██║██║   ██║██║     ██║   &#x0a; ██           ██║   ╚████╔╝ ██║  ██║╚██████╔╝███████╗██║   &#x0a; ███████████████║    ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝   &#x0a; ╚══════════════╝  &#x0a;"
-            TextWrapping="Wrap" />
-        <TextBlock Margin="0,0,0,5" Style="{ThemeResource ShelterVaultTextBlockStyle}">Create master key:</TextBlock>
+        <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+        <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Create master key:</TextBlock>
         <PasswordBox
             x:Name="password"
-            Margin="0,0,0,15"
             helpers:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}"
             helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
             helpers:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}"
             helpers:MultiPasswordBoxValuesHelper.PasswordChangedToCommand="{Binding PasswordRequirementsVM.PasswordChangedCommand}"
             helpers:RequestFocusHelper.Focus="True"
-            MaxLength="32"
-            Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
-            <PasswordBox.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="../Resources/OverrideThemes.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
-            </PasswordBox.Resources>
-        </PasswordBox>
-        <TextBlock Margin="0,0,0,5" Style="{ThemeResource ShelterVaultTextBlockStyle}">Confirm master key:</TextBlock>
+            Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
+        <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Confirm master key:</TextBlock>
         <PasswordBox
             x:Name="passwordConfirmation"
             helpers:EnterToCommandHelper.Command="{Binding CreateMasterKeyCommand}"
             helpers:EnterToCommandHelper.CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
-            MaxLength="32"
-            Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
-            <PasswordBox.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="../Resources/OverrideThemes.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
-            </PasswordBox.Resources>
-        </PasswordBox>
-        <local:PasswordConfirmationView Margin="0,15" DataContext="{Binding PasswordRequirementsVM}" />
-        <StackPanel Orientation="Horizontal">
+            Style="{ThemeResource ShelterVaultPasswordBoxStyle}" />
+        <local:PasswordConfirmationView DataContext="{Binding PasswordRequirementsVM}" />
+        <StackPanel Margin="0,15" Orientation="Horizontal">
             <FontIcon
                 FontSize="12"
                 Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"

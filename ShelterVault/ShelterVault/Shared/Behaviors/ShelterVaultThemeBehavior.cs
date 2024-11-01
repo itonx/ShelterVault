@@ -27,23 +27,17 @@ namespace ShelterVault.Shared.Behaviors
             Grid container = d as Grid;
             ShelterVaultTheme currentShelterVaultTheme = (ShelterVaultTheme)e.NewValue;
             ThemeStyleAttribute currentShelterVaultThemeConfig = currentShelterVaultTheme.GetAttribute<ThemeStyleAttribute>();
-            MainWindow mainWindow = WindowHelper.CurrentMainWindow;
             ResourceDictionary lastDictionary = Application.Current.Resources.MergedDictionaries.LastOrDefault();
 
             ElementTheme expectedTheme = currentShelterVaultThemeConfig.SupportedThemeStyle;
             ElementTheme switchTo = expectedTheme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
 
-            if (lastDictionary != null && lastDictionary.Source != null && lastDictionary.Source.OriginalString.Contains("ms-appx:///Resources/"))
+            if (lastDictionary != null && lastDictionary.Source != null && lastDictionary.Source.OriginalString.Contains("ms-appx:///Resources/") && !lastDictionary.Source.OriginalString.Contains("OverrideDefaultTheme.xaml"))
             {
                 Application.Current.Resources.MergedDictionaries.Remove(lastDictionary);
             }
 
-            if (currentShelterVaultTheme == ShelterVaultTheme.LIGHT || currentShelterVaultTheme == ShelterVaultTheme.DARK)
-            {
-                expectedTheme = currentShelterVaultThemeConfig.SupportedThemeStyle;
-                switchTo = expectedTheme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
-            }
-            else
+            if (currentShelterVaultTheme != ShelterVaultTheme.LIGHT && currentShelterVaultTheme != ShelterVaultTheme.DARK)
             {
                 ResourceDictionary resourceTheme = new ResourceDictionary()
                 {
@@ -52,10 +46,8 @@ namespace ShelterVault.Shared.Behaviors
                 Application.Current.Resources.MergedDictionaries.Add(resourceTheme);
             }
 
-            container.Opacity = 0;
             container.RequestedTheme = switchTo;
             container.RequestedTheme = expectedTheme;
-            container.AnimateOpacity(0, 1, 1);
         }
 
         public static void SetCurrentShelterVaultTheme(Grid obj, ShelterVaultTheme value)

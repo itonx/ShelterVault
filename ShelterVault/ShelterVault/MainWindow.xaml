@@ -57,13 +57,6 @@
                         <behaviors:InteractiveAppTitleBarBehavior />
                     </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="&#xE793;" />
-                    <Button.Resources>
-                        <ResourceDictionary>
-                            <ResourceDictionary.MergedDictionaries>
-                                <ResourceDictionary Source="../Resources/OverrideThemes.xaml" />
-                            </ResourceDictionary.MergedDictionaries>
-                        </ResourceDictionary>
-                    </Button.Resources>
                 </Button>
             </StackPanel>
         </Grid>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ShelterVault.Resources">
+    <Thickness x:Key="ShelterVaultPageContentThickness">100, 0</Thickness>
+    <SolidColorBrush x:Key="ShelterVaultForeground" Color="White" />
+    <Style
+        x:Key="ShelterVaultTitlePasswordBoxStyle"
+        BasedOn="{StaticResource TitleLargeTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="Margin" Value="0,0,0,5" />
+        <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+    </Style>
+    <Style
+        x:Key="ShelterVaultPasswordBoxStyle"
+        BasedOn="{StaticResource DefaultPasswordBoxStyle}"
+        TargetType="PasswordBox">
+        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+        <Setter Property="Height" Value="50" />
+        <Setter Property="IsPasswordRevealButtonEnabled" Value="False" />
+        <Setter Property="Margin" Value="0,0,0,15" />
+        <Setter Property="MaxLength" Value="32" />
+    </Style>
+    <Style
+        x:Key="ShelterVaultTextBlockStyle"
+        BasedOn="{StaticResource TitleTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+        <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+    </Style>
+    <Style
+        x:Key="ShelterVaultLoginBannerStyle"
+        BasedOn="{StaticResource BodyTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="Text" Value=" ███████████████╗                         ▐█████▌  &#x0a; ██░░░░░░░░░░░██║                        ██  ▄  ██ &#x0a; ██░░░░███░░░░██║  ███████████████████████  ▐▐  ██ &#x0a; ██░░░░░█░░░░░██║   ██ ▀ ▀ ▀ █ ▀   ▀ █   ██  ▀  ██ &#x0a; ██░░░░░█░░░░░██║   █        ▀            ▐█████▌  &#x0a; ██░░░░░░░░░░░██║                                  &#x0a; ███████████████║                                  &#x0a; ╚══════════════╝                                  &#x0a;" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="FontFamily" Value="Cascadia Mono" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+</ResourceDictionary>
