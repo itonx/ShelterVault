@@ -11,6 +11,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBlock FontSize="30">Settings example</TextBlock>
+        <TextBlock FontSize="30">Settings page</TextBlock>
     </Grid>
 </Page>
