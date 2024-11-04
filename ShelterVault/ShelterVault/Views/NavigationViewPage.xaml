@@ -61,7 +61,7 @@
         </NavigationView.MenuItems>
         <Frame>
             <interactivity:Interaction.Behaviors>
-                <behaviors:EnableNavigationViewModelBehavior />
+                <behaviors:ExecuteOnINavigationImplementedBehavior />
             </interactivity:Interaction.Behaviors>
         </Frame>
     </NavigationView>
