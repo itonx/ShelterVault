@@ -46,12 +46,14 @@
                 Tag="NEW_CREDENTIALS"
                 ToolTipService.ToolTip="New credentials" />
             <NavigationViewItem
-                behaviors:CredentialItemsGeneratorBehavior.ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 Content="Vault"
                 IsExpanded="True"
                 SelectsOnInvoked="False"
                 Tag="VAULT"
                 ToolTipService.ToolTip="Vault">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:CredentialItemsGeneratorBehavior ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                </interactivity:Interaction.Behaviors>
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xE705;" />
                 </NavigationViewItem.Icon>
