@@ -22,24 +22,21 @@
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Create master key:</TextBlock>
             <PasswordBox
                 x:Name="password"
-                helpers:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}"
-                helpers:MultiPasswordBoxValuesHelper.PasswordChangedToCommand="{Binding PasswordRequirementsVM.PasswordChangedCommand}"
+                Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
                 <interactivity:Interaction.Behaviors>
+                    <behaviors:ExecuteCommandOnPasswordChangedBehavior Command="{Binding PasswordRequirementsVM.PasswordChangedCommand, Mode=OneTime}" />
                     <behaviors:FocusBehavior OnEvent="Loaded" />
-                    <behaviors:KeyDownToCommandBehavior
-                        Command="{Binding CreateMasterKeyCommand}"
-                        CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
-                        VirtualKeyTrigger="Enter" />
+                    <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Confirm master key:</TextBlock>
-            <PasswordBox x:Name="passwordConfirmation" Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
+            <PasswordBox
+                x:Name="passwordConfirmation"
+                Password="{Binding PasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:KeyDownToCommandBehavior
-                        Command="{Binding CreateMasterKeyCommand}"
-                        CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
-                        VirtualKeyTrigger="Enter" />
+                    <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
             <local:PasswordConfirmationView DataContext="{Binding PasswordRequirementsVM}" />

@@ -16,6 +16,10 @@ namespace ShelterVault.ViewModels
     {
         [ObservableProperty]
         private PasswordConfirmationViewModel _passwordRequirementsVM;
+        [ObservableProperty]
+        private string _password;
+        [ObservableProperty]
+        private string _passwordConfirmation;
 
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IProgressBarService _progressBarService;
@@ -28,14 +32,14 @@ namespace ShelterVault.ViewModels
         }
 
         [RelayCommand]
-        private async Task CreateMasterKey(Dictionary<string, StringBuilder> masterKeyPasswords)
+        private async Task CreateMasterKey()
         {
             try
             {
-                if (await PasswordRequirementsVM.ArePasswordsValid(masterKeyPasswords.Values.First().ToString(), masterKeyPasswords.Values.Last().ToString()))
+                if (await PasswordRequirementsVM.ArePasswordsValid(Password, PasswordConfirmation))
                 {
                     await _progressBarService.Show();
-                    bool wasVaultCreated = _shelterVaultLocalStorage.CreateShelterVault(masterKeyPasswords.Values.First().ToString(), Guid.NewGuid().ToString());
+                    bool wasVaultCreated = _shelterVaultLocalStorage.CreateShelterVault(Password, Guid.NewGuid().ToString());
                     if (wasVaultCreated) WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
                 }
             }
