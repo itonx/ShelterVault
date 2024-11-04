@@ -21,7 +21,9 @@ namespace ShelterVault.Shared.Helpers
         private static AppWindow GetAppWindow()
         {
             if (_currentAppWindow != null) return _currentAppWindow;
-            IntPtr hWnd = WindowNative.GetWindowHandle(CurrentMainWindow);
+            MainWindow mainWindow = CurrentMainWindow;
+            if (mainWindow == null) return null;
+            IntPtr hWnd = WindowNative.GetWindowHandle(mainWindow);
             WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             _currentAppWindow = AppWindow.GetFromWindowId(wndId);
             return _currentAppWindow;

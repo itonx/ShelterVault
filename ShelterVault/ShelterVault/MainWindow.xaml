@@ -15,9 +15,9 @@
     mc:Ignorable="d">
     <Grid
         x:Name="WindowContainer"
-        behaviors:ShelterVaultThemeBehavior.CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <interactivity:Interaction.Behaviors>
+            <behaviors:ShelterVaultThemeBehavior CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}" />
             <behaviors:AppStateLoaderBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
             <behaviors:MaximizeWindowAtStartupBehavior />
         </interactivity:Interaction.Behaviors>
@@ -35,7 +35,7 @@
             Canvas.ZIndex="1">
             <interactivity:Interaction.Behaviors>
                 <behaviors:AutoAdjustAppTitleBarCaptionsBehavior />
-                <behaviors:ThemeAppTitleBehavior />
+                <behaviors:ShelterVaultThemeAppTitleBehavior />
             </interactivity:Interaction.Behaviors>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />

@@ -16,15 +16,22 @@ namespace ShelterVault.Shared.Behaviors
     public class ShelterVaultThemeBehavior : Behavior<Grid>
     {
         public static readonly DependencyProperty CurrentShelterVaultThemeProperty =
-            DependencyProperty.RegisterAttached(
-            "CurrentShelterVaultTheme",
-            typeof(ShelterVaultTheme),
-            typeof(ShelterVaultThemeBehavior),
-            new PropertyMetadata(null, OnCurrentShelterVaultThemeChanged));
+            DependencyProperty.Register(
+                nameof(CurrentShelterVaultTheme),
+                typeof(ShelterVaultTheme),
+                typeof(ShelterVaultThemeBehavior),
+                new PropertyMetadata(null, OnCurrentShelterVaultThemeChanged));
+
+        public ShelterVaultTheme CurrentShelterVaultTheme
+        {
+            get { return (ShelterVaultTheme)GetValue(CurrentShelterVaultThemeProperty); }
+            set { SetValue(CurrentShelterVaultThemeProperty, value); }
+        }
 
         private static void OnCurrentShelterVaultThemeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Grid container = d as Grid;
+            ShelterVaultThemeBehavior behavior = d as ShelterVaultThemeBehavior;
+            Grid container = behavior.AssociatedObject;
             ShelterVaultTheme currentShelterVaultTheme = (ShelterVaultTheme)e.NewValue;
             ThemeStyleAttribute currentShelterVaultThemeConfig = currentShelterVaultTheme.GetAttribute<ThemeStyleAttribute>();
             ResourceDictionary lastDictionary = Application.Current.Resources.MergedDictionaries.LastOrDefault();
@@ -48,16 +55,6 @@ namespace ShelterVault.Shared.Behaviors
 
             container.RequestedTheme = switchTo;
             container.RequestedTheme = expectedTheme;
-        }
-
-        public static void SetCurrentShelterVaultTheme(Grid obj, ShelterVaultTheme value)
-        {
-            obj.SetValue(CurrentShelterVaultThemeProperty, value);
-        }
-
-        public static ShelterVaultTheme GetCurrentShelterVaultTheme(Grid obj)
-        {
-            return (ShelterVaultTheme)obj.GetValue(CurrentShelterVaultThemeProperty);
         }
     }
 }
