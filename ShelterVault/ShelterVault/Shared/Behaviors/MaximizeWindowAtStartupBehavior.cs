@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Helpers;
+using ShelterVault.Shared.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,26 +25,6 @@ namespace ShelterVault.Shared.Behaviors
             MainWindow mainWindow = WindowHelper.CurrentMainWindow;
             IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
             PInvoke.MaximizeWindow(hWnd);
-        }
-    }
-
-    class PInvoke
-    {
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
-
-        [DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#138")]
-        public static extern bool ShouldSystemUseDarkMode();
-
-        public enum WindowShowStyle : uint
-        {
-            MAXIMIZED = 3,
-        }
-
-        public static void MaximizeWindow(IntPtr hWnd)
-        {
-            ShowWindow(hWnd, WindowShowStyle.MAXIMIZED);
         }
     }
 }
