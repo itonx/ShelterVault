@@ -24,9 +24,9 @@
                 x:Name="password"
                 helpers:MultiPasswordBoxValuesHelper.PasswordBoxConfirmation="{Binding ElementName=passwordConfirmation}"
                 helpers:MultiPasswordBoxValuesHelper.PasswordChangedToCommand="{Binding PasswordRequirementsVM.PasswordChangedCommand}"
-                helpers:RequestFocusHelper.Focus="True"
                 Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
                 <interactivity:Interaction.Behaviors>
+                    <behaviors:FocusBehavior OnEvent="Loaded" />
                     <behaviors:KeyDownToCommandBehavior
                         Command="{Binding CreateMasterKeyCommand}"
                         CommandParameter="{Binding ElementName=password, Path=(helpers:MultiPasswordBoxValuesHelper.SecurePasswords)}"
