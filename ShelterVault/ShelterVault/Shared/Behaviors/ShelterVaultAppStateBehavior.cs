@@ -24,9 +24,9 @@ namespace ShelterVault.Shared.Behaviors
 
         private static void OnCurrentAppStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ShelterVaultAppStateBehavior behavior = d as ShelterVaultAppStateBehavior;
-            Frame appContainer = behavior.AssociatedObject;
-            appContainer.Navigate(behavior.CurrentAppState.GetAttribute<PageTypeAttribute>().PageType);
+            Frame appContainer = d.GetDependencyObjectFromBehavior<Frame>();
+            ShelterVaultAppState shelterVaultAppState = (ShelterVaultAppState)e.NewValue;
+            appContainer.Navigate(shelterVaultAppState.GetAttribute<PageTypeAttribute>().PageType);
         }
 
         public ShelterVaultAppState CurrentAppState

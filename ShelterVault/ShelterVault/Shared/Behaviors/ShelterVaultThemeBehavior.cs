@@ -30,8 +30,7 @@ namespace ShelterVault.Shared.Behaviors
 
         private static void OnCurrentShelterVaultThemeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ShelterVaultThemeBehavior behavior = d as ShelterVaultThemeBehavior;
-            Grid container = behavior.AssociatedObject;
+            Grid container = d.GetDependencyObjectFromBehavior<Grid>();
             ShelterVaultTheme currentShelterVaultTheme = (ShelterVaultTheme)e.NewValue;
             ThemeStyleAttribute currentShelterVaultThemeConfig = currentShelterVaultTheme.GetAttribute<ThemeStyleAttribute>();
             ResourceDictionary lastDictionary = Application.Current.Resources.MergedDictionaries.LastOrDefault();

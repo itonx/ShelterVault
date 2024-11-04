@@ -18,7 +18,6 @@
         <x:Double x:Key="ShelterVaultOpenPaneLength">280</x:Double>
     </Page.Resources>
     <NavigationView
-        behaviors:SelectItemByTagBehavior.SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}"
         AlwaysShowHeader="True"
         CompactPaneLength="{StaticResource ShelterVaultCompactPaneLength}"
         Header=" "
@@ -29,8 +28,8 @@
         OpenPaneLength="{StaticResource ShelterVaultOpenPaneLength}"
         PaneDisplayMode="Left">
         <interactivity:Interaction.Behaviors>
-            <behaviors:PageLoaderBehavior SettingsPage="views:SettingsPage" />
-            <behaviors:SelectItemByTagBehavior />
+            <behaviors:PageLoaderBehavior SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SettingsPage="views:SettingsPage" />
+            <!--<behaviors:SelectItemByTagBehavior SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}" />-->
         </interactivity:Interaction.Behaviors>
         <NavigationView.MenuItems>
             <NavigationViewItem
