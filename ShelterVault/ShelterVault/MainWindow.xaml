@@ -31,7 +31,7 @@
             x:FieldModifier="public"
             Canvas.ZIndex="1">
             <interactivity:Interaction.Behaviors>
-                <behaviors:AutoAdjustAppTitleBarCaptionsBehavior />
+                <behaviors:AutoSizeAppTitleBarCaptionsBehavior />
                 <behaviors:ShelterVaultThemeAppTitleBehavior />
             </interactivity:Interaction.Behaviors>
             <Grid.ColumnDefinitions>
