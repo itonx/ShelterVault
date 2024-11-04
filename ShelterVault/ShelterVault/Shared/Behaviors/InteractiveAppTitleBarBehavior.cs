@@ -26,14 +26,15 @@ namespace ShelterVault.Shared.Behaviors
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            AssociatedObject.Loaded -= AssociatedObject_Loaded;
             MainWindow mainWindow = WindowHelper.CurrentMainWindow;
             mainWindow.AppTitleBar.SizeChanged -= AppTitleBar_SizeChanged;
         }
 
         private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
         {
+            AssociatedObject.Loaded -= AssociatedObject_Loaded;
             MainWindow mainWindow = WindowHelper.CurrentMainWindow;
+            setupElement(AssociatedObject);
             mainWindow.AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
         }
 
