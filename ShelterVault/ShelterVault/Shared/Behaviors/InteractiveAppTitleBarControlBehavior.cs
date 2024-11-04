@@ -15,7 +15,7 @@ using Windows.Graphics;
  
 namespace ShelterVault.Shared.Behaviors
 {
-    public class InteractiveAppTitleBarBehavior : Behavior<FrameworkElement>
+    public class InteractiveAppTitleBarControlBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()
         {
