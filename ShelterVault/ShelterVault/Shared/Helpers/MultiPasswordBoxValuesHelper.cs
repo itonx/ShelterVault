@@ -17,7 +17,31 @@ namespace ShelterVault.Shared.Helpers
         public static void SetSecurePasswords(DependencyObject obj, Dictionary<string, StringBuilder> value) => obj.SetValue(SecurePasswordsProperty, value);
 
         public static readonly DependencyProperty PasswordChangedToCommandProperty =
-            DependencyProperty.RegisterAttached("PasswordChangedToCommand", typeof(ICommand), typeof(MultiPasswordBoxValuesHelper), new PropertyMetadata(null));
+            DependencyProperty.RegisterAttached("PasswordChangedToCommand", typeof(ICommand), typeof(MultiPasswordBoxValuesHelper), new PropertyMetadata(null, OnPasswordChangedToCommandChanged));
+
+        private static void OnPasswordChangedToCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if(d is PasswordBox passwordBox)
+            {
+                passwordBox.Loaded += PasswordBox_Loaded;
+                passwordBox.PasswordChanged += PasswordBox_PasswordChanged_ExecuteCommand;
+            }
+        }
+
+        private static void PasswordBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            (sender as PasswordBox).Loaded -= PasswordBox_Loaded;
+            PasswordBox_PasswordChanged_ExecuteCommand(sender, e);
+        }
+
+        private static void PasswordBox_PasswordChanged_ExecuteCommand(object sender, RoutedEventArgs e)
+        {
+            if(sender is PasswordBox passwordBox)
+            {
+                ICommand passwordChangedToCommand = GetPasswordChangedToCommand(passwordBox);
+                if (passwordChangedToCommand != null) passwordChangedToCommand.Execute(passwordBox.Password);
+            }
+        }
 
         public static ICommand GetPasswordChangedToCommand(DependencyObject obj) => (ICommand)obj.GetValue(PasswordChangedToCommandProperty);
 
@@ -63,12 +87,7 @@ namespace ShelterVault.Shared.Helpers
                     SetSecurePasswords(passwordBox, passwords);
                 }
 
-                ICommand passwordChangedToCommand = GetPasswordChangedToCommand(passwordBox);
-                if(passwordChangedToCommand != null)
-                {
-                    passwordChangedToCommand.Execute(passwordBox.Password);
-                }
-
+                PasswordBox_PasswordChanged_ExecuteCommand(sender, e);
             }
         }
     }
