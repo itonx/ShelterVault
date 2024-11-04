@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Behaviors
 {
-    public class AutoAdjustAppTitleBarCaptionsBehavior : Behavior<Grid>
+    public class AutoSizeAppTitleBarCaptionsBehavior : Behavior<Grid>
     {
         protected override void OnAttached()
         {
