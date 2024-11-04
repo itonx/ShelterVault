@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Models;
 using ShelterVault.Shared.Enums;
+using ShelterVault.Shared.Extensions;
 using ShelterVault.Views;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,7 @@ namespace ShelterVault.Shared.Behaviors
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == null) return;
-            CredentialItemsGeneratorBehavior behavior = d as CredentialItemsGeneratorBehavior;
-            NavigationViewItem item = behavior.AssociatedObject;
+            NavigationViewItem item = d.GetDependencyObjectFromBehavior<NavigationViewItem>();
             item.MenuItems.Clear();
             foreach (Credential credential in (IList<Credential>)e.NewValue)
             {

@@ -2,6 +2,8 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
+using ShelterVault.Models;
+using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interfaces;
 using ShelterVault.Views;
 using System;
@@ -26,6 +28,34 @@ namespace ShelterVault.Shared.Behaviors
         {
             get { return (Type)GetValue(SettingsPageProperty); }
             set { SetValue(SettingsPageProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedItemProperty =
+            DependencyProperty.Register(
+                nameof(SelectedItem),
+                typeof(object),
+                typeof(PageLoaderBehavior),
+                new PropertyMetadata(null, OnSelectedItemChanged));
+
+        private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue == null) return;
+            NavigationView navigationView = d.GetDependencyObjectFromBehavior<NavigationView>();
+            if (navigationView.MenuItems.Count == 0) return;
+
+            NavigationViewItem itemFound = RecursiveLookup(navigationView.MenuItems, e.NewValue);
+            if (itemFound != null)
+            {
+                navigationView.SelectedItem = itemFound;
+                SelectMenuIfCollapsed(navigationView, e.NewValue);
+            }
+
+        }
+
+        public object SelectedItem
+        {
+            get { return GetValue(SelectedItemProperty); }
+            set { SetValue(SelectedItemProperty, value); }
         }
 
         public static readonly DependencyProperty PageTypeProperty =
@@ -62,23 +92,6 @@ namespace ShelterVault.Shared.Behaviors
             return (bool)obj.GetValue(SkipSelectionLoginProperty);
         }
 
-        public static readonly DependencyProperty SkipSelectionByTagProperty =
-            DependencyProperty.RegisterAttached(
-            "SkipSelectionByTag",
-            typeof(bool),
-            typeof(PageLoaderBehavior),
-            new PropertyMetadata(false));
-
-        public static void SetSkipSelectionByTag(NavigationView obj, bool value)
-        {
-            obj.SetValue(SkipSelectionByTagProperty, value);
-        }
-
-        public static bool GetSkipSelectionByTag(NavigationView obj)
-        {
-            return (bool)obj.GetValue(SkipSelectionByTagProperty); 
-        }
-
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -94,22 +107,23 @@ namespace ShelterVault.Shared.Behaviors
         private async void AssociatedObject_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.SelectedItem == null) return;
-            bool? skip = (bool?)sender.GetValue(SkipSelectionLoginProperty);
+            bool? skip = (bool?)sender.GetValue(PageLoaderBehavior.SkipSelectionLoginProperty);
             if (skip == true) return;
             if (AssociatedObject.Content is not Frame pageContainer) throw new InvalidOperationException("The NavigationView must contain a Frame.");
 
             NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
-            object lastSelectedItemByTag = AssociatedObject.GetValue(SelectItemByTagBehavior.SelectedItemProperty);
+            object lastSelectedItemByTag = sender.GetValue(PageLoaderBehavior.SelectedItemProperty);
 
             if(pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted)
             {
                 bool discardChanges = await pendingChangesChallenge.DiscardChangesAsync();
                 if(!discardChanges)
                 {
-                    NavigationViewItem itemFound = SelectItemByTagBehavior.RecursiveLookup(sender.MenuItems, lastSelectedItemByTag);
-                    sender.SetValue(SkipSelectionLoginProperty, true);
+                    NavigationViewItem itemFound = RecursiveLookup(sender.MenuItems, lastSelectedItemByTag);
+                    sender.SetValue(PageLoaderBehavior.SkipSelectionLoginProperty, true);
                     sender.SelectedItem = itemFound;
-                    sender.SetValue(SkipSelectionLoginProperty, false);
+                    SelectMenuIfCollapsed(AssociatedObject, itemFound.Tag);
+                    sender.SetValue(PageLoaderBehavior.SkipSelectionLoginProperty, false);
                     return;
                 }
             }
@@ -122,8 +136,49 @@ namespace ShelterVault.Shared.Behaviors
             {
                 Type selectedPageType = (Type)selectedItem.GetValue(PageTypeProperty);
                 object navigationParameter = selectedItem.Tag;
+                sender.SetValue(PageLoaderBehavior.SelectedItemProperty, navigationParameter);
                 if (selectedPageType == null) return;
                 pageContainer.Navigate(selectedPageType, navigationParameter);
+            }
+        }
+
+        public static NavigationViewItem RecursiveLookup(IList<object> menuItems, object tag)
+        {
+            foreach (var item in menuItems)
+            {
+                NavigationViewItem navItem = item as NavigationViewItem;
+                bool found = AreTagEqual(navItem, tag);
+                if (found) return navItem;
+                if (navItem.MenuItems.Count > 0) return RecursiveLookup(navItem.MenuItems, tag);
+            }
+
+            return null;
+        }
+
+        private static bool AreTagEqual(NavigationViewItem item, object tag)
+        {
+            if (item.Tag is string && tag is string && item.Tag.Equals(tag.ToString()))
+            {
+                return true;
+            }
+            if (item.Tag is Credential itemCredential && tag is Credential tagCredential && tagCredential.UUID.Equals(itemCredential.UUID))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void SelectMenuIfCollapsed(NavigationView navigationView, object tag)
+        {
+            if (tag is Credential && navigationView.MenuItems.Count > 2)
+            {
+                NavigationViewItem menuItem = navigationView.MenuItems[2] as NavigationViewItem;
+                if (!menuItem.IsExpanded)
+                {
+                    menuItem.IsExpanded = true;
+                    menuItem.IsExpanded = false;
+                }
             }
         }
     }
