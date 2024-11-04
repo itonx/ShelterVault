@@ -25,10 +25,10 @@
             <PasswordBox
                 x:Name="password"
                 Margin="0,0,0,15"
-                helpers:RequestFocusHelper.Focus="True"
                 MaxLength="32"
                 Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
                 <interactivity:Interaction.Behaviors>
+                    <behaviors:FocusBehavior OnEvent="Loaded" />
                     <behaviors:KeyDownToCommandBehavior
                         Command="{Binding ConfirmMasterKeyCommand}"
                         CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
