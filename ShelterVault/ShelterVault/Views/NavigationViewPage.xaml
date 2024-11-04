@@ -29,7 +29,6 @@
         PaneDisplayMode="Left">
         <interactivity:Interaction.Behaviors>
             <behaviors:PageLoaderBehavior SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SettingsPage="views:SettingsPage" />
-            <!--<behaviors:SelectItemByTagBehavior SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}" />-->
         </interactivity:Interaction.Behaviors>
         <NavigationView.MenuItems>
             <NavigationViewItem
