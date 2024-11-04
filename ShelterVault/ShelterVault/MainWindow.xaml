@@ -13,9 +13,7 @@
     xmlns:views="using:ShelterVault.Views"
     Title="ShelterVault"
     mc:Ignorable="d">
-    <Grid
-        x:Name="WindowContainer"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <interactivity:Interaction.Behaviors>
             <behaviors:ShelterVaultThemeBehavior CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}" />
             <behaviors:AppStateLoaderBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
