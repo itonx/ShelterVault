@@ -112,7 +112,7 @@ namespace ShelterVault.Shared.Behaviors
             if (AssociatedObject.Content is not Frame pageContainer) throw new InvalidOperationException("The NavigationView must contain a Frame.");
 
             NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
-            object lastSelectedItemByTag = sender.GetValue(PageLoaderBehavior.SelectedItemProperty);
+            object lastSelectedItemByTag = this.GetValue(PageLoaderBehavior.SelectedItemProperty);
 
             if(pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted)
             {
@@ -136,7 +136,7 @@ namespace ShelterVault.Shared.Behaviors
             {
                 Type selectedPageType = (Type)selectedItem.GetValue(PageTypeProperty);
                 object navigationParameter = selectedItem.Tag;
-                sender.SetValue(PageLoaderBehavior.SelectedItemProperty, navigationParameter);
+                this.SetValue(PageLoaderBehavior.SelectedItemProperty, navigationParameter);
                 if (selectedPageType == null) return;
                 pageContainer.Navigate(selectedPageType, navigationParameter);
             }
