@@ -53,7 +53,7 @@
                     Command="{Binding ChangeThemeCommand}"
                     CornerRadius="0">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:InteractiveAppTitleBarBehavior />
+                        <behaviors:InteractiveAppTitleBarControlBehavior />
                     </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="{Binding CurrentTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
                 </Button>
