@@ -13,7 +13,7 @@ using Windows.UI;
 
 namespace ShelterVault.Shared.Behaviors
 {
-    public class ThemeAppTitleBehavior : Behavior<Grid>
+    public class ShelterVaultThemeAppTitleBehavior : Behavior<Grid>
     {
         protected override void OnAttached()
         {
@@ -41,6 +41,7 @@ namespace ShelterVault.Shared.Behaviors
         private void ApplyThemeToCaptionButtons(ElementTheme currentTheme)
         {
             AppWindow appWindow = WindowHelper.CurrentAppWindow;
+            if (appWindow == null) return;
             appWindow.TitleBar.ButtonHoverBackgroundColor = currentTheme == ElementTheme.Light ? Color.FromArgb(50, 0, 0, 0) : Color.FromArgb(50, 255, 255, 255);
             appWindow.TitleBar.ButtonHoverForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
             appWindow.TitleBar.ButtonForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
