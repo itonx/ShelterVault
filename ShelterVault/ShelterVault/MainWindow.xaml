@@ -16,7 +16,6 @@
     <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <interactivity:Interaction.Behaviors>
             <behaviors:ShelterVaultThemeBehavior CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}" />
-            <behaviors:AppStateLoaderBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
             <behaviors:MaximizeWindowAtStartupBehavior />
         </interactivity:Interaction.Behaviors>
         <Grid.Resources>
@@ -60,6 +59,10 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Frame Grid.RowSpan="2" />
+        <Frame Grid.RowSpan="2">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:ShelterVaultAppStateBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
+            </interactivity:Interaction.Behaviors>
+        </Frame>
     </Grid>
 </Window>
