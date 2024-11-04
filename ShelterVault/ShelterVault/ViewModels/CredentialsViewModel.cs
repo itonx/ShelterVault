@@ -154,6 +154,7 @@ namespace ShelterVault.ViewModels
         {
             try
             {
+                if (!await DiscardChangesAsync(completeChallenge: true)) return;
                 await _progressBarService.Show();
                 if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
                 string uuid = SelectedCredential.UUID;
