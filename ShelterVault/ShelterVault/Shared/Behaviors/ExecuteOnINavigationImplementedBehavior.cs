@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Behaviors
 {
-    public class EnableNavigationViewModelBehavior : Behavior<Frame>
+    public class ExecuteOnINavigationImplementedBehavior : Behavior<Frame>
     {
         protected override void OnAttached()
         {
@@ -32,7 +32,7 @@ namespace ShelterVault.Shared.Behaviors
 
             if(e.Parameter != null && pageRequested.DataContext is INavigation navigate)
             {
-                if (e.Parameter is not string) navigate.OnNavigateTo(e.Parameter);
+                if (e.Parameter is not string) navigate.OnNavigated(e.Parameter);
             }
         }
     }

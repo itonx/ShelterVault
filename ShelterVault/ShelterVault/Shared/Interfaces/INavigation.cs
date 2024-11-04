@@ -8,6 +8,6 @@ namespace ShelterVault.Shared.Interfaces
 {
     public interface INavigation
     {
-        void OnNavigateTo(object parameter);
+        void OnNavigated(object parameter);
     }
 }

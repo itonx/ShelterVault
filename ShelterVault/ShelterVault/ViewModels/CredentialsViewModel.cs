@@ -54,7 +54,7 @@ namespace ShelterVault.ViewModels
             NewCredentials();
         }
 
-        public void OnNavigateTo(object parameter)
+        public void OnNavigated(object parameter)
         {
             Credential credentialParameter = ((Credential)parameter).Clone(); 
             SelectedCredential = credentialParameter.Clone();
