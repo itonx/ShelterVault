@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Models;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Views;
 using System;
 using System.Collections.Generic;
@@ -14,16 +15,23 @@ namespace ShelterVault.Shared.Behaviors
     public class CredentialItemsGeneratorBehavior : Behavior<NavigationViewItem>
     {
         public static readonly DependencyProperty ItemsSourceProperty =
-            DependencyProperty.RegisterAttached(
-            "ItemsSource",
+            DependencyProperty.Register(
+            nameof(ItemsSource),
             typeof(IList<Credential>),
             typeof(CredentialItemsGeneratorBehavior),
             new PropertyMetadata(null, OnItemsSourceChanged));
 
+        public IList<Credential> ItemsSource
+        {
+            get { return (IList<Credential>)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
+        }
+
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == null) return;
-            NavigationViewItem item = d as NavigationViewItem;
+            CredentialItemsGeneratorBehavior behavior = d as CredentialItemsGeneratorBehavior;
+            NavigationViewItem item = behavior.AssociatedObject;
             item.MenuItems.Clear();
             foreach (Credential credential in (IList<Credential>)e.NewValue)
             {
@@ -33,16 +41,6 @@ namespace ShelterVault.Shared.Behaviors
                 item.MenuItems.Add(navigationViewItem);
             }
             if(item.MenuItems.Count == 0) item.Visibility = Visibility.Collapsed;
-        }
-
-        public static void SetItemsSource(NavigationViewItem obj, IList<Credential> value)
-        {
-            obj.SetValue(ItemsSourceProperty, value);
-        }
-
-        public static IList<Credential> GetItemsSource(NavigationViewItem obj)
-        {
-            return (IList<Credential>)obj.GetValue(ItemsSourceProperty);
         }
     }
 }
