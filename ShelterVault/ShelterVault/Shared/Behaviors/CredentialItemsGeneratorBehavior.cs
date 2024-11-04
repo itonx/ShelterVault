@@ -41,6 +41,7 @@ namespace ShelterVault.Shared.Behaviors
                 item.MenuItems.Add(navigationViewItem);
             }
             if(item.MenuItems.Count == 0) item.Visibility = Visibility.Collapsed;
+            else if(item.Visibility == Visibility.Collapsed) item.Visibility = Visibility.Visible;
         }
     }
 }
