@@ -159,8 +159,8 @@ namespace ShelterVault.ViewModels
                 string uuid = SelectedCredential.UUID;
                 if (_shelterVaultLocalStorage.DeleteCredential(uuid))
                 {
-                    WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                     WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
+                    WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                     await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Credentials deleted.", "OK");
                 }
                 else await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Your credentials couldn't be deleted.", "OK");
