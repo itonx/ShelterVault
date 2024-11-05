@@ -46,8 +46,11 @@ namespace ShelterVault.Shared.Behaviors
             if (itemFound != null && (NavigationViewItem)navigationView.SelectedItem != itemFound)
             {
                 bool shouldRestore = !navigationView.IsPaneOpen;
-                ExpandPaneIfNeeded(navigationView);
-                SelectMenuIfCollapsed(navigationView, e.NewValue);
+                if (!e.NewValue.ToString().Equals(Enums.ShelterVaultPage.HOME.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    ExpandPaneIfNeeded(navigationView);
+                    SelectMenuIfCollapsed(navigationView, e.NewValue);
+                }
                 navigationView.SelectedItem = itemFound;
                 itemFound.IsSelected = true;
                 SelectMenuIfCollapsed(navigationView, e.NewValue);
