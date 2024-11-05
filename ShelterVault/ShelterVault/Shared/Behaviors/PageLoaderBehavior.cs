@@ -45,8 +45,13 @@ namespace ShelterVault.Shared.Behaviors
             NavigationViewItem itemFound = RecursiveLookup(navigationView.MenuItems, e.NewValue);
             if (itemFound != null && (NavigationViewItem)navigationView.SelectedItem != itemFound)
             {
-                navigationView.SelectedItem = itemFound;
+                bool shouldRestore = !navigationView.IsPaneOpen;
+                ExpandPaneIfNeeded(navigationView);
                 SelectMenuIfCollapsed(navigationView, e.NewValue);
+                navigationView.SelectedItem = itemFound;
+                itemFound.IsSelected = true;
+                SelectMenuIfCollapsed(navigationView, e.NewValue);
+                RestorePane(navigationView, shouldRestore);
             }
 
         }
@@ -176,8 +181,28 @@ namespace ShelterVault.Shared.Behaviors
                 if (!menuItem.IsExpanded)
                 {
                     menuItem.IsExpanded = true;
-                    menuItem.IsExpanded = false;
+                    menuItem.UpdateLayout();
+                    menuItem.IsExpanded = false; 
+                    menuItem.UpdateLayout();
                 }
+            }
+        }
+
+        private static void ExpandPaneIfNeeded(NavigationView navigationView)
+        {
+            if (!navigationView.IsPaneOpen)
+            {
+                navigationView.IsPaneOpen = true;
+                navigationView.UpdateLayout();
+            }
+        }
+
+        private static void RestorePane(NavigationView navigationView, bool shouldRestore)
+        {
+            if (shouldRestore)
+            {
+                navigationView.IsPaneOpen = false;
+                navigationView.UpdateLayout();
             }
         }
     }
