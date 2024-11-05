@@ -33,6 +33,7 @@
             <interactivity:Interaction.Behaviors>
                 <behaviors:AutoSizeAppTitleBarCaptionsBehavior />
                 <behaviors:ShelterVaultThemeAppTitleBehavior />
+                <behaviors:AddMarginOnNavigationViewLoadedBehavior ShelterVaultCurrentAppState="{Binding ShelterVaultCurrentAppState, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </interactivity:Interaction.Behaviors>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
