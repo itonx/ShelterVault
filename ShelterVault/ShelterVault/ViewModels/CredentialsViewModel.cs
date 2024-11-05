@@ -67,7 +67,7 @@ namespace ShelterVault.ViewModels
         {
             if (!_selectedCredentialBackup.Equals(SelectedCredential))
             {
-                bool discard = await _dialogService.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue?", expectedResult: ContentDialogResult.Secondary);
+                bool discard = await _dialogService.ShowContinueConfirmationDialogAsync("Important", "You have pending changes, do you want to continue without saving changes?", expectedResult: ContentDialogResult.Secondary);
                 if (completeChallenge && discard) ChallengeCompleted = true;
                 return discard;
             }
@@ -161,7 +161,7 @@ namespace ShelterVault.ViewModels
                 {
                     WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
                     WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
-                    await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Credentials deleted.", "OK");
+                    await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Your credentials were deleted.", "OK");
                 }
                 else await _dialogService.ShowConfirmationDialogAsync("Shelter Vault", "Your credentials couldn't be deleted.", "OK");
             }
@@ -186,9 +186,9 @@ namespace ShelterVault.ViewModels
                 SelectedCredential = credentialUpdated;
                 _selectedCredentialBackup = credentialUpdated.Clone();
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
-                await _dialogService.ShowConfirmationDialogAsync("Important", "Chages were saved.");
+                await _dialogService.ShowConfirmationDialogAsync("Important", "Your credentials were updated.");
             }
-            else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential could't be updated.");
+            else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credentials could't be updated.");
 
             RequestFocusOnFirstField = true;
         }
@@ -205,9 +205,9 @@ namespace ShelterVault.ViewModels
                 _selectedCredentialBackup = newCredential.Clone();
                 State = CredentialsViewModelState.Updating;
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
-                await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential was saved.");
+                await _dialogService.ShowConfirmationDialogAsync("Important", "Your credentials were saved.");
             }
-            else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
+            else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credentials could't be saved.");
 
             RequestFocusOnFirstField = true;
         }
