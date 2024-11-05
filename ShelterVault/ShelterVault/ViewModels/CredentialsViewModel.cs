@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace ShelterVault.ViewModels
 {
@@ -139,7 +139,6 @@ namespace ShelterVault.ViewModels
                     await _progressBarService.Show();
                     if (State == CredentialsViewModelState.Updating) await UpdateCredential();
                     else if (State == CredentialsViewModelState.New) await CreateCredential();
-                    WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                     WeakReferenceMessenger.Default.Send(new SelectCredentialRequestMessage(SelectedCredential));
                 }
             }
@@ -186,6 +185,7 @@ namespace ShelterVault.ViewModels
             {
                 SelectedCredential = credentialUpdated;
                 _selectedCredentialBackup = credentialUpdated.Clone();
+                WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                 await _dialogService.ShowConfirmationDialogAsync("Important", "Chages were saved.");
             }
             else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential could't be updated.");
@@ -203,8 +203,9 @@ namespace ShelterVault.ViewModels
             {
                 SelectedCredential = newCredential;
                 _selectedCredentialBackup = newCredential.Clone();
-                await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential was saved.");
                 State = CredentialsViewModelState.Updating;
+                WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
+                await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential was saved.");
             }
             else await _dialogService.ShowConfirmationDialogAsync("Important", "Your credential could't be saved.");
 

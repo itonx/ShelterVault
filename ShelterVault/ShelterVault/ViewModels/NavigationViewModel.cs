@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace ShelterVault.ViewModels
 {
@@ -45,7 +45,8 @@ namespace ShelterVault.ViewModels
             {
                 if (message.Value != null)
                 {
-                    receiver.SelectedMenuItem = message.Value;
+                    Credential selectTarget = Credentials.FirstOrDefault(c => c.UUID.Equals(message.Value.UUID));
+                    receiver.SelectedMenuItem = selectTarget;
                 }
             });
         }
