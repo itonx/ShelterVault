@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Models;
 using ShelterVault.Shared.Extensions;
@@ -39,12 +38,12 @@ namespace ShelterVault.Shared.Behaviors
 
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue == null) return;
+            if (e.NewValue == null || e.NewValue == e.OldValue) return;
             NavigationView navigationView = d.GetDependencyObjectFromBehavior<NavigationView>();
             if (navigationView.MenuItems.Count == 0) return;
 
             NavigationViewItem itemFound = RecursiveLookup(navigationView.MenuItems, e.NewValue);
-            if (itemFound != null)
+            if (itemFound != null && (NavigationViewItem)navigationView.SelectedItem != itemFound)
             {
                 navigationView.SelectedItem = itemFound;
                 SelectMenuIfCollapsed(navigationView, e.NewValue);
@@ -75,21 +74,21 @@ namespace ShelterVault.Shared.Behaviors
             return (Type)obj.GetValue(PageTypeProperty);
         }
 
-        public static readonly DependencyProperty SkipSelectionLoginProperty =
+        public static readonly DependencyProperty SkipSelectionProperty =
             DependencyProperty.RegisterAttached(
-            "SkipSelectionLogin",
+            "SkipSelection",
             typeof(bool),
             typeof(PageLoaderBehavior),
             new PropertyMetadata(false));
 
-        public static void SetSkipSelectionLogin(NavigationView obj, bool value)
+        public static void SetSkipSelection(NavigationView obj, bool value)
         {
-            obj.SetValue(SkipSelectionLoginProperty, value);
+            obj.SetValue(SkipSelectionProperty, value);
         }
 
-        public static bool GetSkipSelectionLogin(NavigationView obj)
+        public static bool GetSkipSelection(NavigationView obj)
         {
-            return (bool)obj.GetValue(SkipSelectionLoginProperty);
+            return (bool)obj.GetValue(SkipSelectionProperty);
         }
 
         protected override void OnAttached()
@@ -107,12 +106,12 @@ namespace ShelterVault.Shared.Behaviors
         private async void AssociatedObject_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.SelectedItem == null) return;
-            bool? skip = (bool?)sender.GetValue(PageLoaderBehavior.SkipSelectionLoginProperty);
+            bool? skip = (bool?)AssociatedObject.GetValue(PageLoaderBehavior.SkipSelectionProperty);
             if (skip == true) return;
             if (AssociatedObject.Content is not Frame pageContainer) throw new InvalidOperationException("The NavigationView must contain a Frame.");
 
             NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
-            object lastSelectedItemByTag = this.GetValue(PageLoaderBehavior.SelectedItemProperty);
+            object lastSelectedItemByTag = this.SelectedItem;
 
             if(pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted)
             {
@@ -120,10 +119,10 @@ namespace ShelterVault.Shared.Behaviors
                 if(!discardChanges)
                 {
                     NavigationViewItem itemFound = RecursiveLookup(sender.MenuItems, lastSelectedItemByTag);
-                    sender.SetValue(PageLoaderBehavior.SkipSelectionLoginProperty, true);
+                    AssociatedObject.SetValue(PageLoaderBehavior.SkipSelectionProperty, true);
                     sender.SelectedItem = itemFound;
                     SelectMenuIfCollapsed(AssociatedObject, itemFound.Tag);
-                    sender.SetValue(PageLoaderBehavior.SkipSelectionLoginProperty, false);
+                    AssociatedObject.SetValue(PageLoaderBehavior.SkipSelectionProperty, false);
                     return;
                 }
             }
@@ -136,7 +135,7 @@ namespace ShelterVault.Shared.Behaviors
             {
                 Type selectedPageType = (Type)selectedItem.GetValue(PageTypeProperty);
                 object navigationParameter = selectedItem.Tag;
-                this.SetValue(PageLoaderBehavior.SelectedItemProperty, navigationParameter);
+                this.SelectedItem = navigationParameter;
                 if (selectedPageType == null) return;
                 pageContainer.Navigate(selectedPageType, navigationParameter);
             }
