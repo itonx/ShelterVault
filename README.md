@@ -1,38 +1,49 @@
-# ShelterVault
-ShelterVault helps you to save your passwords in your local machine. All passwords are encrypted with the master key you set up at startup.
+<p align="center">
+  <img src="https://github.com/itonx/ShelterVault/blob/assets/ShelterVaultApp.png"/>
+</p>
 
-# Create a master key
-- A database with all your passwords will be saved at user's profile directory.
+--- 
+
+<p align="center">
+  <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/itonx/ShelterVault/blob/assets/ShelterVaultDarkThemeLogo.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/itonx/ShelterVault/blob/assets/ShelterVaultLightThemeLogo.png">
+  <img alt="ShelterVault" src="https://github.com/itonx/ShelterVault/blob/assets/ShelterVaultDarkThemeLogo.png">
+  </picture>
+</p>
+<p align="center">
+  <a href="https://github.com/itonx/ShelterVault/actions/workflows/main.yml" target="_blank"><img src="https://github.com/itonx/ShelterVault/actions/workflows/main.yml/badge.svg?branch=main"/></a>
+</p>
+
+---
+
+# 🔐 ShelterVault
+ShelterVault helps you to save your passwords in your local machine. <ins>All passwords are encrypted</ins> with the master key you set up at startup.
+
+# 🛡️ Main features:
+- Create a master key.
+- Access to ShelterVault using your master key.
+- Create, update, or delete credentials.
+- Change the theme at runtime.
+
+# ℹ️ More about ShelterVault
+- Data is saved in a SQLite3 database at user's profile directory.
 - All passwords are encrypted using AES and a random initial vector.
+- Tested in Windows 11.
 
-![image](https://github.com/user-attachments/assets/aa6c7280-4771-4e97-a42b-40f662f59d8d)
-
-# Log in
-![image](https://github.com/user-attachments/assets/c1c8142c-4bab-426c-aafe-473211f0f065)
-
-# Home screen
-![image](https://github.com/user-attachments/assets/4343e9ac-17e2-4c76-8e71-e0db848fba66)
-
-# Add new credentials
-![image](https://github.com/user-attachments/assets/e6697c26-93f1-4bbc-9bcc-2927fb23aae8)
-
-# View, edit or delete
-![image](https://github.com/user-attachments/assets/26c03766-61b2-4ebe-afe1-64e69697b6d8)
-
-# Themes
+# 🎨 Themes
 ShelterVault supports Light, Dark, and Neuromancer mode. It detects and uses your current Windows theme the first time the application is executed.
 
-### Light mode
+### ☀️ Light mode
 ![image](https://github.com/user-attachments/assets/868e2910-fa76-4f58-ba0c-5f2fb136c733)
 
-### Dark mode
+### 🌙 Dark mode
 ![image](https://github.com/user-attachments/assets/4f286fdd-c5cf-4d81-9eb7-433b9b140b79)
 
-### Neuromancer mode
+### ☠️ Neuromancer mode ![Static Badge](https://img.shields.io/badge/New-6c2987)
 ![image](https://github.com/user-attachments/assets/26c03766-61b2-4ebe-afe1-64e69697b6d8)
 
-
-# How to install beta version
+# 🖥️ How to install the beta version
 All WinUI3 applications must be signed in order to be installed in your Windows machine. This beta version is using a self-signed certificate so you will need to follow the next steps to install the application.
 1. Download the .zip file for x86 or x64 architecture.
 2. Unzip the file.
