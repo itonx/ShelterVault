@@ -2,26 +2,40 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ShelterVault.DataLayer;
+using ShelterVault.Managers;
+using ShelterVault.Models;
 using ShelterVault.Services;
+using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    public partial class ConfirmMasterKeyViewModel : ObservableObject
+    partial class ConfirmMasterKeyViewModel : ObservableObject
     {
         private readonly IMasterKeyService _masterKeyService;
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;
+        private readonly IMasterKeyValidatorManager _masterKeyValidatorManager;
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
+ 
+        [ObservableProperty]
+        private List<ShelterVaultModel> _vaults;
+        [ObservableProperty]
+        private ShelterVaultModel _selectedVault;
 
-        public ConfirmMasterKeyViewModel(IMasterKeyService masterKeyService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVaultLocalStorage shelterVaultLocalStorage)
+        public ConfirmMasterKeyViewModel(IMasterKeyService masterKeyService, IDialogService dialogService, IProgressBarService progressBarService, IMasterKeyValidatorManager masterKeyValidatorManager, IShelterVaultLocalStorage shelterVaultLocalStorage)
         {
             _masterKeyService = masterKeyService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
+            _masterKeyValidatorManager = masterKeyValidatorManager;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
+            Vaults = _shelterVaultLocalStorage.GetVaults().ToList();
+            if (Vaults.Any()) SelectedVault = Vaults.FirstOrDefault();
         }
 
         [RelayCommand]
@@ -30,10 +44,9 @@ namespace ShelterVault.ViewModels
             try
             {
                 await _progressBarService.Show();
-                if (_shelterVaultLocalStorage.IsMasterKeyValid(parameter?.ToString()))
+                if (_masterKeyValidatorManager.IsValid(parameter?.ToString(), SelectedVault))
                 {
-                    string salt = _shelterVaultLocalStorage.GetMasterKeySalt();
-                    _masterKeyService.ProtectMasterKey(Encoding.Unicode.GetBytes(parameter?.ToString()), Encoding.Unicode.GetBytes(salt));
+                    _masterKeyService.ProtectMasterKey(parameter?.ToString().GetBytes(), SelectedVault.Salt.FromBase64ToBytes());
                     WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.NavigationView));
                 }
                 else await _dialogService.ShowConfirmationDialogAsync("Important", "Wrong master key!");

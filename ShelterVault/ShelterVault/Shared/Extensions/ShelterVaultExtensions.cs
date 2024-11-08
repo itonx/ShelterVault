@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,25 +11,32 @@ namespace ShelterVault.Shared.Extensions
     {
         private static string _passwordPattern = @"^(?=.*\d)(?=.*[!@#$%^&*()-_=+[\]{};:'"",.<>/?])(?=.*[a-z])(?=.*[A-Z]).{8,32}$";
 
-        public static string ToSHA256Base64(this string value)
+        public static string ToSHA256Hex(this string value)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
-                byte[] hashValueBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(value));
-                return Convert.ToBase64String(hashValueBytes);
+                return Convert.ToHexString(sha256.ComputeHash(value.GetBytes()));
             }
         }
 
-        public static string ToBase64Encoded(this string value)
+        public static string ToBase64(this byte[] value)
         {
-            byte[] valueBytes = Encoding.UTF8.GetBytes(value);
-            return Convert.ToBase64String(valueBytes);
+            return Convert.ToBase64String(value);
         }
 
-        public static string ToBase64Decoded(this string base64Value)
+        public static byte[] FromBase64ToBytes(this string base64Value)
         {
-            byte[] base64Bytes = Convert.FromBase64String(base64Value);
-            return Encoding.UTF8.GetString(base64Bytes);
+            return Convert.FromBase64String(base64Value);
+        }
+
+        public static byte[] GetBytes(this string value)
+        {
+            return Encoding.UTF8.GetBytes(value);
+        }
+
+        public static string GetString(this byte[] value)
+        {
+            return Encoding.UTF8.GetString(value);
         }
 
         public static bool IsStrongPassword(this string value) => Regex.IsMatch(value, _passwordPattern);

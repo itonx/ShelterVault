@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using ShelterVault.DataLayer;
+using ShelterVault.Managers;
 using ShelterVault.Services;
 using ShelterVault.Shared.Messages;
 using System;
@@ -12,21 +12,23 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    public partial class CreateMasterKeyViewModel : ObservableObject
+    partial class CreateMasterKeyViewModel : ObservableObject
     {
         [ObservableProperty]
         private PasswordConfirmationViewModel _passwordRequirementsVM;
+        [ObservableProperty]
+        private string _name;
         [ObservableProperty]
         private string _password;
         [ObservableProperty]
         private string _passwordConfirmation;
 
-        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
+        private readonly IShelterVaultCreatorManager _shelterVaultCreatorManager;
         private readonly IProgressBarService _progressBarService;
 
-        public CreateMasterKeyViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, PasswordConfirmationViewModel passwordConfirmationViewModel, IProgressBarService progressBarService)
+        public CreateMasterKeyViewModel(IShelterVaultCreatorManager shelterVaultCreatorManager, PasswordConfirmationViewModel passwordConfirmationViewModel, IProgressBarService progressBarService)
         {
-            _shelterVaultLocalStorage = shelterVaultLocalStorage;
+            _shelterVaultCreatorManager = shelterVaultCreatorManager;
             _progressBarService = progressBarService;
             PasswordRequirementsVM = passwordConfirmationViewModel;
         }
@@ -39,7 +41,7 @@ namespace ShelterVault.ViewModels
                 if (await PasswordRequirementsVM.ArePasswordsValid(Password, PasswordConfirmation))
                 {
                     await _progressBarService.Show();
-                    bool wasVaultCreated = _shelterVaultLocalStorage.CreateShelterVault(Password, Guid.NewGuid().ToString());
+                    bool wasVaultCreated = _shelterVaultCreatorManager.CreateVault(Name, Password, Guid.NewGuid().ToString());
                     if (wasVaultCreated) WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
                 }
             }
