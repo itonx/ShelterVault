@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using ShelterVault.Shared.Extensions;
 using System;
 using System.Text;
  
@@ -12,7 +13,7 @@ namespace ShelterVault.Models
         public string Password { get; set; }
         public string PasswordConfirmation { get; set; }
         public string EncryptedPassword { get; set; }
-        public string InitializationVector { get; set; }
+        public string Iv { get; set; }
         public string Url { get; set; }
         public string Notes { get; set; }
 
@@ -26,13 +27,13 @@ namespace ShelterVault.Models
             Credential item = (Credential)obj;
             return UUID == item.UUID && Title == item.Title && Username == item.Username &&
                 Password == item.Password && PasswordConfirmation == item.PasswordConfirmation &&
-                EncryptedPassword == item.EncryptedPassword && InitializationVector == item.InitializationVector && 
+                EncryptedPassword == item.EncryptedPassword && Iv == item.Iv && 
                 Url == item.Url && Notes == item.Notes;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(UUID, Title, Username, EncryptedPassword, InitializationVector, Url, Notes);
+            return HashCode.Combine(UUID, Title, Username, EncryptedPassword, Iv, Url, Notes);
         }
 
         public bool IsUpdatedCredentialValid(StringBuilder err)
@@ -46,8 +47,8 @@ namespace ShelterVault.Models
         public Credential GenerateBase64EncryptedValues((byte[], byte[]) encryptedValues)
         {
             Credential newCredential = this.Clone();
-            newCredential.EncryptedPassword = Convert.ToBase64String(encryptedValues.Item1);
-            newCredential.InitializationVector = Convert.ToBase64String(encryptedValues.Item2);
+            newCredential.EncryptedPassword = encryptedValues.Item1.ToBase64();
+            newCredential.Iv = encryptedValues.Item2.ToBase64();
 
             return newCredential;
         }

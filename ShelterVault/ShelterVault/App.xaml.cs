@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using ShelterVault.DataLayer;
+using ShelterVault.Managers;
 using ShelterVault.Services;
 using ShelterVault.ViewModels;
 using System;
@@ -81,6 +82,10 @@ namespace ShelterVault
             services.AddSingleton<IShelterVaultThemeService, ShelterVaultThemeService>();
             services.AddSingleton<IShelterVaultLocalStorage, ShelterVaultLocalStorage>();
             services.AddSingleton<MainWindowViewModel>();
+
+            // Managers
+            services.AddScoped<IShelterVaultCreatorManager, ShelterVaultCreatorManager>();
+            services.AddScoped<IMasterKeyValidatorManager, MasterKeyValidatorManager>();
 
             // Viewmodels
             services.AddTransient<NavigationViewModel>();

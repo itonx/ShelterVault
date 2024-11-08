@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShelterVault.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,8 +20,6 @@ namespace ShelterVault.Services
     {
         public (byte[], byte[]) EncryptAes(string plainText, byte[] key, byte[] salt)
         {
-            string kpt = Encoding.Unicode.GetString(key, 0, key.Length);
-
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException(nameof(plainText));
             if (key == null || key.Length == 0)
@@ -31,7 +30,7 @@ namespace ShelterVault.Services
 
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = DeriveKeyFromPassword(Encoding.Unicode.GetString(key), salt);
+                aesAlg.Key = DeriveKeyFromPassword(key.GetString(), salt);
                 lastIV = aesAlg.IV;
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
@@ -64,7 +63,7 @@ namespace ShelterVault.Services
 
                 using (Aes aesAlg = Aes.Create())
                 {
-                    aesAlg.Key = DeriveKeyFromPassword(Encoding.Unicode.GetString(key), salt);
+                    aesAlg.Key = DeriveKeyFromPassword(key.GetString(), salt);
                     aesAlg.IV = iv;
                     ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
@@ -84,7 +83,7 @@ namespace ShelterVault.Services
             }
             catch (Exception)
             {
-                return "Password could not be decrypted";
+                return null;
             }
 
         }

@@ -58,7 +58,7 @@ namespace ShelterVault.ViewModels
         {
             Credential credentialParameter = ((Credential)parameter).Clone(); 
             SelectedCredential = credentialParameter.Clone();
-            SelectedCredential.Password = SelectedCredential.PasswordConfirmation = _encryptionService.DecryptAes(Convert.FromBase64String(credentialParameter.EncryptedPassword), _masterKeyService.GetMasterKeyUnprotected(), Convert.FromBase64String(credentialParameter.InitializationVector), _masterKeyService.GetMasterKeySaltUnprotected());
+            SelectedCredential.Password = SelectedCredential.PasswordConfirmation = _encryptionService.DecryptAes(credentialParameter.EncryptedPassword.FromBase64ToBytes(), _masterKeyService.GetMasterKeyUnprotected(), credentialParameter.Iv.FromBase64ToBytes(), _masterKeyService.GetMasterKeySaltUnprotected());
             _selectedCredentialBackup = SelectedCredential.Clone();
             State = CredentialsViewModelState.Updating;
         }

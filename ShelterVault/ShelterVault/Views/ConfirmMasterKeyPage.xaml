@@ -19,6 +19,13 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Vault:</TextBlock>
+            <ComboBox
+                HorizontalAlignment="Stretch"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding Vaults}"
+                SelectedIndex="0"
+                SelectedItem="{Binding SelectedVault, Mode=TwoWay}" />
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">
                 Master key:
             </TextBlock>

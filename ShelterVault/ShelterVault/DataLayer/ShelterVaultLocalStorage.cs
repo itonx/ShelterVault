@@ -14,14 +14,14 @@ namespace ShelterVault.DataLayer
     public interface IShelterVaultLocalStorage
     {
         bool DBExists();
-        bool CreateShelterVault(string masterKey, string salt);
+        bool CreateShelterVault(string name,string masterKey, string iv, string salt);
         bool IsMasterKeyValid(string masterKey);
         bool InsertCredential(Credential credential);
         bool UpdateCredential(Credential credential);
         bool DeleteCredential(string uuid);
         IEnumerable<Credential> GetAllCredentials();
         Credential GetCredentialByUUID(string uuid);
-        string GetMasterKeySalt();
+        IEnumerable<ShelterVaultModel> GetVaults();
     }
 
     public class ShelterVaultLocalStorage : IShelterVaultLocalStorage
@@ -30,17 +30,10 @@ namespace ShelterVault.DataLayer
         private string _userPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         private string _dbPath => Path.Combine(_userPath, _dbName);
         private string _dbConnectionString => $"Data Source={_dbPath}";
-        private readonly string _createShelterVaultMasterKeySaltTableQuery = @"
-            CREATE TABLE IF NOT EXISTS shelter_vault_master_key_salt (
-            salt TEXT NOT NULL
-        )";
-        private readonly string _insertMasterKeySaltQuery = @"
-            INSERT INTO shelter_vault_master_key_salt
-            VALUES ($salt)
-        ";
+
         public bool DBExists() => File.Exists(_dbPath);
 
-        public bool CreateShelterVault(string masterKey, string salt)
+        public bool CreateShelterVault(string name, string masterKey, string iv, string salt)
         {
             try
             {
@@ -49,32 +42,31 @@ namespace ShelterVault.DataLayer
                     connection.Open();
 
                     string createShelterVaultMasterKeyTableQuery = @"
-                        CREATE TABLE IF NOT EXISTS shelter_vault_master_key (
-                            hash TEXT NOT NULL
+                        CREATE TABLE IF NOT EXISTS shelter_vault (
+                            name TEXT NOT NULL,
+                            masterKeyHash TEXT NOT NULL,
+                            iv TEXT NOT NULL,
+                            salt TEXT NOT NULL,
+                            UNIQUE(name)
                     )";
 
                     string createShelterVaultEncryptedCredentialsTableQuery = @"
-                        CREATE TABLE IF NOT EXISTS shelter_vault_encrypted_credentials (
+                        CREATE TABLE IF NOT EXISTS shelter_vault_credentials (
                             uuid TEXT PRIMARY KEY,
                             title TEXT NOT NULL,
                             username TEXT,
                             encryptedPassword TEXT NOT NULL,
-                            initializationVector TEXT NOT NULL,
+                            iv TEXT NOT NULL,
                             url TEXT,
                             notes TEXT
                     )";
 
                     string insertMasterKeyQuery = @"
-                        INSERT INTO shelter_vault_master_key
-                        VALUES ($hash)
+                        INSERT INTO shelter_vault
+                        VALUES ($name, $masterKeyHash, $iv, $salt)
                     ";
 
                     using (var command = new SqliteCommand(createShelterVaultMasterKeyTableQuery, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-
-                    using (var command = new SqliteCommand(_createShelterVaultMasterKeySaltTableQuery, connection))
                     {
                         command.ExecuteNonQuery();
                     }
@@ -86,13 +78,10 @@ namespace ShelterVault.DataLayer
 
                     using (var command = new SqliteCommand(insertMasterKeyQuery, connection))
                     {
-                        command.Parameters.AddWithValue("$hash", masterKey.ToSHA256Base64());
-                        command.ExecuteNonQuery();
-                    }
-
-                    using (var command = new SqliteCommand(_insertMasterKeySaltQuery, connection))
-                    {
-                        command.Parameters.AddWithValue("$salt", salt.ToBase64Encoded());
+                        command.Parameters.AddWithValue("$name", name);
+                        command.Parameters.AddWithValue("$masterKeyHash", masterKey);
+                        command.Parameters.AddWithValue("$iv", iv);
+                        command.Parameters.AddWithValue("$salt", salt);
                         command.ExecuteNonQuery();
                     }
                 }
@@ -116,10 +105,10 @@ namespace ShelterVault.DataLayer
                 var command = connection.CreateCommand();
                 command.CommandText = @"
                     SELECT count(*)
-                    FROM shelter_vault_master_key
-                    WHERE hash = $hash
+                    FROM shelter_vault
+                    WHERE masterKeyHash = $masterKeyHash
                 ";
-                command.Parameters.AddWithValue("$hash", masterKey.ToSHA256Base64());
+                command.Parameters.AddWithValue("$masterKeyHash", masterKey);
 
                 object result = command.ExecuteScalar();
                 return result != null && int.Parse(result.ToString()) == 1;
@@ -134,15 +123,15 @@ namespace ShelterVault.DataLayer
 
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    INSERT INTO shelter_vault_encrypted_credentials
-                    VALUES($uuid, $title, $username, $encryptedPassword, $initializationVector, $url, $notes)
+                    INSERT INTO shelter_vault_credentials
+                    VALUES($uuid, $title, $username, $encryptedPassword, $iv, $url, $notes)
                 ";
                 string uuid = Guid.NewGuid().ToString();
                 command.Parameters.AddWithValue("uuid", uuid);
                 command.Parameters.AddWithValue("$title", credential.Title);
                 command.Parameters.AddWithValue("$username", credential.Username);
                 command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
-                command.Parameters.AddWithValue("$initializationVector", credential.InitializationVector);
+                command.Parameters.AddWithValue("$iv", credential.Iv);
                 command.Parameters.AddWithValue("$url", credential.Url);
                 command.Parameters.AddWithValue("$notes", credential.Notes);
 
@@ -161,15 +150,15 @@ namespace ShelterVault.DataLayer
 
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    UPDATE shelter_vault_encrypted_credentials
+                    UPDATE shelter_vault_credentials
                     SET
-                    title=$title, username=$username, encryptedPassword=$encryptedPassword, initializationVector=$initializationVector, url=$url, notes=$notes
+                    title=$title, username=$username, encryptedPassword=$encryptedPassword, iv=$iv, url=$url, notes=$notes
                     WHERE uuid=$uuid
                 ";
                 command.Parameters.AddWithValue("$title", credential.Title);
                 command.Parameters.AddWithValue("$username", credential.Username);
                 command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
-                command.Parameters.AddWithValue("$initializationVector", credential.InitializationVector);
+                command.Parameters.AddWithValue("$iv", credential.Iv);
                 command.Parameters.AddWithValue("$url", credential.Url);
                 command.Parameters.AddWithValue("$notes", credential.Notes);
                 command.Parameters.AddWithValue("uuid", credential.UUID);
@@ -187,7 +176,7 @@ namespace ShelterVault.DataLayer
 
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    DELETE FROM shelter_vault_encrypted_credentials
+                    DELETE FROM shelter_vault_credentials
                     WHERE uuid=$uuid
                 ";
                 command.Parameters.AddWithValue("uuid", uuid);
@@ -204,7 +193,7 @@ namespace ShelterVault.DataLayer
                 connection.Open();
 
                 string query = @"
-                    SELECT * FROM shelter_vault_encrypted_credentials
+                    SELECT * FROM shelter_vault_credentials
                 ";
 
                 IEnumerable<Credential> results = connection.Query<Credential>(query);
@@ -219,7 +208,7 @@ namespace ShelterVault.DataLayer
                 connection.Open();
 
                 string query = @"
-                    SELECT * FROM shelter_vault_encrypted_credentials
+                    SELECT * FROM shelter_vault_credentials
                     WHERE uuid=$uuid
                 ";
 
@@ -228,51 +217,18 @@ namespace ShelterVault.DataLayer
             }
         }
 
-        public string GetMasterKeySalt()
+        public IEnumerable<ShelterVaultModel> GetVaults()
         {
-            CreateMasterKeySaltTableIfNotExists();
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
                 connection.Open();
 
                 string query = @"
-                    SELECT salt FROM shelter_vault_master_key_salt LIMIT 1
+                    SELECT * FROM shelter_vault
                 ";
 
-                string result = connection.QueryFirstOrDefault<string>(query);
-                if (result == null)
-                {
-                    InsertMasterKeySalt();
-                    result = connection.QueryFirstOrDefault<string>(query);
-                }
-                return result.ToBase64Decoded();
-            }
-        }
-
-        private void CreateMasterKeySaltTableIfNotExists()
-        {
-            using (var connection = new SqliteConnection(_dbConnectionString))
-            {
-                connection.Open();
-
-                using (var command = new SqliteCommand(_createShelterVaultMasterKeySaltTableQuery, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
-        private void InsertMasterKeySalt()
-        {
-            using (var connection = new SqliteConnection(_dbConnectionString))
-            {
-                connection.Open();
-
-                using (var command = new SqliteCommand(_insertMasterKeySaltQuery, connection))
-                {
-                    command.Parameters.AddWithValue("$salt", Guid.NewGuid().ToString().ToBase64Encoded());
-                    command.ExecuteNonQuery();
-                }
+                IEnumerable<ShelterVaultModel> result = connection.Query<ShelterVaultModel>(query) ?? Enumerable.Empty<ShelterVaultModel>();
+                return result;
             }
         }
     }

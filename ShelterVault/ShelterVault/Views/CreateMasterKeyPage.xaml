@@ -19,6 +19,12 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Vault name:</TextBlock>
+            <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:FocusBehavior OnEvent="Loaded" />
+                </interactivity:Interaction.Behaviors>
+            </TextBox>
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Create master key:</TextBlock>
             <PasswordBox
                 x:Name="password"
@@ -26,7 +32,6 @@
                 Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:ExecuteCommandOnPasswordChangedBehavior Command="{Binding PasswordRequirementsVM.PasswordChangedCommand, Mode=OneTime}" />
-                    <behaviors:FocusBehavior OnEvent="Loaded" />
                     <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
