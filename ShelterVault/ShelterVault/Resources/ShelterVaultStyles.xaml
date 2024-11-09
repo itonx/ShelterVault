@@ -12,6 +12,7 @@
     <SolidColorBrush x:Key="ShelterVaultButtonBackgroundTransparent" Color="Transparent" />
     <Thickness x:Key="ShelterVaultPageContentThickness">100, 0</Thickness>
     <SolidColorBrush x:Key="ShelterVaultForeground" Color="White" />
+    <x:Double x:Key="ShelterVaultControlHeight">50</x:Double>
     <Style
         x:Key="ShelterVaultTitlePasswordBoxStyle"
         BasedOn="{StaticResource TitleLargeTextBlockStyle}"
@@ -20,11 +21,19 @@
         <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
     </Style>
     <Style
+        x:Key="ShelterVaulTextBoxStyle"
+        BasedOn="{StaticResource DefaultTextBoxStyle}"
+        TargetType="TextBox">
+        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="Margin" Value="0,0,0,15" />
+    </Style>
+    <Style
         x:Key="ShelterVaultPasswordBoxStyle"
         BasedOn="{StaticResource DefaultPasswordBoxStyle}"
         TargetType="PasswordBox">
         <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
-        <Setter Property="Height" Value="50" />
+        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
         <Setter Property="IsPasswordRevealButtonEnabled" Value="False" />
         <Setter Property="Margin" Value="0,0,0,15" />
         <Setter Property="MaxLength" Value="32" />
@@ -50,4 +59,13 @@
         x:Key="ShelterVaultContentDialog"
         BasedOn="{StaticResource DefaultContentDialogStyle}"
         TargetType="ContentDialog" />
+    <Style
+        x:Key="ShelterVaultComboBox"
+        BasedOn="{StaticResource DefaultComboBoxStyle}"
+        TargetType="ComboBox">
+        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+    </Style>
+
 </ResourceDictionary>
