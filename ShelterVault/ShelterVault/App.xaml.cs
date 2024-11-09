@@ -78,7 +78,7 @@ namespace ShelterVault
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IProgressBarService, ProgressBarService>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IMasterKeyService, MasterKeyService>();
+            services.AddSingleton<IShelterVaultStateService, ShelterVaultStateService>();
             services.AddSingleton<IShelterVaultThemeService, ShelterVaultThemeService>();
             services.AddSingleton<IShelterVaultLocalStorage, ShelterVaultLocalStorage>();
             services.AddSingleton<MainWindowViewModel>();

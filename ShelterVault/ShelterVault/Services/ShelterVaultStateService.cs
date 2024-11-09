@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ShelterVault.Models;
+using ShelterVault.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,17 +9,20 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.Services
 {
-    internal interface IMasterKeyService
+    internal interface IShelterVaultStateService
     {
         byte[] GetMasterKeyUnprotected();
         byte[] GetMasterKeySaltUnprotected();
-        void ProtectMasterKey(byte[] masterKey, byte[] masterKeySalt);
+        void SetVault(ShelterVaultModel shelterVaultModel, string masterKey);
+        string VaultName { get; }
     }
 
-    internal class MasterKeyService : IMasterKeyService
+    internal class ShelterVaultStateService : IShelterVaultStateService
     {
         private byte[] _inMemoryMasterKeyProtected;
         private byte[] _inMemoryMasterKeySaltProtected;
+
+        public string VaultName { get; private set; }
 
         public byte[] GetMasterKeyUnprotected()
         {
@@ -29,7 +34,13 @@ namespace ShelterVault.Services
             return ProtectedData.Unprotect(_inMemoryMasterKeySaltProtected, null, DataProtectionScope.CurrentUser);
         }
 
-        public void ProtectMasterKey(byte[] masterKey, byte[] masterKeySalt)
+        public void SetVault(ShelterVaultModel shelterVaultModel, string masterKey)
+        {
+            VaultName = shelterVaultModel.Name;
+            ProtectMasterKey(masterKey.GetBytes(), shelterVaultModel.Salt.FromBase64ToBytes());
+        }
+
+        private void ProtectMasterKey(byte[] masterKey, byte[] masterKeySalt)
         {
             _inMemoryMasterKeyProtected = ProtectedData.Protect(masterKey, null, DataProtectionScope.CurrentUser);
             _inMemoryMasterKeySaltProtected = ProtectedData.Protect(masterKeySalt, null, DataProtectionScope.CurrentUser);

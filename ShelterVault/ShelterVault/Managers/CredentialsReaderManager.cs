@@ -19,25 +19,25 @@ namespace ShelterVault.Managers
     {
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IEncryptionService _encryptionService;
-        private readonly IMasterKeyService _masterKeyService;
+        private readonly IShelterVaultStateService _shelterVaultStateService;
 
-        public CredentialsReaderManager(IMasterKeyService masterKeyService, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService)
+        public CredentialsReaderManager(IShelterVaultStateService shelterVaultStateService, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _encryptionService = encryptionService;
-            _masterKeyService = masterKeyService;
+            _shelterVaultStateService = shelterVaultStateService;
         }
 
         public IEnumerable<CredentialsViewItem> GetAllCredentials()
         {
             IList<CredentialsViewItem> credentialsList = new List<CredentialsViewItem>();
             IEnumerable<ShelterVaultCredentialsModel> shelterVaultCredentials = _shelterVaultLocalStorage.GetAllCredentials();
-            byte[] masterKey = _masterKeyService.GetMasterKeyUnprotected();
-            byte[] salt = _masterKeyService.GetMasterKeySaltUnprotected();
+            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
+            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
 
             foreach (ShelterVaultCredentialsModel item in shelterVaultCredentials)
             {
-                string jsonValues = _encryptionService.DecryptAes(item.EncryptedValues.FromBase64ToBytes(), masterKey, item.Iv.FromBase64ToBytes(), salt);
+                string jsonValues = _encryptionService.DecryptAes(item, masterKey, salt);
                 CredentialsViewItem credentials = new(item, Credentials.GetCredentialFrom(jsonValues));
                 credentialsList.Add(credentials);
             }

@@ -44,7 +44,7 @@
                 Tag="NEW_CREDENTIALS"
                 ToolTipService.ToolTip="New credentials" />
             <NavigationViewItem
-                Content="Vault"
+                Content="{Binding VaultName, Mode=OneWay}"
                 IsExpanded="True"
                 SelectsOnInvoked="False"
                 Tag="VAULT"

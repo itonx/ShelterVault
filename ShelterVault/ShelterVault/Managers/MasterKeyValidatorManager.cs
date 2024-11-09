@@ -27,7 +27,7 @@ namespace ShelterVault.Managers
         public bool IsValid(string masterKey, ShelterVaultModel shelterVaultModel)
         {
             byte[] masterKeyBytes = masterKey.GetBytes();
-            string expectedMasterKeyHash = _encryptionService.DecryptAes(shelterVaultModel.MasterKeyHash.FromBase64ToBytes(), masterKeyBytes, shelterVaultModel.Iv.FromBase64ToBytes(), shelterVaultModel.Salt.FromBase64ToBytes());
+            string expectedMasterKeyHash = _encryptionService.DecryptAes(shelterVaultModel, masterKeyBytes);
 
             return expectedMasterKeyHash != null && expectedMasterKeyHash.Equals(masterKey.ToSHA256Hex());
         }

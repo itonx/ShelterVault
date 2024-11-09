@@ -23,19 +23,19 @@ namespace ShelterVault.Managers
     {
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IEncryptionService _encryptionService;
-        private readonly IMasterKeyService _masterKeyService;
+        private readonly IShelterVaultStateService _shelterVaultStateService;
 
-        public CredentialsManager(IMasterKeyService masterKeyService, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService)
+        public CredentialsManager(IShelterVaultStateService shelterVaultStateService, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _encryptionService = encryptionService;
-            _masterKeyService = masterKeyService;
+            _shelterVaultStateService = shelterVaultStateService;
         }
 
         public Credentials InsertCredentials(Credentials credentials)
         {
-            byte[] masterKey = _masterKeyService.GetMasterKeyUnprotected();
-            byte[] salt = _masterKeyService.GetMasterKeySaltUnprotected();
+            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
+            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
 
             (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
 
@@ -50,8 +50,8 @@ namespace ShelterVault.Managers
 
         public Credentials UpdateCredentials(Credentials credentials)
         {
-            byte[] masterKey = _masterKeyService.GetMasterKeyUnprotected();
-            byte[] salt = _masterKeyService.GetMasterKeySaltUnprotected();
+            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
+            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
 
             (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
 
@@ -60,16 +60,16 @@ namespace ShelterVault.Managers
 
             if(!updated) return null;
 
-            string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials.EncryptedValues.FromBase64ToBytes(), masterKey, shelterVaultCredentials.Iv.FromBase64ToBytes(), salt);
+            string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials, masterKey, salt);
             return new(decryptedValues, shelterVaultCredentials);
         }
 
         public Credentials GetCredentials(CredentialsViewItem credentialsViewItem)
         {
-            byte[] masterKey = _masterKeyService.GetMasterKeyUnprotected();
-            byte[] salt = _masterKeyService.GetMasterKeySaltUnprotected();
+            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
+            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
 
-            string jsonValues = _encryptionService.DecryptAes(credentialsViewItem.EncryptedValues.FromBase64ToBytes(), masterKey, credentialsViewItem.Iv.FromBase64ToBytes(), salt);
+            string jsonValues = _encryptionService.DecryptAes(credentialsViewItem, masterKey, salt);
             return new(jsonValues, credentialsViewItem);
         }
 
