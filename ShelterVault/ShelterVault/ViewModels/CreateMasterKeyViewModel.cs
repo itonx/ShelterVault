@@ -12,7 +12,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    partial class CreateMasterKeyViewModel : ObservableObject
+    internal partial class CreateMasterKeyViewModel : ObservableObject
     {
         [ObservableProperty]
         private PasswordConfirmationViewModel _passwordRequirementsVM;

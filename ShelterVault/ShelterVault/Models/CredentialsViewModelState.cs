@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    public enum CredentialsViewModelState
+    internal enum CredentialsViewModelState
     {
         Updating = 0,
         New = 1

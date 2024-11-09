@@ -7,14 +7,14 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.Services
 {
-    public interface IMasterKeyService
+    internal interface IMasterKeyService
     {
         byte[] GetMasterKeyUnprotected();
         byte[] GetMasterKeySaltUnprotected();
         void ProtectMasterKey(byte[] masterKey, byte[] masterKeySalt);
     }
 
-    public class MasterKeyService : IMasterKeyService
+    internal class MasterKeyService : IMasterKeyService
     {
         private byte[] _inMemoryMasterKeyProtected;
         private byte[] _inMemoryMasterKeySaltProtected;

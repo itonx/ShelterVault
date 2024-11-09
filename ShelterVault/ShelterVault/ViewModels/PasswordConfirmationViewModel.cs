@@ -11,7 +11,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    partial class PasswordConfirmationViewModel : ObservableObject
+    internal partial class PasswordConfirmationViewModel : ObservableObject
     {
         private readonly IDialogService _dialogService;
         [ObservableProperty]

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Managers
 {
-    interface ICredentialsManager
+    internal interface ICredentialsManager
     {
         Credentials InsertCredentials(Credentials credentials);
         Credentials UpdateCredentials(Credentials credentials);

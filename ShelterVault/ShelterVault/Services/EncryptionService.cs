@@ -8,15 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
  
 namespace ShelterVault.Services
-{ 
-    public interface IEncryptionService
+{
+    internal interface IEncryptionService
     {
         (byte[], byte[]) EncryptAes(string plainText, byte[] key, byte[] salt);
         string DecryptAes(byte[] cipherText, byte[] key, byte[] iv, byte[] salt);
         byte[] DeriveKeyFromPassword(string password, byte[] salt, int keyLength = 32);
     }
 
-    public class EncryptionService : IEncryptionService
+    internal class EncryptionService : IEncryptionService
     {
         public (byte[], byte[]) EncryptAes(string plainText, byte[] key, byte[] salt)
         {

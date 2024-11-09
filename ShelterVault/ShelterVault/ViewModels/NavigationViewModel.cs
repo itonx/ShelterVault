@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    partial class NavigationViewModel : ObservableObject
+    internal partial class NavigationViewModel : ObservableObject
     {
         private readonly ICredentialsReaderManager _credentialsReaderManager;
 

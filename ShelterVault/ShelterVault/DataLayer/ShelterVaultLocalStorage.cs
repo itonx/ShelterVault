@@ -11,7 +11,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.DataLayer
 {
-    interface IShelterVaultLocalStorage
+    internal interface IShelterVaultLocalStorage
     {
         bool DBExists();
         bool CreateShelterVault(string name,string masterKey, string iv, string salt);
@@ -24,7 +24,7 @@ namespace ShelterVault.DataLayer
         IEnumerable<ShelterVaultModel> GetAllVaults();
     }
 
-    class ShelterVaultLocalStorage : IShelterVaultLocalStorage
+    internal class ShelterVaultLocalStorage : IShelterVaultLocalStorage
     {
         private readonly string _dbName = "ShelterVault.db";
         private string _userPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);

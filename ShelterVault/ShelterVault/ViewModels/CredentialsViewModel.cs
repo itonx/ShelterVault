@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    partial class CredentialsViewModel : ObservableObject, INavigation, IPendingChangesChallenge
+    internal partial class CredentialsViewModel : ObservableObject, INavigation, IPendingChangesChallenge
     {
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;

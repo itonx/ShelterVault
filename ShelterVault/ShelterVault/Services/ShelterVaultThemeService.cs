@@ -10,13 +10,13 @@ using Windows.Storage;
 
 namespace ShelterVault.Services
 {
-    public interface IShelterVaultThemeService
+    internal interface IShelterVaultThemeService
     {
         ShelterVaultTheme GetTheme();
         ShelterVaultTheme GetNextTheme(ShelterVaultTheme currentShelterVaultTheme);
     }
 
-    public class ShelterVaultThemeService : IShelterVaultThemeService
+    internal class ShelterVaultThemeService : IShelterVaultThemeService
     {
         public ShelterVaultTheme GetTheme()
         {
