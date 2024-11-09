@@ -14,7 +14,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    partial class ConfirmMasterKeyViewModel : ObservableObject
+    internal partial class ConfirmMasterKeyViewModel : ObservableObject
     {
         private readonly IMasterKeyService _masterKeyService;
         private readonly IDialogService _dialogService;

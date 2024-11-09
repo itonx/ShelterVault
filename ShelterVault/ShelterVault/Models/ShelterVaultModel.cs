@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    public class ShelterVaultModel
+    internal class ShelterVaultModel
     {
         public string Name { get; set; }
         public string MasterKeyHash { get; set; }

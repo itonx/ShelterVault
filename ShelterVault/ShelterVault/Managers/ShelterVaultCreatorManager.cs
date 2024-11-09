@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Managers
 {
-    interface IShelterVaultCreatorManager
+    internal interface IShelterVaultCreatorManager
     {
         bool CreateVault(string name, string masterKey, string salt);
     }
 
-    class ShelterVaultCreatorManager : IShelterVaultCreatorManager
+    internal class ShelterVaultCreatorManager : IShelterVaultCreatorManager
     {
 
         private readonly IEncryptionService _encryptionService;

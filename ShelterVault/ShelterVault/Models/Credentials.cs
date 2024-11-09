@@ -5,7 +5,7 @@ using System.Text;
  
 namespace ShelterVault.Models
 {
-    class Credentials : ObservableObject
+    internal class Credentials : ObservableObject
     {
         public string UUID { get; set; }
         public string Title { get; set; }
@@ -49,14 +49,6 @@ namespace ShelterVault.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(UUID, Title, Username, Iv, Url, Notes);
-        }
-
-        public bool IsUpdatedCredentialValid(StringBuilder err)
-        {
-            if (err == null) throw new ArgumentNullException("Error while validating the new credential.");
-            if (string.IsNullOrWhiteSpace(Title)) err.AppendLine("Title can't be empty");
-
-            return err.Length == 0;
         }
 
         public string GetJsonValues()

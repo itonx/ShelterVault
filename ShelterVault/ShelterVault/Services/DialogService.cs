@@ -11,12 +11,12 @@ using ShelterVault.Shared.Constants;
 
 namespace ShelterVault.Services
 {
-    public interface IDialogService
+    internal interface IDialogService
     {
         Task ShowConfirmationDialogAsync(string title, string message, string primaryButtonText = "Close");
         Task<bool> ShowContinueConfirmationDialogAsync(string title, string message, string primaryButtonText = "No", string secondaryButtonText = "Yes", ContentDialogResult expectedResult = ContentDialogResult.Primary);
     }
-    public class DialogService : IDialogService
+    internal class DialogService : IDialogService
     {
         public async Task ShowConfirmationDialogAsync(string title, string message, string primaryButtonText = "Close")
         {

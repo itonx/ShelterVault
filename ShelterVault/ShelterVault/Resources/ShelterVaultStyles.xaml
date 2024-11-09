@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ShelterVault.Resources">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="ShelterVaultCredentialsButtonCancelIconForeground" Color="#FF9229" />
     <SolidColorBrush x:Key="ShelterVaultCredentialsButtonCopyIconForeground" Color="{ThemeResource SystemAccentColor}" />
     <SolidColorBrush x:Key="ShelterVaultCredentialsButtonShowIconForeground" Color="Green" />

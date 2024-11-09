@@ -8,12 +8,12 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.Services
 {
-    public interface IProgressBarService
+    internal interface IProgressBarService
     {
         Task Show();
         Task Hide();
     }
-    public class ProgressBarService : IProgressBarService
+    internal class ProgressBarService : IProgressBarService
     {
         public async Task Show()
         {

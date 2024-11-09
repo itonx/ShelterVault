@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Managers
 {
-    interface ICredentialsReaderManager
+    internal interface ICredentialsReaderManager
     {
         IEnumerable<CredentialsViewItem> GetAllCredentials();
     }
