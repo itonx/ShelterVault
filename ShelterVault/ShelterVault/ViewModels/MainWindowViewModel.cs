@@ -15,7 +15,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    public partial class MainWindowViewModel : ObservableObject
+    partial class MainWindowViewModel : ObservableObject
     {
         [ObservableProperty]
         private bool _isProgressBarVisible = false;

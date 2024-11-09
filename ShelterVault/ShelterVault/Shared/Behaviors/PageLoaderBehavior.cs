@@ -168,7 +168,7 @@ namespace ShelterVault.Shared.Behaviors
             {
                 return true;
             }
-            if (item.Tag is Credential itemCredential && tag is Credential tagCredential && tagCredential.UUID.Equals(itemCredential.UUID))
+            if (item.Tag is Credentials itemCredential && tag is Credentials tagCredential && tagCredential.UUID.Equals(itemCredential.UUID))
             {
                 return true;
             }
@@ -178,7 +178,7 @@ namespace ShelterVault.Shared.Behaviors
 
         private static void SelectMenuIfCollapsed(NavigationView navigationView, object tag)
         {
-            if (tag is Credential && navigationView.MenuItems.Count > 2)
+            if (tag is Credentials && navigationView.MenuItems.Count > 2)
             {
                 NavigationViewItem menuItem = navigationView.MenuItems[2] as NavigationViewItem;
                 if (!menuItem.IsExpanded)

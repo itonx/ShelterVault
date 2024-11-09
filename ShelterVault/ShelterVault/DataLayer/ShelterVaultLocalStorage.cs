@@ -11,20 +11,20 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.DataLayer
 {
-    public interface IShelterVaultLocalStorage
+    interface IShelterVaultLocalStorage
     {
         bool DBExists();
         bool CreateShelterVault(string name,string masterKey, string iv, string salt);
         bool IsMasterKeyValid(string masterKey);
-        bool InsertCredential(Credential credential);
-        bool UpdateCredential(Credential credential);
-        bool DeleteCredential(string uuid);
-        IEnumerable<Credential> GetAllCredentials();
-        Credential GetCredentialByUUID(string uuid);
-        IEnumerable<ShelterVaultModel> GetVaults();
+        bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
+        bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
+        bool DeleteCredentials(string uuid);
+        IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials();
+        ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid);
+        IEnumerable<ShelterVaultModel> GetAllVaults();
     }
 
-    public class ShelterVaultLocalStorage : IShelterVaultLocalStorage
+    class ShelterVaultLocalStorage : IShelterVaultLocalStorage
     {
         private readonly string _dbName = "ShelterVault.db";
         private string _userPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -53,12 +53,8 @@ namespace ShelterVault.DataLayer
                     string createShelterVaultEncryptedCredentialsTableQuery = @"
                         CREATE TABLE IF NOT EXISTS shelter_vault_credentials (
                             uuid TEXT PRIMARY KEY,
-                            title TEXT NOT NULL,
-                            username TEXT,
-                            encryptedPassword TEXT NOT NULL,
-                            iv TEXT NOT NULL,
-                            url TEXT,
-                            notes TEXT
+                            encryptedValues TEXT NOT NULL,
+                            iv TEXT NOT NULL
                     )";
 
                     string insertMasterKeyQuery = @"
@@ -115,7 +111,7 @@ namespace ShelterVault.DataLayer
             }
         }
 
-        public bool InsertCredential(Credential credential)
+        public bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -124,25 +120,19 @@ namespace ShelterVault.DataLayer
                 var command = connection.CreateCommand();
                 command.CommandText = @"
                     INSERT INTO shelter_vault_credentials
-                    VALUES($uuid, $title, $username, $encryptedPassword, $iv, $url, $notes)
+                    VALUES($uuid, $encryptedValues, $iv)
                 ";
-                string uuid = Guid.NewGuid().ToString();
-                command.Parameters.AddWithValue("uuid", uuid);
-                command.Parameters.AddWithValue("$title", credential.Title);
-                command.Parameters.AddWithValue("$username", credential.Username);
-                command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
-                command.Parameters.AddWithValue("$iv", credential.Iv);
-                command.Parameters.AddWithValue("$url", credential.Url);
-                command.Parameters.AddWithValue("$notes", credential.Notes);
+                command.Parameters.AddWithValue("uuid", shelterVaultCredentialsModel.UUID);
+                command.Parameters.AddWithValue("$encryptedValues", shelterVaultCredentialsModel.EncryptedValues);
+                command.Parameters.AddWithValue("$iv", shelterVaultCredentialsModel.Iv);
 
                 int result = command.ExecuteNonQuery();
-                if (result > 0) credential.UUID = uuid;
 
                 return result > 0;
             }
         }
 
-        public bool UpdateCredential(Credential credential)
+        public bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -152,23 +142,19 @@ namespace ShelterVault.DataLayer
                 command.CommandText = @"
                     UPDATE shelter_vault_credentials
                     SET
-                    title=$title, username=$username, encryptedPassword=$encryptedPassword, iv=$iv, url=$url, notes=$notes
+                    encryptedValues=$encryptedValues, iv=$iv
                     WHERE uuid=$uuid
                 ";
-                command.Parameters.AddWithValue("$title", credential.Title);
-                command.Parameters.AddWithValue("$username", credential.Username);
-                command.Parameters.AddWithValue("$encryptedPassword", credential.EncryptedPassword);
-                command.Parameters.AddWithValue("$iv", credential.Iv);
-                command.Parameters.AddWithValue("$url", credential.Url);
-                command.Parameters.AddWithValue("$notes", credential.Notes);
-                command.Parameters.AddWithValue("uuid", credential.UUID);
+                command.Parameters.AddWithValue("$encryptedValues", shelterVaultCredentialsModel.EncryptedValues);
+                command.Parameters.AddWithValue("$iv", shelterVaultCredentialsModel.Iv);
+                command.Parameters.AddWithValue("uuid", shelterVaultCredentialsModel.UUID);
 
                 int result = command.ExecuteNonQuery();
                 return result == 1;
             }
         }
 
-        public bool DeleteCredential(string uuid)
+        public bool DeleteCredentials(string uuid)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -186,7 +172,7 @@ namespace ShelterVault.DataLayer
             }
         }
 
-        public IEnumerable<Credential> GetAllCredentials()
+        public IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials()
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -196,12 +182,12 @@ namespace ShelterVault.DataLayer
                     SELECT * FROM shelter_vault_credentials
                 ";
 
-                IEnumerable<Credential> results = connection.Query<Credential>(query);
+                IEnumerable<ShelterVaultCredentialsModel> results = connection.Query<ShelterVaultCredentialsModel>(query);
                 return results;
             }
         }
 
-        public Credential GetCredentialByUUID(string uuid)
+        public ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {
@@ -212,12 +198,12 @@ namespace ShelterVault.DataLayer
                     WHERE uuid=$uuid
                 ";
 
-                Credential result = connection.QueryFirst<Credential>(query, new { uuid });
+                ShelterVaultCredentialsModel result = connection.QueryFirst<ShelterVaultCredentialsModel>(query, new { uuid });
                 return result;
             }
         }
 
-        public IEnumerable<ShelterVaultModel> GetVaults()
+        public IEnumerable<ShelterVaultModel> GetAllVaults()
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
             {

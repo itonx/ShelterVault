@@ -11,7 +11,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.ViewModels
 {
-    public partial class PasswordConfirmationViewModel : ObservableObject
+    partial class PasswordConfirmationViewModel : ObservableObject
     {
         private readonly IDialogService _dialogService;
         [ObservableProperty]
@@ -40,15 +40,15 @@ namespace ShelterVault.ViewModels
             IsValidPassword(password);
         }
 
-        public async Task<bool> AreCredentialsValid(Credential credential)
+        public async Task<bool> AreCredentialsValid(Credentials credentials)
         {
-            if (string.IsNullOrWhiteSpace(credential.Title)) 
+            if (string.IsNullOrWhiteSpace(credentials.Title)) 
             {
                 await _dialogService.ShowConfirmationDialogAsync("Important", "Title can't be empty");
                 return false;
             }
 
-            return await ArePasswordsValid(credential.Password, credential.PasswordConfirmation);
+            return await ArePasswordsValid(credentials.Password, credentials.PasswordConfirmation);
         }
 
         public async Task<bool> ArePasswordsValid(string password, string passwordConfirmation)

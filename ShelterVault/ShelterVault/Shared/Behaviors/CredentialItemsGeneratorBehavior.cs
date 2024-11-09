@@ -13,18 +13,18 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Behaviors
 {
-    public class CredentialItemsGeneratorBehavior : Behavior<NavigationViewItem>
+    class CredentialItemsGeneratorBehavior : Behavior<NavigationViewItem>
     {
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(
             nameof(ItemsSource),
-            typeof(IList<Credential>),
+            typeof(IList<CredentialsViewItem>),
             typeof(CredentialItemsGeneratorBehavior),
             new PropertyMetadata(null, OnItemsSourceChanged));
 
-        public IList<Credential> ItemsSource
+        public IList<CredentialsViewItem> ItemsSource
         {
-            get { return (IList<Credential>)GetValue(ItemsSourceProperty); }
+            get { return (IList<CredentialsViewItem>)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
 
@@ -33,10 +33,10 @@ namespace ShelterVault.Shared.Behaviors
             if (e.NewValue == null) return;
             NavigationViewItem item = d.GetDependencyObjectFromBehavior<NavigationViewItem>();
             item.MenuItems.Clear();
-            foreach (Credential credential in (IList<Credential>)e.NewValue)
+            foreach (CredentialsViewItem credentialsViewItem in (IList<CredentialsViewItem>)e.NewValue)
             {
-                NavigationViewItem navigationViewItem = new() { Content = credential.Title, Icon = new FontIcon() { Glyph= "\uE72E" }, Tag = credential };
-                navigationViewItem.SetValue(ToolTipService.ToolTipProperty, credential.Title);
+                NavigationViewItem navigationViewItem = new() { Content = credentialsViewItem.Title, Icon = new FontIcon() { Glyph= "\uE72E" }, Tag = credentialsViewItem };
+                navigationViewItem.SetValue(ToolTipService.ToolTipProperty, credentialsViewItem.Title);
                 navigationViewItem.SetValue(PageLoaderBehavior.PageTypeProperty, typeof(CredentialsPage));
                 item.MenuItems.Add(navigationViewItem);
             }
