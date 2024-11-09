@@ -94,6 +94,22 @@
             <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+
+            <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxForegroundFocusedPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundFocused" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxPlaceholderForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxPlaceholderForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+
+            <StaticResource x:Key="ComboBoxItemPillFillBrush" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ShelterVaultMainForeground" />
+
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

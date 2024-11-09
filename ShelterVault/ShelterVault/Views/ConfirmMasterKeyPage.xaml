@@ -25,15 +25,12 @@
                 DisplayMemberPath="Name"
                 ItemsSource="{Binding Vaults}"
                 SelectedIndex="0"
-                SelectedItem="{Binding SelectedVault, Mode=TwoWay}" />
+                SelectedItem="{Binding SelectedVault, Mode=TwoWay}"
+                Style="{ThemeResource ShelterVaultComboBox}" />
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">
                 Master key:
             </TextBlock>
-            <PasswordBox
-                x:Name="password"
-                Margin="0,0,0,15"
-                MaxLength="32"
-                Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
+            <PasswordBox x:Name="password" Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:FocusBehavior OnEvent="Loaded" />
                     <behaviors:KeyDownToCommandBehavior

@@ -20,7 +20,7 @@
             VerticalAlignment="Center">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Vault name:</TextBlock>
-            <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox Style="{ThemeResource ShelterVaulTextBoxStyle}" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:FocusBehavior OnEvent="Loaded" />
                 </interactivity:Interaction.Behaviors>
