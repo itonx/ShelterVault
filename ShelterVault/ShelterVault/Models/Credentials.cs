@@ -15,10 +15,16 @@ namespace ShelterVault.Models
         public string Iv { get; set; }
         public string Url { get; set; }
         public string Notes { get; set; }
+        public string ShelterVaultUuid { get; set; }
 
         public Credentials()
         {
             
+        }
+
+        public Credentials(string shelterVaultUuid)
+        {
+            ShelterVaultUuid = shelterVaultUuid;
         }
 
         public Credentials(string jsonValues, ShelterVaultCredentialsModel shelterVaultCredentialsModel)
@@ -31,6 +37,7 @@ namespace ShelterVault.Models
             this.Iv = shelterVaultCredentialsModel.Iv;
             this.Url = credentials.Url;
             this.Notes = credentials.Notes;
+            this.ShelterVaultUuid = shelterVaultCredentialsModel.ShelterVaultUuid;
         }
 
         public Credentials Clone() => (Credentials)this.MemberwiseClone();

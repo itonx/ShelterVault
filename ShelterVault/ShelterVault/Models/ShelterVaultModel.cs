@@ -8,6 +8,7 @@ namespace ShelterVault.Models
 {
     internal class ShelterVaultModel
     {
+        public string UUID { get; set; }
         public string Name { get; set; }
         public string MasterKeyHash { get; set; }
         public string Iv { get; set; }

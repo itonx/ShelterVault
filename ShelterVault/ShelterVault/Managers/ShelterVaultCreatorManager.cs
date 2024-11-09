@@ -11,7 +11,7 @@ namespace ShelterVault.Managers
 {
     internal interface IShelterVaultCreatorManager
     {
-        bool CreateVault(string name, string masterKey, string salt);
+        bool CreateVault(string uuid, string name, string masterKey, string salt);
     }
 
     internal class ShelterVaultCreatorManager : IShelterVaultCreatorManager
@@ -26,7 +26,7 @@ namespace ShelterVault.Managers
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
         }
 
-        public bool CreateVault(string name, string masterKey, string salt)
+        public bool CreateVault(string uuid, string name, string masterKey, string salt)
         {
             byte[] masterKeyBytes = masterKey.GetBytes();
             string masterKeyHash = masterKey.ToSHA256Hex();
@@ -34,7 +34,7 @@ namespace ShelterVault.Managers
 
             (byte[] encryptedMasterKeyHash, byte[] iv) = _encryptionService.EncryptAes(masterKeyHash, masterKeyBytes, saltBytes);
 
-            return _shelterVaultLocalStorage.CreateShelterVault(name, encryptedMasterKeyHash.ToBase64(), iv.ToBase64(), saltBytes.ToBase64());
+            return _shelterVaultLocalStorage.CreateShelterVault(uuid, name, encryptedMasterKeyHash.ToBase64(), iv.ToBase64(), saltBytes.ToBase64());
         }
     }
 }

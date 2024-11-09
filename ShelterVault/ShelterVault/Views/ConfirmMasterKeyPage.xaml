@@ -20,13 +20,31 @@
             VerticalAlignment="Center">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Vault:</TextBlock>
-            <ComboBox
-                HorizontalAlignment="Stretch"
-                DisplayMemberPath="Name"
-                ItemsSource="{Binding Vaults}"
-                SelectedIndex="0"
-                SelectedItem="{Binding SelectedVault, Mode=TwoWay}"
-                Style="{ThemeResource ShelterVaultComboBox}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ComboBox
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding Vaults}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding SelectedVault, Mode=TwoWay}"
+                    Style="{ThemeResource ShelterVaultComboBox}" />
+                <Button
+                    x:Name="NewVault"
+                    Grid.Column="1"
+                    Width="{ThemeResource ShelterVaultControlHeight}"
+                    Height="{ThemeResource ShelterVaultControlHeight}"
+                    Margin="5,0,0,0"
+                    Command="{Binding NewVaultCommand}"
+                    Style="{ThemeResource AccentButtonStyle}"
+                    ToolTipService.ToolTip="New Vault">
+                    <FontIcon FontSize="25" Glyph="&#xF8AA;" />
+                </Button>
+            </Grid>
             <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">
                 Master key:
             </TextBlock>

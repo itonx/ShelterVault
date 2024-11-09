@@ -10,12 +10,9 @@ namespace ShelterVault.Models
     {
         public string Title { get; set; }
 
-        public CredentialsViewItem(ShelterVaultCredentialsModel shelterVaultCredentialsModel, Credentials credentials)
+        public CredentialsViewItem(ShelterVaultCredentialsModel shelterVaultCredentialsModel, Credentials decryptedCredentials) : base(shelterVaultCredentialsModel)
         {
-            this.UUID = shelterVaultCredentialsModel.UUID;
-            this.EncryptedValues = shelterVaultCredentialsModel.EncryptedValues;
-            this.Iv = shelterVaultCredentialsModel.Iv;
-            this.Title = credentials.Title;
+            this.Title = decryptedCredentials.Title;
         }
 
         public CredentialsViewItem Clone() => (CredentialsViewItem)this.MemberwiseClone();

@@ -14,7 +14,8 @@ namespace ShelterVault.Services
         byte[] GetMasterKeyUnprotected();
         byte[] GetMasterKeySaltUnprotected();
         void SetVault(ShelterVaultModel shelterVaultModel, string masterKey);
-        string VaultName { get; }
+        void ResetState();
+        ShelterVaultModel ShelterVault { get; }
     }
 
     internal class ShelterVaultStateService : IShelterVaultStateService
@@ -22,7 +23,7 @@ namespace ShelterVault.Services
         private byte[] _inMemoryMasterKeyProtected;
         private byte[] _inMemoryMasterKeySaltProtected;
 
-        public string VaultName { get; private set; }
+        public ShelterVaultModel ShelterVault { get; private set; }
 
         public byte[] GetMasterKeyUnprotected()
         {
@@ -36,8 +37,15 @@ namespace ShelterVault.Services
 
         public void SetVault(ShelterVaultModel shelterVaultModel, string masterKey)
         {
-            VaultName = shelterVaultModel.Name;
+            ShelterVault = shelterVaultModel;
             ProtectMasterKey(masterKey.GetBytes(), shelterVaultModel.Salt.FromBase64ToBytes());
+        }
+
+        public void ResetState()
+        {
+            _inMemoryMasterKeyProtected = Array.Empty<byte>();
+            _inMemoryMasterKeySaltProtected = Array.Empty<byte>();
+            ShelterVault = new();
         }
 
         private void ProtectMasterKey(byte[] masterKey, byte[] masterKeySalt)

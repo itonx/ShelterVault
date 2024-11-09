@@ -4,7 +4,6 @@ using Microsoft.Xaml.Interactivity;
 using ShelterVault.Models;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interfaces;
-using ShelterVault.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -168,7 +167,7 @@ namespace ShelterVault.Shared.Behaviors
             {
                 return true;
             }
-            if (item.Tag is Credentials itemCredential && tag is Credentials tagCredential && tagCredential.UUID.Equals(itemCredential.UUID))
+            if (item.Tag is CredentialsViewItem itemCredential && tag is CredentialsViewItem tagCredential && tagCredential.UUID.Equals(itemCredential.UUID))
             {
                 return true;
             }
@@ -178,7 +177,7 @@ namespace ShelterVault.Shared.Behaviors
 
         private static void SelectMenuIfCollapsed(NavigationView navigationView, object tag)
         {
-            if (tag is Credentials && navigationView.MenuItems.Count > 2)
+            if (tag is CredentialsViewItem && navigationView.MenuItems.Count > 2)
             {
                 NavigationViewItem menuItem = navigationView.MenuItems[2] as NavigationViewItem;
                 if (!menuItem.IsExpanded)

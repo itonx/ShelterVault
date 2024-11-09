@@ -39,6 +39,13 @@ namespace ShelterVault.ViewModels
         }
 
         [RelayCommand]
+        private void NewVault()
+        {
+            WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.CreateMasterKey));
+        }
+
+
+        [RelayCommand]
         private async Task ConfirmMasterKey(object parameter)
         {
             try

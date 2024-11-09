@@ -39,12 +39,13 @@ namespace ShelterVault.Managers
 
             (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
 
-            ShelterVaultCredentialsModel shelterVaultCredentials = new(encryptedValues);
+            ShelterVaultCredentialsModel shelterVaultCredentials = new(credentials.ShelterVaultUuid, encryptedValues);
             bool inserted = _shelterVaultLocalStorage.InsertCredentials(shelterVaultCredentials);
 
             if (!inserted) return null;
 
             credentials.UUID = shelterVaultCredentials.UUID;
+            credentials.Iv = shelterVaultCredentials.Iv;
             return credentials;
         }
 
