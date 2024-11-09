@@ -23,6 +23,7 @@ namespace ShelterVault.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;
         private readonly ICredentialsManager _credentialsManager;
+        private readonly IShelterVaultStateService _shelterVaultStateService;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Credentials _selectedCredentialBackup;
@@ -40,7 +41,7 @@ namespace ShelterVault.ViewModels
 
         public bool ChallengeCompleted { get; private set; } = false;
 
-        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager)
+        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService)
         {
             _dialogService = dialogService;
             _progressBarService = progressBarService;
@@ -48,6 +49,7 @@ namespace ShelterVault.ViewModels
             PasswordRequirementsVM = passwordConfirmationViewModel;
             PasswordRequirementsVM.HeaderText = "Password must:";
             RequestFocusOnFirstField = true;
+            _shelterVaultStateService = shelterVaultStateService;
             NewCredentials();
         }
 
@@ -83,10 +85,12 @@ namespace ShelterVault.ViewModels
 
         private void NewCredentials()
         {
+            if (_shelterVaultStateService == null) throw new NullReferenceException("State hasn't been initialized.");
+
             ShowPassword = false;
             RequestFocusOnFirstField = true;
             State = CredentialsViewModelState.New;
-            Credentials newCredential = new Credentials();
+            Credentials newCredential = new Credentials(_shelterVaultStateService.ShelterVault.UUID);
             newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
             SelectedCredential = newCredential;
             _selectedCredentialBackup = newCredential.Clone();

@@ -41,7 +41,9 @@ namespace ShelterVault.ViewModels
                 if (await PasswordRequirementsVM.ArePasswordsValid(Password, PasswordConfirmation))
                 {
                     await _progressBarService.Show();
-                    bool wasVaultCreated = _shelterVaultCreatorManager.CreateVault(Name, Password, Guid.NewGuid().ToString());
+                    string salt = Guid.NewGuid().ToString();
+                    string uuid = Guid.NewGuid().ToString();
+                    bool wasVaultCreated = _shelterVaultCreatorManager.CreateVault(uuid, Name, Password, salt);
                     if (wasVaultCreated) WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
                 }
             }

@@ -19,6 +19,7 @@
             <behaviors:MaximizeWindowAtStartupBehavior />
         </interactivity:Interaction.Behaviors>
         <Grid.Resources>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIconConverter" />
             <Thickness x:Key="ShelterVaultTitleMargin">50,0,0,0</Thickness>
         </Grid.Resources>
@@ -45,6 +46,29 @@
                 Margin="0"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:InteractiveAppTitleBarControlBehavior />
+                </interactivity:Interaction.Behaviors>
+                <Button
+                    x:Name="AppTitleBarSwitchVaultButton"
+                    Height="{Binding ElementName=AppTitleBar, Path=Height}"
+                    Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
+                    BorderThickness="0"
+                    Command="{Binding SwitchVaultCommand}"
+                    CornerRadius="0"
+                    Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE8AB;" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="5,0,0,0"
+                            Text="Switch Vault" />
+                    </Grid>
+                </Button>
                 <Button
                     x:Name="AppTitleBarThemeButton"
                     Width="{Binding ElementName=AppTitleBar, Path=Height}"
@@ -53,9 +77,6 @@
                     BorderThickness="0"
                     Command="{Binding ChangeThemeCommand}"
                     CornerRadius="0">
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:InteractiveAppTitleBarControlBehavior />
-                    </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="{Binding CurrentTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
                 </Button>
             </StackPanel>
