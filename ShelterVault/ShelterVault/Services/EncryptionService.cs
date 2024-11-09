@@ -1,4 +1,5 @@
-﻿using ShelterVault.Shared.Extensions;
+﻿using ShelterVault.Models;
+using ShelterVault.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,9 @@ namespace ShelterVault.Services
     {
         (byte[], byte[]) EncryptAes(string plainText, byte[] key, byte[] salt);
         string DecryptAes(byte[] cipherText, byte[] key, byte[] iv, byte[] salt);
+        string DecryptAes(ShelterVaultCredentialsModel shelterVaultCredentialsModel, byte[] key, byte[] salt);
+        string DecryptAes(ShelterVaultModel shelterVaultModel, byte[] key);
+        string DecryptAes(CredentialsViewItem credentialsViewItem, byte[] key, byte[] salt);
         byte[] DeriveKeyFromPassword(string password, byte[] salt, int keyLength = 32);
     }
 
@@ -48,6 +52,21 @@ namespace ShelterVault.Services
             }
 
             return (encrypted, lastIV);
+        }
+
+        public string DecryptAes(ShelterVaultCredentialsModel shelterVaultCredentialsModel, byte[] key, byte[] salt)
+        {
+            return DecryptAes(shelterVaultCredentialsModel.EncryptedValues.FromBase64ToBytes(), key, shelterVaultCredentialsModel.Iv.FromBase64ToBytes(), salt);
+        }
+
+        public string DecryptAes(ShelterVaultModel shelterVaultModel, byte[] key)
+        {
+            return DecryptAes(shelterVaultModel.MasterKeyHash.FromBase64ToBytes(), key, shelterVaultModel.Iv.FromBase64ToBytes(), shelterVaultModel.Salt.FromBase64ToBytes());
+        }
+
+        public string DecryptAes(CredentialsViewItem credentialsViewItem, byte[] key, byte[] salt)
+        {
+            return DecryptAes(credentialsViewItem.EncryptedValues.FromBase64ToBytes(), key, credentialsViewItem.Iv.FromBase64ToBytes(), salt);
         }
 
         public string DecryptAes(byte[] cipherText, byte[] key, byte[] iv, byte[] salt)
