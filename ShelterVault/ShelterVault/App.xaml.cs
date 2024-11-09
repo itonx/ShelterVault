@@ -86,6 +86,8 @@ namespace ShelterVault
             // Managers
             services.AddScoped<IShelterVaultCreatorManager, ShelterVaultCreatorManager>();
             services.AddScoped<IMasterKeyValidatorManager, MasterKeyValidatorManager>();
+            services.AddScoped<ICredentialsManager, CredentialsManager>();
+            services.AddScoped<ICredentialsReaderManager, CredentialsReaderManager>();
 
             // Viewmodels
             services.AddTransient<NavigationViewModel>();

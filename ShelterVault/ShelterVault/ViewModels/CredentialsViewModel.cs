@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using ShelterVault.DataLayer;
+using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Extensions;
@@ -17,19 +18,17 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public partial class CredentialsViewModel : ObservableObject, INavigation, IPendingChangesChallenge
+    partial class CredentialsViewModel : ObservableObject, INavigation, IPendingChangesChallenge
     {
-        private readonly IMasterKeyService _masterKeyService;
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;
-        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
-        private readonly IEncryptionService _encryptionService;
+        private readonly ICredentialsManager _credentialsManager;
 
         private CancellationTokenSource _cancellationTokenSource;
-        private Credential _selectedCredentialBackup;
+        private Credentials _selectedCredentialBackup;
 
         [ObservableProperty]
-        private Credential _selectedCredential;
+        private Credentials _selectedCredential;
         [ObservableProperty]
         private bool _showPassword = false;
         [ObservableProperty]
@@ -41,13 +40,11 @@ namespace ShelterVault.ViewModels
 
         public bool ChallengeCompleted { get; private set; } = false;
 
-        public CredentialsViewModel(IMasterKeyService masterKeyService, IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService)
+        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager)
         {
-            _masterKeyService = masterKeyService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
-            _shelterVaultLocalStorage = shelterVaultLocalStorage;
-            _encryptionService = encryptionService;
+            _credentialsManager = credentialsManager;
             PasswordRequirementsVM = passwordConfirmationViewModel;
             PasswordRequirementsVM.HeaderText = "Password must:";
             RequestFocusOnFirstField = true;
@@ -56,9 +53,8 @@ namespace ShelterVault.ViewModels
 
         public void OnNavigated(object parameter)
         {
-            Credential credentialParameter = ((Credential)parameter).Clone(); 
-            SelectedCredential = credentialParameter.Clone();
-            SelectedCredential.Password = SelectedCredential.PasswordConfirmation = _encryptionService.DecryptAes(credentialParameter.EncryptedPassword.FromBase64ToBytes(), _masterKeyService.GetMasterKeyUnprotected(), credentialParameter.Iv.FromBase64ToBytes(), _masterKeyService.GetMasterKeySaltUnprotected());
+            CredentialsViewItem credentialParameter = ((CredentialsViewItem)parameter).Clone(); 
+            SelectedCredential = _credentialsManager.GetCredentials(credentialParameter);
             _selectedCredentialBackup = SelectedCredential.Clone();
             State = CredentialsViewModelState.Updating;
         }
@@ -90,7 +86,7 @@ namespace ShelterVault.ViewModels
             ShowPassword = false;
             RequestFocusOnFirstField = true;
             State = CredentialsViewModelState.New;
-            Credential newCredential = new Credential();
+            Credentials newCredential = new Credentials();
             newCredential.Password = newCredential.PasswordConfirmation = string.Empty;
             SelectedCredential = newCredential;
             _selectedCredentialBackup = newCredential.Clone();
@@ -157,7 +153,7 @@ namespace ShelterVault.ViewModels
                 await _progressBarService.Show();
                 if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
                 string uuid = SelectedCredential.UUID;
-                if (_shelterVaultLocalStorage.DeleteCredential(uuid))
+                if (_credentialsManager.DeleteCredentials(uuid))
                 {
                     WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
                     WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
@@ -173,18 +169,11 @@ namespace ShelterVault.ViewModels
 
         private async Task UpdateCredential()
         {
-            Credential credentialUpdated = SelectedCredential;
-            if (_selectedCredentialBackup.Password != SelectedCredential.Password)
+            Credentials credentials = _credentialsManager.UpdateCredentials(SelectedCredential);
+            if (credentials != null)
             {
-                (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(SelectedCredential.Password, _masterKeyService.GetMasterKeyUnprotected(), _masterKeyService.GetMasterKeySaltUnprotected());
-                credentialUpdated = SelectedCredential.GenerateBase64EncryptedValues(encryptedValues);
-            }
-
-            bool updated = _shelterVaultLocalStorage.UpdateCredential(credentialUpdated);
-            if (updated)
-            {
-                SelectedCredential = credentialUpdated;
-                _selectedCredentialBackup = credentialUpdated.Clone();
+                SelectedCredential = credentials;
+                _selectedCredentialBackup = credentials.Clone();
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                 await _dialogService.ShowConfirmationDialogAsync("Important", "Your credentials were updated.");
             }
@@ -195,14 +184,11 @@ namespace ShelterVault.ViewModels
 
         private async Task CreateCredential()
         {
-            (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(SelectedCredential.Password, _masterKeyService.GetMasterKeyUnprotected(), _masterKeyService.GetMasterKeySaltUnprotected());
-            Credential newCredential = SelectedCredential.GenerateBase64EncryptedValues(encryptedValues);
-
-            bool inserted = _shelterVaultLocalStorage.InsertCredential(newCredential);
-            if (inserted)
+            Credentials credentials = _credentialsManager.InsertCredentials(SelectedCredential);
+            if (credentials != null)
             {
-                SelectedCredential = newCredential;
-                _selectedCredentialBackup = newCredential.Clone();
+                SelectedCredential = credentials;
+                _selectedCredentialBackup = SelectedCredential.Clone();
                 State = CredentialsViewModelState.Updating;
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                 await _dialogService.ShowConfirmationDialogAsync("Important", "Your credentials were saved.");

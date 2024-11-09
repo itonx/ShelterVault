@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Messages
 {
-    public class SelectCredentialRequestMessage : ValueChangedMessage<Credential>
+    class SelectCredentialRequestMessage : ValueChangedMessage<Credentials>
     {
-        public SelectCredentialRequestMessage(Credential value) : base(value)
+        public SelectCredentialRequestMessage(Credentials value) : base(value)
         {
         }
     }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using ShelterVault.DataLayer;
+using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Shared.Messages;
 using System;
@@ -11,20 +12,20 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    public partial class NavigationViewModel : ObservableObject
+    partial class NavigationViewModel : ObservableObject
     {
-        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
+        private readonly ICredentialsReaderManager _credentialsReaderManager;
 
         [ObservableProperty]
-        private IList<Credential> _credentials;
+        private IList<CredentialsViewItem> _credentials;
         [ObservableProperty]
         private object _selectedMenuItem;
 
-        public NavigationViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage)
+        public NavigationViewModel(ICredentialsReaderManager credentialsReaderManager)
         {
             RegisterMessages();
-            _shelterVaultLocalStorage = shelterVaultLocalStorage;
-            Credentials = (IList<Credential>)_shelterVaultLocalStorage.GetAllCredentials();
+            _credentialsReaderManager = credentialsReaderManager;
+            Credentials = _credentialsReaderManager.GetAllCredentials().ToList();
             SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
         }
 
@@ -38,14 +39,14 @@ namespace ShelterVault.ViewModels
             {
                 if (message.Value)
                 {
-                    receiver.Credentials = (IList<Credential>)receiver._shelterVaultLocalStorage.GetAllCredentials();
+                    receiver.Credentials = receiver._credentialsReaderManager.GetAllCredentials().ToList();
                 }
             });
             WeakReferenceMessenger.Default.Register<NavigationViewModel, SelectCredentialRequestMessage>(this, (receiver, message) =>
             {
                 if (message.Value != null)
                 {
-                    Credential selectTarget = Credentials.FirstOrDefault(c => c.UUID.Equals(message.Value.UUID));
+                    CredentialsViewItem selectTarget = Credentials.FirstOrDefault(c => c.UUID.Equals(message.Value.UUID));
                     receiver.SelectedMenuItem = selectTarget;
                 }
             });
