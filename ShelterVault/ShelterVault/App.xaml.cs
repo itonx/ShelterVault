@@ -23,7 +23,7 @@ using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
- 
+
 namespace ShelterVault
 {
     /// <summary>
@@ -38,7 +38,6 @@ namespace ShelterVault
         public App()
         {
             Services = ConfigureServices();
-
             this.InitializeComponent();
         }
 
@@ -75,6 +74,7 @@ namespace ShelterVault
             var services = new ServiceCollection();
 
             // Services
+            services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IProgressBarService, ProgressBarService>();
             services.AddSingleton<IDialogService, DialogService>();

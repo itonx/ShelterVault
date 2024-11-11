@@ -49,6 +49,19 @@
                 <interactivity:Interaction.Behaviors>
                     <behaviors:InteractiveAppTitleBarControlBehavior />
                 </interactivity:Interaction.Behaviors>
+                <ComboBox
+                    Width="100"
+                    Height="30"
+                    VerticalAlignment="Center"
+                    FontSize="{ThemeResource ContentControlFontSize}"
+                    Style="{ThemeResource ShelterVaultComboBox}"
+                    Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:ComboBoxChangeLanguageBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ComboBoxItem Content="{Binding EnglishLangOptionText, Mode=OneWay}" Tag="en-US" />
+                    <ComboBoxItem Content="{Binding SpanishLangOptionText, Mode=OneWay}" Tag="es-MX" />
+                </ComboBox>
                 <Button
                     x:Name="AppTitleBarSwitchVaultButton"
                     Height="{Binding ElementName=AppTitleBar, Path=Height}"
@@ -66,7 +79,7 @@
                         <TextBlock
                             Grid.Column="1"
                             Margin="5,0,0,0"
-                            Text="Switch Vault" />
+                            Text="{Binding SwitchVaultText, Mode=OneWay}" />
                     </Grid>
                 </Button>
                 <Button
@@ -81,7 +94,10 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Frame Grid.RowSpan="2">
+        <Frame
+            x:Name="Navigator"
+            Grid.RowSpan="2"
+            x:FieldModifier="internal">
             <interactivity:Interaction.Behaviors>
                 <behaviors:ShelterVaultAppStateBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
             </interactivity:Interaction.Behaviors>

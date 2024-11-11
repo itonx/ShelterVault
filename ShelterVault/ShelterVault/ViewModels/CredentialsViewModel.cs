@@ -6,6 +6,7 @@ using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
+using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interfaces;
 using ShelterVault.Shared.Messages;
@@ -24,6 +25,7 @@ namespace ShelterVault.ViewModels
         private readonly IProgressBarService _progressBarService;
         private readonly ICredentialsManager _credentialsManager;
         private readonly IShelterVaultStateService _shelterVaultStateService;
+        private readonly ILanguageService _languageService;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Credentials _selectedCredentialBackup;
@@ -41,13 +43,14 @@ namespace ShelterVault.ViewModels
 
         public bool ChallengeCompleted { get; private set; } = false;
 
-        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService)
+        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService)
         {
             _dialogService = dialogService;
             _progressBarService = progressBarService;
             _credentialsManager = credentialsManager;
+            _languageService = languageService;
             PasswordRequirementsVM = passwordConfirmationViewModel;
-            PasswordRequirementsVM.HeaderText = "Password must:";
+            PasswordRequirementsVM.HeaderText = _languageService.GetLangValue(LangResourceKeys.PASSWORD_MUST);
             RequestFocusOnFirstField = true;
             _shelterVaultStateService = shelterVaultStateService;
             NewCredentials();

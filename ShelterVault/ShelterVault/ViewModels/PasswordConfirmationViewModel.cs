@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using ShelterVault.Models;
 using ShelterVault.Services;
+using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Extensions;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace ShelterVault.ViewModels
     internal partial class PasswordConfirmationViewModel : ObservableObject
     {
         private readonly IDialogService _dialogService;
+        private readonly ILanguageService _languageService;
+
         [ObservableProperty]
         private bool _is8Characters;
         [ObservableProperty]
@@ -29,9 +32,11 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _headerText = "Master key password must:";
 
-        public PasswordConfirmationViewModel(IDialogService dialogService)
+        public PasswordConfirmationViewModel(IDialogService dialogService, ILanguageService languageService)
         {
             _dialogService = dialogService;
+            _languageService = languageService;
+            HeaderText = _languageService.GetLangValue(LangResourceKeys.MASTER_KEY_MUST);
         }
 
         [RelayCommand]

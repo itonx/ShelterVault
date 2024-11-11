@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ShelterVault.DataLayer;
 using ShelterVault.Services;
+using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
 using System;
@@ -24,10 +25,19 @@ namespace ShelterVault.ViewModels
         private ShelterVaultTheme _currentTheme;
         [ObservableProperty]
         private bool _showSwitchVault;
+        [ObservableProperty]
+        private bool _showLangOptions;
+        [ObservableProperty]
+        private string _englishLangOptionText;
+        [ObservableProperty]
+        private string _spanishLangOptionText;
+        [ObservableProperty]
+        private string _switchVaultText;
 
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IShelterVaultThemeService _shelterVaultThemeService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
+        private readonly ILanguageService _languageService;
 
         [RelayCommand]
         private void SwitchVault()
@@ -42,11 +52,12 @@ namespace ShelterVault.ViewModels
             CurrentTheme = _shelterVaultThemeService.GetNextTheme(CurrentTheme);
         }
 
-        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService)
+        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _shelterVaultThemeService = shelterVaultThemeService;
             _shelterVaultStateService = shelterVaultStateService;
+            _languageService = languageService;
             InitialSetup();
         }
 
@@ -55,7 +66,9 @@ namespace ShelterVault.ViewModels
             RegisterMessages();
             CurrentTheme = _shelterVaultThemeService.GetTheme();
             if (_shelterVaultLocalStorage.DBExists()) ShelterVaultCurrentAppState = ShelterVaultAppState.ConfirmMasterKey;
+            ShowLangOptions = true;
             ShowSwitchVault = false;
+            SetLangText();
         }
 
         private void RegisterMessages()
@@ -65,13 +78,26 @@ namespace ShelterVault.ViewModels
                 receiver.ShelterVaultCurrentAppState = message.Value;
                 if(message.Value == ShelterVaultAppState.NavigationView)
                 {
+                    ShowLangOptions = false;
                     ShowSwitchVault = true;
                 }
                 else
                 {
+                    ShowLangOptions = true;
                     ShowSwitchVault = false;
                 }
             });
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, UpdateLanguageValuesMessage>(this, (receiver, message) =>
+            {
+                SetLangText();
+            });
+        }
+
+        private void SetLangText()
+        {
+            EnglishLangOptionText = _languageService.GetLangValue(LangResourceKeys.ENGLISH_OPTION);
+            SpanishLangOptionText = _languageService.GetLangValue(LangResourceKeys.SPANISH_OPTION);
+            SwitchVaultText = _languageService.GetLangValue(LangResourceKeys.SWITCH_VAULT);
         }
     }
 }

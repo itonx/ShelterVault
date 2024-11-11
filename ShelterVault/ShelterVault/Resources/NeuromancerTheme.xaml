@@ -34,6 +34,12 @@
                 <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
                 <Setter Property="BorderBrush" Value="{ThemeResource ShelterVaultForeground}" />
             </Style>
+            <Style
+                x:Key="ShelterVaultComboBox"
+                BasedOn="{StaticResource ShelterVaultComboBox}"
+                TargetType="ComboBox">
+                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+            </Style>
 
             <!--  Override Default styles  -->
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Black" />

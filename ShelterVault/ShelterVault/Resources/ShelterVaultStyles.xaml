@@ -8,7 +8,7 @@
     <SolidColorBrush x:Key="ShelterVaultCredentialsButtonDeletelIconForeground" Color="Red" />
     <SolidColorBrush x:Key="ShelterVaultButtonBackgroundTransparent" Color="Transparent" />
     <Thickness x:Key="ShelterVaultPageContentThickness">100, 0</Thickness>
-    <SolidColorBrush x:Key="ShelterVaultForeground" Color="White" />
+    <SolidColorBrush x:Key="ShelterVaultForeground" Color="{ThemeResource TextFillColorPrimary}" />
     <x:Double x:Key="ShelterVaultControlHeight">50</x:Double>
     <Style
         x:Key="ShelterVaultTitlePasswordBoxStyle"
