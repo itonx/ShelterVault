@@ -5,6 +5,7 @@ using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
+using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace ShelterVault.ViewModels
                     _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
                     WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.NavigationView));
                 }
-                else await _dialogService.ShowConfirmationDialogAsync("Important", "Wrong master key!");
+                else await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_WRONG_MASTER_KEY);
             }
             finally
             {

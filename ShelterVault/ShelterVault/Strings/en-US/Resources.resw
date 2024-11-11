@@ -213,4 +213,49 @@
   <data name="AppBarSwitchVault.Text" xml:space="preserve">
     <value>Switch Vault</value>
   </data>
+  <data name="DialogTitleDefault.Text" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="DialogCloseDefault.Text" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="DialogWrongMasterKey.Text" xml:space="preserve">
+    <value>Wrong master key.</value>
+  </data>
+  <data name="DialogCredentialsDeleted.Text" xml:space="preserve">
+    <value>Your credentials were deleted.</value>
+  </data>
+  <data name="DialogCredentialsNotDeleted.Text" xml:space="preserve">
+    <value>Your credentials couldn't be deleted.</value>
+  </data>
+  <data name="DialogCredentialsUpdated.Text" xml:space="preserve">
+    <value>Your credentials were updated.</value>
+  </data>
+  <data name="DialogCredentialsNotUpdated.Text" xml:space="preserve">
+    <value>Your credentials couldn't be updated.</value>
+  </data>
+  <data name="DialogCredentialsSaved.Text" xml:space="preserve">
+    <value>Your credentials were saved.</value>
+  </data>
+  <data name="DialogCredentialsNotSaved.Text" xml:space="preserve">
+    <value>Your credentials couldn't be saved.</value>
+  </data>
+  <data name="DialogCredentialsEmptyTitle.Text" xml:space="preserve">
+    <value>Title can't be empty.</value>
+  </data>
+  <data name="DialogCredentialsPasswordMinimumRequirementsError.Text" xml:space="preserve">
+    <value>Password doesn't meet the minimum requirements.</value>
+  </data>
+  <data name="DialogCredentialsPasswordsDoNotMatch.Text" xml:space="preserve">
+    <value>Passwords don't match.</value>
+  </data>
+  <data name="DialogCloseNo.Text" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DialogCloseYes.Text" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="DialogCredentialsPendingChanges.Text" xml:space="preserve">
+    <value>You have pending changes, do you want to continue without saving changes?</value>
+  </data>
 </root>

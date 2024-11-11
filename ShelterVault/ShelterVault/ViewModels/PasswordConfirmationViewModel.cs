@@ -49,7 +49,7 @@ namespace ShelterVault.ViewModels
         {
             if (string.IsNullOrWhiteSpace(credentials.Title)) 
             {
-                await _dialogService.ShowConfirmationDialogAsync("Important", "Title can't be empty");
+                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_EMPTY_TITLE);
                 return false;
             }
 
@@ -60,12 +60,12 @@ namespace ShelterVault.ViewModels
         {
             if (!IsValidPassword(password))
             {
-                await _dialogService.ShowConfirmationDialogAsync("Important", "Password doesn't meet minimum requirements.");
+                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PASSWORD_MINIMUM_REQUIREMENTS_ERROR);
                 return false;
             }
             else if (password != passwordConfirmation)
             {
-                await _dialogService.ShowConfirmationDialogAsync("Important", "Passwords don't match.");
+                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PASSWORD_DO_NOT_MATCH);
                 return false;
             }
 
