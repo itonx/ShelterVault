@@ -213,4 +213,49 @@
   <data name="AppBarSwitchVault.Text" xml:space="preserve">
     <value>Cambiar de baúl</value>
   </data>
+  <data name="DialogCloseDefault.Text" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="DialogTitleDefault.Text" xml:space="preserve">
+    <value>Atención</value>
+  </data>
+  <data name="DialogWrongMasterKey.Text" xml:space="preserve">
+    <value>La llave maestra es incorrecta.</value>
+  </data>
+  <data name="DialogCredentialsDeleted.Text" xml:space="preserve">
+    <value>Tus credenciales fueron borradas.</value>
+  </data>
+  <data name="DialogCredentialsNotDeleted.Text" xml:space="preserve">
+    <value>Tus credenciales no pudieron ser borradas.</value>
+  </data>
+  <data name="DialogCredentialsUpdated.Text" xml:space="preserve">
+    <value>Tus credenciales fueron actualizadas.</value>
+  </data>
+  <data name="DialogCredentialsNotUpdated.Text" xml:space="preserve">
+    <value>Tus credenciales no pudieron ser actualizadas.</value>
+  </data>
+  <data name="DialogCredentialsSaved.Text" xml:space="preserve">
+    <value>Tus credenciales fueron guardadas.</value>
+  </data>
+  <data name="DialogCredentialsNotSaved.Text" xml:space="preserve">
+    <value>Tus credenciales no pudieron ser guardadas.</value>
+  </data>
+  <data name="DialogCredentialsEmptyTitle.Text" xml:space="preserve">
+    <value>El título no puede estar vacío.</value>
+  </data>
+  <data name="DialogCredentialsPasswordMinimumRequirementsError.Text" xml:space="preserve">
+    <value>El password no cumple los requisitos mínimos de seguridad.</value>
+  </data>
+  <data name="DialogCredentialsPasswordsDoNotMatch.Text" xml:space="preserve">
+    <value>Las contraseñas no coinciden.</value>
+  </data>
+  <data name="DialogCloseNo.Text" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DialogCloseYes.Text" xml:space="preserve">
+    <value>Si</value>
+  </data>
+  <data name="DialogCredentialsPendingChanges.Text" xml:space="preserve">
+    <value>Tienes cambios pendientes. ¿Deseas continuar sin guardar cambios?</value>
+  </data>
 </root>
