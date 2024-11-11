@@ -32,17 +32,17 @@
         </interactivity:Interaction.Behaviors>
         <NavigationView.MenuItems>
             <NavigationViewItem
+                x:Uid="NavigationHomeItem"
                 behaviors:PageLoaderBehavior.PageType="views:HomePage"
-                Content="Home"
                 Icon="Home"
                 Tag="HOME"
-                ToolTipService.ToolTip="Home" />
+                ToolTipService.ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
             <NavigationViewItem
+                x:Uid="NavigationNewCredentialsItem"
                 behaviors:PageLoaderBehavior.PageType="views:CredentialsPage"
-                Content="New credentials"
                 Icon="Add"
                 Tag="NEW_CREDENTIALS"
-                ToolTipService.ToolTip="New credentials" />
+                ToolTipService.ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
             <NavigationViewItem
                 Content="{Binding VaultName, Mode=OneWay}"
                 IsExpanded="True"

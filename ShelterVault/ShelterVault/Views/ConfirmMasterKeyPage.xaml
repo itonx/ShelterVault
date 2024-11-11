@@ -19,7 +19,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
-            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Vault:</TextBlock>
+            <TextBlock x:Uid="TitleSelectVault" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -35,19 +35,17 @@
                     Style="{ThemeResource ShelterVaultComboBox}" />
                 <Button
                     x:Name="NewVault"
+                    x:Uid="NewVaultButton"
                     Grid.Column="1"
                     Width="{ThemeResource ShelterVaultControlHeight}"
                     Height="{ThemeResource ShelterVaultControlHeight}"
                     Margin="5,0,0,0"
                     Command="{Binding NewVaultCommand}"
-                    Style="{ThemeResource AccentButtonStyle}"
-                    ToolTipService.ToolTip="New Vault">
+                    Style="{ThemeResource AccentButtonStyle}">
                     <FontIcon FontSize="25" Glyph="&#xF8AA;" />
                 </Button>
             </Grid>
-            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">
-                Master key:
-            </TextBlock>
+            <TextBlock x:Uid="TitleMasterKey" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
             <PasswordBox x:Name="password" Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:FocusBehavior OnEvent="Loaded" />

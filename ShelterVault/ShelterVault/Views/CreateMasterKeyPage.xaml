@@ -19,13 +19,13 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
-            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Vault name:</TextBlock>
+            <TextBlock x:Uid="TitleVaultName" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
             <TextBox Style="{ThemeResource ShelterVaulTextBoxStyle}" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:FocusBehavior OnEvent="Loaded" />
                 </interactivity:Interaction.Behaviors>
             </TextBox>
-            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Create master key:</TextBlock>
+            <TextBlock x:Uid="TitleCreateMasterKey" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
             <PasswordBox
                 x:Name="password"
                 Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -35,7 +35,7 @@
                     <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
-            <TextBlock Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}">Confirm master key:</TextBlock>
+            <TextBlock x:Uid="TitleConfirmMasterKey" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
             <PasswordBox
                 x:Name="passwordConfirmation"
                 Password="{Binding PasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -51,11 +51,10 @@
                     Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"
                     Glyph="&#xF167;" />
                 <TextBlock
+                    x:Uid="MasterKeyEncryptionInfo"
                     Grid.Column="1"
                     Margin="8,0,0,0"
-                    TextWrapping="Wrap">
-                    This password will be used to encrypt your vault.
-                </TextBlock>
+                    TextWrapping="Wrap" />
             </StackPanel>
         </StackPanel>
     </ScrollViewer>
