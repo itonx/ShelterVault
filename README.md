@@ -25,6 +25,8 @@ ShelterVault helps you to save your passwords in your local machine. <ins>All pa
 - Access to ShelterVault using your master key.
 - Create, update, or delete credentials.
 - Change the theme at runtime.
+- Multi-language (English & Spanish). ![Static Badge](https://img.shields.io/badge/New-6c2987)
+- Multi-vault management. ![Static Badge](https://img.shields.io/badge/New-6c2987)
 
 # ℹ️ More about ShelterVault
 - Data is saved in a SQLite3 database at user's profile directory.
@@ -41,7 +43,6 @@ ShelterVault supports Light, Dark, and Neuromancer mode. It detects and uses you
 ![image](https://github.com/user-attachments/assets/4f286fdd-c5cf-4d81-9eb7-433b9b140b79)
 
 ### ☠️ Neuromancer mode ![Static Badge](https://img.shields.io/badge/New-6c2987)
-![image](https://github.com/user-attachments/assets/26c03766-61b2-4ebe-afe1-64e69697b6d8)
 
 # 🖥️ How to install the beta version
 All WinUI3 applications must be signed in order to be installed in your Windows machine. This beta version is using a self-signed certificate so you will need to follow the next steps to install the application.
