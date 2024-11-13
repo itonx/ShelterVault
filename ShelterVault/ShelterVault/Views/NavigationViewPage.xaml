@@ -23,7 +23,7 @@
         Header=" "
         IsBackButtonVisible="Collapsed"
         IsBackEnabled="False"
-        IsSettingsVisible="False"
+        IsSettingsVisible="True"
         IsTabStop="False"
         OpenPaneLength="{StaticResource ShelterVaultOpenPaneLength}"
         PaneDisplayMode="Left">
