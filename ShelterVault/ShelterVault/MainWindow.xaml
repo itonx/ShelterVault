@@ -43,55 +43,63 @@
             </Grid.ColumnDefinitions>
             <StackPanel
                 Grid.Column="1"
-                Margin="0"
                 HorizontalAlignment="Right"
-                Orientation="Horizontal">
-                <interactivity:Interaction.Behaviors>
-                    <behaviors:InteractiveAppTitleBarControlBehavior />
-                </interactivity:Interaction.Behaviors>
-                <ComboBox
-                    Width="100"
-                    Height="30"
+                Orientation="Horizontal"
+                Spacing="5">
+                <FontIcon
+                    Margin="0,2,0,0"
                     VerticalAlignment="Center"
-                    FontSize="{ThemeResource ContentControlFontSize}"
-                    Style="{ThemeResource ShelterVaultComboBox}"
-                    Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                    FontSize="14"
+                    Glyph="&#xE930;" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center">Up to date</TextBlock>
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:ComboBoxChangeLanguageBehavior />
+                        <behaviors:InteractiveAppTitleBarControlBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ComboBoxItem Content="{Binding EnglishLangOptionText, Mode=OneWay}" Tag="en-US" />
-                    <ComboBoxItem Content="{Binding SpanishLangOptionText, Mode=OneWay}" Tag="es-MX" />
-                </ComboBox>
-                <Button
-                    x:Name="AppTitleBarSwitchVaultButton"
-                    Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                    Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
-                    BorderThickness="0"
-                    Command="{Binding SwitchVaultCommand}"
-                    CornerRadius="0"
-                    Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <FontIcon Glyph="&#xE8AB;" />
-                        <TextBlock
-                            Grid.Column="1"
-                            Margin="5,0,0,0"
-                            Text="{Binding SwitchVaultText, Mode=OneWay}" />
-                    </Grid>
-                </Button>
-                <Button
-                    x:Name="AppTitleBarThemeButton"
-                    Width="{Binding ElementName=AppTitleBar, Path=Height}"
-                    Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                    Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
-                    BorderThickness="0"
-                    Command="{Binding ChangeThemeCommand}"
-                    CornerRadius="0">
-                    <FontIcon Glyph="{Binding CurrentTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
-                </Button>
+                    <ComboBox
+                        Width="100"
+                        Height="30"
+                        VerticalAlignment="Center"
+                        FontSize="{ThemeResource ContentControlFontSize}"
+                        Style="{ThemeResource ShelterVaultComboBox}"
+                        Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxChangeLanguageBehavior />
+                        </interactivity:Interaction.Behaviors>
+                        <ComboBoxItem Content="{Binding EnglishLangOptionText, Mode=OneWay}" Tag="en-US" />
+                        <ComboBoxItem Content="{Binding SpanishLangOptionText, Mode=OneWay}" Tag="es-MX" />
+                    </ComboBox>
+                    <Button
+                        x:Name="AppTitleBarSwitchVaultButton"
+                        Height="{Binding ElementName=AppTitleBar, Path=Height}"
+                        Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
+                        BorderThickness="0"
+                        Command="{Binding SwitchVaultCommand}"
+                        CornerRadius="0"
+                        Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon FontSize="14" Glyph="&#xE8AB;" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Text="{Binding SwitchVaultText, Mode=OneWay}" />
+                        </Grid>
+                    </Button>
+                    <Button
+                        x:Name="AppTitleBarThemeButton"
+                        Width="{Binding ElementName=AppTitleBar, Path=Height}"
+                        Height="{Binding ElementName=AppTitleBar, Path=Height}"
+                        Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
+                        BorderThickness="0"
+                        Command="{Binding ChangeThemeCommand}"
+                        CornerRadius="0">
+                        <FontIcon Glyph="{Binding CurrentTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </Grid>
         <Frame
