@@ -74,6 +74,7 @@ namespace ShelterVault
             var services = new ServiceCollection();
 
             // Services
+            services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IProgressBarService, ProgressBarService>();
@@ -95,6 +96,7 @@ namespace ShelterVault
             services.AddTransient<CredentialsViewModel>();
             services.AddTransient<CreateMasterKeyViewModel>();
             services.AddTransient<ConfirmMasterKeyViewModel>();
+            services.AddTransient<SettingsViewModel>();
 
             return services.BuildServiceProvider();
         }

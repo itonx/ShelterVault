@@ -31,6 +31,7 @@
             <StackPanel Spacing="10">
                 <TextBlock Text="Cloud settings" />
                 <toolkit:SettingsExpander
+                    x:Name="SettingsExpander"
                     Description="Enable cloud synchronization using your own cloud provider"
                     Header="Cloud sync"
                     IsExpanded="True">
@@ -38,15 +39,29 @@
                         <FontIcon Glyph="&#xE753;" />
                     </toolkit:SettingsExpander.HeaderIcon>
                     <toolkit:SettingsExpander.Items>
-                        <toolkit:SettingsCard
-                            HorizontalContentAlignment="Left"
-                            ContentAlignment="Vertical"
-                            Header="Cloud providers">
-                            <RadioButtons>
-                                <RadioButton Content="None" IsChecked="True" />
-                                <RadioButton Content="Azure" />
-                            </RadioButtons>
-                        </toolkit:SettingsCard>
+                        <Grid Background="{Binding ElementName=SettingsExpander, Path=Background}">
+                            <Grid MinHeight="100" Margin="57,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <RadioButtons
+                                    Header="Cloud providers:"
+                                    ItemsSource="{Binding CloudProviders, Mode=OneWay}"
+                                    SelectedItem="{Binding SelectedCloudProvider, Mode=TwoWay}" />
+                                <StackPanel
+                                    Grid.Column="1"
+                                    Margin="100,20"
+                                    Spacing="10">
+                                    <TextBlock HorizontalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">Azure configuration</TextBlock>
+                                    <TextBox Header="Token *" />
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Button Width="120">Test connection</Button>
+                                        <Button Width="120" Style="{ThemeResource AccentButtonStyle}">Synchronize</Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
                     </toolkit:SettingsExpander.Items>
                 </toolkit:SettingsExpander>
             </StackPanel>
