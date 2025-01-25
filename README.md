@@ -33,6 +33,13 @@ ShelterVault helps you to save your passwords in your local machine. <ins>All pa
 - All passwords are encrypted using AES and a random initial vector.
 - Tested in Windows 11.
 
+# 📚 Multi-language 
+Support for English & Spanish
+
+![image](https://github.com/user-attachments/assets/af9dbad4-3ef6-4733-9311-0352f56641fc)
+
+![image](https://github.com/user-attachments/assets/35cbabec-8aa5-4fb9-8a7a-ed15877fddbb)
+
 # 🎨 Themes
 ShelterVault supports Light, Dark, and Neuromancer mode. It detects and uses your current Windows theme the first time the application is executed.
 
