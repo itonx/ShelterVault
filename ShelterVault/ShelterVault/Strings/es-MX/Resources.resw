@@ -258,4 +258,10 @@
   <data name="DialogCredentialsPendingChanges.Text" xml:space="preserve">
     <value>Tienes cambios pendientes. ¿Deseas continuar sin guardar cambios?</value>
   </data>
+  <data name="DialogCosmosDBSettingsTestOk.Text" xml:space="preserve">
+    <value>La configuración de Cosmos DB es correcta.</value>
+  </data>
+  <data name="DialogCosmosDBSettingsTestError.Text" xml:space="preserve">
+    <value>La configuración de Cosmos DB es incorrecta.</value>
+  </data>
 </root>

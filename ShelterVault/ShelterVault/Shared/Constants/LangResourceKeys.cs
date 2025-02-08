@@ -30,5 +30,7 @@ namespace ShelterVault.Shared.Constants
         public const string DIALOG_CREDENTIALS_PASSWORD_MINIMUM_REQUIREMENTS_ERROR = "DialogCredentialsPasswordMinimumRequirementsError/Text";
         public const string DIALOG_CREDENTIALS_PASSWORD_DO_NOT_MATCH = "DialogCredentialsPasswordsDoNotMatch/Text";
         public const string DIALOG_CREDENTIALS_PENDING_CHANGES = "DialogCredentialsPendingChanges/Text";
+        public const string DIALOG_COSMOS_DB_SETTINGS_TEST_OK = "DialogCosmosDBSettingsTestOk/Text";
+        public const string DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR = "DialogCosmosDBSettingsTestError/Text";
     }
 }

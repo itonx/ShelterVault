@@ -3,12 +3,17 @@
     x:Class="ShelterVault.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:ShelterVault.Shared.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:ShowHideToVisibilityConverter x:Key="ShowHideToVisibility" />
+    </Page.Resources>
 
     <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
@@ -54,9 +59,27 @@
                                     Margin="100,20"
                                     Spacing="10">
                                     <TextBlock HorizontalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">Azure configuration</TextBlock>
-                                    <TextBox Header="Token *" />
+                                    <InfoBar
+                                        Title="Sync info:"
+                                        IsClosable="False"
+                                        IsOpen="True"
+                                        Message="This is a global configuration, all vaults will be synchronized with Cosmos DB." />
+                                    <TextBox Header="Cosmos Endpoint *" Text="{Binding CosmosEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Header="Comos Key *" Text="{Binding CosmosKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Header="Database *" Text="{Binding CosmosDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Header="Container *" Text="{Binding CosmosContainer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <StackPanel Spacing="10" Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <TextBlock>Database throughput:</TextBlock>
+                                            <TextBlock Text="{Binding DatabaseThroughput, Mode=OneWay}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <TextBlock>Container partition key:</TextBlock>
+                                            <TextBlock Text="{Binding ContainerPartitionKey, Mode=OneWay}" />
+                                        </StackPanel>
+                                    </StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <Button Width="120">Test connection</Button>
+                                        <Button Width="120" Command="{Binding TestConnectionCommand}">Test connection</Button>
                                         <Button Width="120" Style="{ThemeResource AccentButtonStyle}">Synchronize</Button>
                                     </StackPanel>
                                 </StackPanel>
