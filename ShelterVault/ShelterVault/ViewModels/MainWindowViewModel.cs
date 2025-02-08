@@ -91,6 +91,10 @@ namespace ShelterVault.ViewModels
             {
                 SetLangText();
             });
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ProgressBarRequestMessage>(this, (receiver, message) =>
+            {
+                IsProgressBarVisible = message.Value;
+            });
         }
 
         private void SetLangText()

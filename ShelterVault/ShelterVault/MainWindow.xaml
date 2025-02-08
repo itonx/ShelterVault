@@ -102,13 +102,23 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
-        <Frame
-            x:Name="Navigator"
-            Grid.RowSpan="2"
-            x:FieldModifier="internal">
-            <interactivity:Interaction.Behaviors>
-                <behaviors:ShelterVaultAppStateBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
-            </interactivity:Interaction.Behaviors>
-        </Frame>
+        <Grid Grid.RowSpan="2">
+            <Frame x:Name="Navigator" x:FieldModifier="internal">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:ShelterVaultAppStateBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
+                </interactivity:Interaction.Behaviors>
+            </Frame>
+            <Grid Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.8" />
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ProgressRing
+                        FontSize="40"
+                        Foreground="{ThemeResource ShelterVaultForeground}"
+                        IsActive="True"
+                        Opacity="1" />
+                    <TextBlock Style="{ThemeResource ShelterVaultTextBlockStyle}" Text="Loading..." />
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

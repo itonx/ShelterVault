@@ -13,11 +13,13 @@ namespace ShelterVault.Services
     {
         CloudProviderType GetCurrentCloudProviderType();
         void SaveCloudProviderType(CloudProviderType cloudProviderType);
+        void SaveAsJsonValue(string key, object settingObj);
+        T ReadJsonValueAs<T>(string key);
     }
 
     class SettingsService : ISettingsService
     {
-        ApplicationDataContainer _localSettings;
+        readonly ApplicationDataContainer _localSettings;
 
         public SettingsService()
         {
@@ -35,6 +37,18 @@ namespace ShelterVault.Services
         public void SaveCloudProviderType(CloudProviderType cloudProviderType)
         {
             _localSettings.Values[ShelterVaultConstants.SETTINGS_CLOUD_PROVIDER] = cloudProviderType.ToString();
+        }
+
+        public void SaveAsJsonValue(string key, object settingObj)
+        {
+            _localSettings.Values[key] = System.Text.Json.JsonSerializer.Serialize(settingObj);
+        }
+
+        public T ReadJsonValueAs<T>(string key)
+        {
+            string value = _localSettings.Values[key] as string;
+            if (string.IsNullOrWhiteSpace(value)) return default(T);
+            return System.Text.Json.JsonSerializer.Deserialize<T>(value);
         }
     }
 }
