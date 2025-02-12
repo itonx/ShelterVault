@@ -32,5 +32,7 @@ namespace ShelterVault.Shared.Constants
         public const string DIALOG_CREDENTIALS_PENDING_CHANGES = "DialogCredentialsPendingChanges/Text";
         public const string DIALOG_COSMOS_DB_SETTINGS_TEST_OK = "DialogCosmosDBSettingsTestOk/Text";
         public const string DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR = "DialogCosmosDBSettingsTestError/Text";
+        public const string DIALOG_COSMOS_DB_SYNC_DONE = "DialogCosmosDBSyncDone/Text";
+        public const string DIALOG_COSMOS_DB_SYNC_ERROR = "DialogCosmosDBSyncError/Text";
     }
 }

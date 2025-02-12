@@ -110,11 +110,18 @@ namespace ShelterVault.ViewModels
         {
             try
             {
-                await _shelterVaultCosmosDBService.SyncAll();
+                await _progressBarService.Show();
+                await _shelterVaultCosmosDBService.SyncAllAsync();
+                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(true));
+                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_DONE);
             }
             catch (Exception ex)
             {
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
+                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_ERROR);
+            }
+            finally
+            {
+                await _progressBarService.Hide();
             }
         }
     }

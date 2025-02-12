@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    internal class ShelterVaultModel
+    internal interface IShelterVaultLocalModel
+    {
+        ICosmosDBModel ToCosmosDBModel();
+    }
+
+    internal class ShelterVaultModel : IShelterVaultLocalModel
     {
         public string UUID { get; set; }
         public string Name { get; set; }
@@ -14,7 +19,7 @@ namespace ShelterVault.Models
         public string Iv { get; set; }
         public string Salt { get; set; }
 
-        public CosmosDBVault ToCosmosDBVault()
+        public ICosmosDBModel ToCosmosDBModel()
         {
             CosmosDBVault vault = new(UUID, Name, MasterKeyHash, Iv, Salt);
             return vault;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Core;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Shared.Constants;
@@ -12,7 +13,9 @@ namespace ShelterVault.Services
 {
     internal interface IShelterVaultCosmosDBService
     {
-        Task SyncAll();
+        Task UpsertItemAsync<T>(T shelterVault) where T : ICosmosDBModel;
+        Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel;
+        Task SyncAllAsync();
     }
 
     internal class ShelterVaultCosmosDBService : IShelterVaultCosmosDBService
@@ -26,7 +29,25 @@ namespace ShelterVault.Services
             _vaultReaderManager = vaultReaderManager;
         }
 
-        public async Task SyncAll()
+        public async Task UpsertItemAsync<T>(T shelterVault) where T : ICosmosDBModel
+        {
+            CosmosDBSettings cosmosDBSettings = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+            using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
+            Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
+            Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
+            ItemResponse<T> vaultResponse = await cosmosContainer.UpsertItemAsync(item: shelterVault);
+        }
+
+        public async Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel
+        {
+            CosmosDBSettings cosmosDBSettings = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+            using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
+            Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
+            Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
+            ItemResponse<object> vaultResponse = await cosmosContainer.DeleteItemAsync<object>(id: shelterVault.id, partitionKey: new PartitionKey(shelterVault.type));
+        }
+
+        public async Task SyncAllAsync()
         {
             CosmosDBSettings cosmosDBSettings = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
             IList<VaultModel> vaults = _vaultReaderManager.GetAllVaults();
@@ -36,11 +57,11 @@ namespace ShelterVault.Services
 
             foreach (VaultModel vault in vaults)
             {
-                CosmosDBVault cosmosDBVault = vault.ShelterVault.ToCosmosDBVault();
-                await cosmosContainer.UpsertItemAsync(item: cosmosDBVault, partitionKey: new PartitionKey("shelter_vault"));
+                ICosmosDBModel cosmosDBVault = vault.ShelterVault.ToCosmosDBModel();
+                ItemResponse<ICosmosDBModel> vaultResponse = await cosmosContainer.UpsertItemAsync(item: cosmosDBVault);
                 foreach (var credential in vault.ShelterVaultCredentials)
                 {
-                    await cosmosContainer.UpsertItemAsync(item: credential.ToCosmosDBCredentials(), partitionKey: new PartitionKey("shelter_vault_credentials"));
+                    ItemResponse<ICosmosDBModel> credentialsResponse = await cosmosContainer.UpsertItemAsync(item: credential.ToCosmosDBModel());
                 }
             }
         }

@@ -264,4 +264,10 @@
   <data name="DialogCosmosDBSettingsTestError.Text" xml:space="preserve">
     <value>La configuración de Cosmos DB es incorrecta.</value>
   </data>
+  <data name="DialogCosmosDBSyncDone.Text" xml:space="preserve">
+    <value>Sincronización completada</value>
+  </data>
+  <data name="DialogCosmosDBSyncError.Text" xml:space="preserve">
+    <value>No se pudo completar la sincronización</value>
+  </data>
 </root>

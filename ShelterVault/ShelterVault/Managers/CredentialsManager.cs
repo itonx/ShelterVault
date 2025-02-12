@@ -24,45 +24,63 @@ namespace ShelterVault.Managers
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IEncryptionService _encryptionService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
+        private readonly ICloudSyncManager _cloudSyncManager;
 
-        public CredentialsManager(IShelterVaultStateService shelterVaultStateService, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService)
+        public CredentialsManager(IShelterVaultStateService shelterVaultStateService, IShelterVaultLocalStorage shelterVaultLocalStorage, IEncryptionService encryptionService, ICloudSyncManager cloudSyncManager)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _encryptionService = encryptionService;
             _shelterVaultStateService = shelterVaultStateService;
+            _cloudSyncManager = cloudSyncManager;
         }
 
         public Credentials InsertCredentials(Credentials credentials)
         {
-            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
-            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
+            try
+            {
+                byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
+                byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
 
-            (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
+                (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
 
-            ShelterVaultCredentialsModel shelterVaultCredentials = new(credentials.ShelterVaultUuid, encryptedValues);
-            bool inserted = _shelterVaultLocalStorage.InsertCredentials(shelterVaultCredentials);
+                ShelterVaultCredentialsModel shelterVaultCredentials = new(credentials.ShelterVaultUuid, encryptedValues);
+                bool inserted = _shelterVaultLocalStorage.InsertCredentials(shelterVaultCredentials);
 
-            if (!inserted) return null;
+                if (!inserted) return null;
 
-            credentials.UUID = shelterVaultCredentials.UUID;
-            credentials.Iv = shelterVaultCredentials.Iv;
-            return credentials;
+                credentials.UUID = shelterVaultCredentials.UUID;
+                credentials.Iv = shelterVaultCredentials.Iv;
+                _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
+                return credentials;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public Credentials UpdateCredentials(Credentials credentials)
         {
-            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
-            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
+            try
+            {
+                byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
+                byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
 
-            (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
+                (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
 
-            ShelterVaultCredentialsModel shelterVaultCredentials = new(credentials, encryptedValues);
-            bool updated = _shelterVaultLocalStorage.UpdateCredentials(shelterVaultCredentials);
+                ShelterVaultCredentialsModel shelterVaultCredentials = new(credentials, encryptedValues);
+                bool updated = _shelterVaultLocalStorage.UpdateCredentials(shelterVaultCredentials);
 
-            if(!updated) return null;
+                if(!updated) return null;
 
-            string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials, masterKey, salt);
-            return new(decryptedValues, shelterVaultCredentials);
+                string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials, masterKey, salt);
+                _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
+                return new(decryptedValues, shelterVaultCredentials);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public Credentials GetCredentials(CredentialsViewItem credentialsViewItem)
@@ -76,7 +94,16 @@ namespace ShelterVault.Managers
 
         public bool DeleteCredentials(string uuid)
         {
-            return _shelterVaultLocalStorage.DeleteCredentials(uuid);
+            try
+            {
+                ShelterVaultCredentialsModel tmpCredentials = _shelterVaultLocalStorage.GetCredentialsByUUID(uuid);
+                _cloudSyncManager.DeleteItemAsync(tmpCredentials);
+                return _shelterVaultLocalStorage.DeleteCredentials(uuid);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
