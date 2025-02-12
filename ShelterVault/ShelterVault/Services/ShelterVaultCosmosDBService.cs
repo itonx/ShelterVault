@@ -35,7 +35,7 @@ namespace ShelterVault.Services
             using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
             Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
             Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
-            ItemResponse<T> vaultResponse = await cosmosContainer.UpsertItemAsync(item: shelterVault);
+            ItemResponse<object> vaultResponse = await cosmosContainer.UpsertItemAsync(item: (object)shelterVault);
         }
 
         public async Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel
@@ -58,10 +58,10 @@ namespace ShelterVault.Services
             foreach (VaultModel vault in vaults)
             {
                 ICosmosDBModel cosmosDBVault = vault.ShelterVault.ToCosmosDBModel();
-                ItemResponse<ICosmosDBModel> vaultResponse = await cosmosContainer.UpsertItemAsync(item: cosmosDBVault);
+                ItemResponse<object> vaultResponse = await cosmosContainer.UpsertItemAsync(item: (object)cosmosDBVault);
                 foreach (var credential in vault.ShelterVaultCredentials)
                 {
-                    ItemResponse<ICosmosDBModel> credentialsResponse = await cosmosContainer.UpsertItemAsync(item: credential.ToCosmosDBModel());
+                    ItemResponse<object> credentialsResponse = await cosmosContainer.UpsertItemAsync(item: (object)credential.ToCosmosDBModel());
                 }
             }
         }

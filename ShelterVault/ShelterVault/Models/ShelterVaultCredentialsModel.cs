@@ -13,6 +13,7 @@ namespace ShelterVault.Models
         public string EncryptedValues { get; set; }
         public string Iv { get; set; }
         public string ShelterVaultUuid { get; set; }
+        public long Version { get; set; }
 
         public ShelterVaultCredentialsModel()
         {
@@ -25,6 +26,7 @@ namespace ShelterVault.Models
             EncryptedValues = encyptedValues.Item1.ToBase64();
             Iv = encyptedValues.Item2.ToBase64();
             ShelterVaultUuid = shelterVaultUuid;
+            Version = 1;
         }
 
         public ShelterVaultCredentialsModel(Credentials credentials, (byte[], byte[]) encyptedValues)
@@ -33,6 +35,7 @@ namespace ShelterVault.Models
             EncryptedValues = encyptedValues.Item1.ToBase64();
             Iv = encyptedValues.Item2.ToBase64();
             ShelterVaultUuid = credentials.ShelterVaultUuid;
+            Version = credentials.Version + 1;
         }
 
         public ShelterVaultCredentialsModel(ShelterVaultCredentialsModel shelterVaultCredentialsModel)
@@ -41,11 +44,12 @@ namespace ShelterVault.Models
             EncryptedValues = shelterVaultCredentialsModel.EncryptedValues;
             Iv = shelterVaultCredentialsModel.Iv;
             ShelterVaultUuid = shelterVaultCredentialsModel.ShelterVaultUuid;
+            Version = shelterVaultCredentialsModel.Version;
         }
 
         public ICosmosDBModel ToCosmosDBModel()
         {
-            CosmosDBCredentials credentials = new(UUID, EncryptedValues, Iv, ShelterVaultUuid);
+            CosmosDBCredentials credentials = new(UUID, EncryptedValues, Iv, ShelterVaultUuid, Version);
             return credentials;
         }
     }

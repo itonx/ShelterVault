@@ -39,7 +39,7 @@ namespace ShelterVault.Managers
 
                 (byte[] encryptedMasterKeyHash, byte[] iv) = _encryptionService.EncryptAes(masterKeyHash, masterKeyBytes, saltBytes);
 
-                bool vaultCreated = _shelterVaultLocalStorage.CreateShelterVault(uuid, name, encryptedMasterKeyHash.ToBase64(), iv.ToBase64(), saltBytes.ToBase64());
+                bool vaultCreated = _shelterVaultLocalStorage.CreateShelterVault(uuid, name, encryptedMasterKeyHash.ToBase64(), iv.ToBase64(), saltBytes.ToBase64(), 1);
                 if (vaultCreated)
                 {
                     ShelterVaultModel vault = _shelterVaultLocalStorage.GetVaultByUUID(uuid);

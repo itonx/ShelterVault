@@ -16,6 +16,7 @@ namespace ShelterVault.Models
         public string Url { get; set; }
         public string Notes { get; set; }
         public string ShelterVaultUuid { get; set; }
+        public long Version { get; set; }
 
         public Credentials()
         {
@@ -38,6 +39,7 @@ namespace ShelterVault.Models
             this.Url = credentials.Url;
             this.Notes = credentials.Notes;
             this.ShelterVaultUuid = shelterVaultCredentialsModel.ShelterVaultUuid;
+            this.Version = shelterVaultCredentialsModel.Version;
         }
 
         public Credentials Clone() => (Credentials)this.MemberwiseClone();
@@ -50,12 +52,12 @@ namespace ShelterVault.Models
             Credentials item = (Credentials)obj;
             return UUID == item.UUID && Title == item.Title && Username == item.Username &&
                 Password == item.Password && PasswordConfirmation == item.PasswordConfirmation &&
-                Iv == item.Iv && Url == item.Url && Notes == item.Notes;
+                Iv == item.Iv && Url == item.Url && Notes == item.Notes && Version == item.Version;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(UUID, Title, Username, Iv, Url, Notes);
+            return HashCode.Combine(UUID, Title, Username, Iv, Url, Notes, Version);
         }
 
         public string GetJsonValues()
