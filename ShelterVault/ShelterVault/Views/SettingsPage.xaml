@@ -80,7 +80,12 @@
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <Button Width="120" Command="{Binding TestConnectionCommand}">Test connection</Button>
-                                        <Button Width="120" Style="{ThemeResource AccentButtonStyle}">Synchronize</Button>
+                                        <Button
+                                            Width="120"
+                                            Command="{Binding SyncVaultsCommand}"
+                                            Style="{ThemeResource AccentButtonStyle}">
+                                            Synchronize
+                                        </Button>
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
