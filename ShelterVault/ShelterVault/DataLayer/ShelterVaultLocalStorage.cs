@@ -14,7 +14,7 @@ namespace ShelterVault.DataLayer
     internal interface IShelterVaultLocalStorage
     {
         bool DBExists();
-        bool CreateShelterVault(string uuid, string name,string masterKey, string iv, string salt);
+        bool CreateShelterVault(string uuid, string name,string masterKey, string iv, string salt, long version);
         bool IsMasterKeyValid(string masterKey);
         bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
         bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
@@ -34,7 +34,7 @@ namespace ShelterVault.DataLayer
 
         public bool DBExists() => File.Exists(_dbPath);
 
-        public bool CreateShelterVault(string uuid,string name, string masterKey, string iv, string salt)
+        public bool CreateShelterVault(string uuid,string name, string masterKey, string iv, string salt, long version)
         {
             try
             {
@@ -49,6 +49,7 @@ namespace ShelterVault.DataLayer
                             masterKeyHash TEXT NOT NULL,
                             iv TEXT NOT NULL,
                             salt TEXT NOT NULL,
+                            version INTEGER NOT NULL,
                             UNIQUE(name)
                     )";
 
@@ -58,12 +59,13 @@ namespace ShelterVault.DataLayer
                             encryptedValues TEXT NOT NULL,
                             iv TEXT NOT NULL,
                             shelterVaultUuid TEXT NOT NULL,
+                            version INTEGER NOT NULL,
                             FOREIGN KEY(shelterVaultUuid) REFERENCES shelter_vault(uuid)
                     )";
 
                     string insertMasterKeyQuery = @"
                         INSERT INTO shelter_vault
-                        VALUES ($uuid, $name, $masterKeyHash, $iv, $salt)
+                        VALUES ($uuid, $name, $masterKeyHash, $iv, $salt, $version)
                     ";
 
                     using (var command = new SqliteCommand(createShelterVaultMasterKeyTableQuery, connection))
@@ -83,6 +85,7 @@ namespace ShelterVault.DataLayer
                         command.Parameters.AddWithValue("$masterKeyHash", masterKey);
                         command.Parameters.AddWithValue("$iv", iv);
                         command.Parameters.AddWithValue("$salt", salt);
+                        command.Parameters.AddWithValue("$version", version);
                         command.ExecuteNonQuery();
                     }
                 }
@@ -125,12 +128,13 @@ namespace ShelterVault.DataLayer
                 var command = connection.CreateCommand();
                 command.CommandText = @"
                     INSERT INTO shelter_vault_credentials
-                    VALUES($uuid, $encryptedValues, $iv, $shelterVaultUuid)
+                    VALUES($uuid, $encryptedValues, $iv, $shelterVaultUuid, $version)
                 ";
                 command.Parameters.AddWithValue("uuid", shelterVaultCredentialsModel.UUID);
                 command.Parameters.AddWithValue("$encryptedValues", shelterVaultCredentialsModel.EncryptedValues);
                 command.Parameters.AddWithValue("$iv", shelterVaultCredentialsModel.Iv);
                 command.Parameters.AddWithValue("$shelterVaultUuid", shelterVaultCredentialsModel.ShelterVaultUuid);
+                command.Parameters.AddWithValue("$version", shelterVaultCredentialsModel.Version);
 
                 int result = command.ExecuteNonQuery();
 
@@ -148,12 +152,13 @@ namespace ShelterVault.DataLayer
                 command.CommandText = @"
                     UPDATE shelter_vault_credentials
                     SET
-                    encryptedValues=$encryptedValues, iv=$iv, shelterVaultUuid=$shelterVaultUuid
+                    encryptedValues=$encryptedValues, iv=$iv, shelterVaultUuid=$shelterVaultUuid, version=$version
                     WHERE uuid=$uuid
                 ";
                 command.Parameters.AddWithValue("$encryptedValues", shelterVaultCredentialsModel.EncryptedValues);
                 command.Parameters.AddWithValue("$iv", shelterVaultCredentialsModel.Iv);
                 command.Parameters.AddWithValue("$shelterVaultUuid", shelterVaultCredentialsModel.ShelterVaultUuid);
+                command.Parameters.AddWithValue("$version", shelterVaultCredentialsModel.Version);
                 command.Parameters.AddWithValue("$uuid", shelterVaultCredentialsModel.UUID);
 
                 int result = command.ExecuteNonQuery();

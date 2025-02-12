@@ -10,6 +10,7 @@ namespace ShelterVault.Models
     {
         public string id { get; set; }
         public string type { get; set; }
+        public long version { get; set; }
     }
     internal record CosmosDBVault
     (
@@ -17,11 +18,13 @@ namespace ShelterVault.Models
         string name,
         string masterKeyHash,
         string iv,
-        string salt
+        string salt,
+        long version
     ) : ICosmosDBModel
     {
         public string id { get; set; } = id;
         public string type { get; set; } = "shelter_vault";
+        public long version { get; set; } = version;
     }
 
     internal record CosmosDBCredentials
@@ -29,10 +32,12 @@ namespace ShelterVault.Models
         string id,
         string encryptedValues,
         string iv,
-        string shelterVaultUuid
+        string shelterVaultUuid,
+        long version
     ) : ICosmosDBModel
     {
         public string id { get; set; } = id;
         public string type { get; set; } = "shelter_vault_credentials";
+        public long version { get; set; } = version;
     }
 }
