@@ -82,6 +82,7 @@ namespace ShelterVault
             services.AddSingleton<IShelterVaultStateService, ShelterVaultStateService>();
             services.AddSingleton<IShelterVaultThemeService, ShelterVaultThemeService>();
             services.AddSingleton<IShelterVaultLocalStorage, ShelterVaultLocalStorage>();
+            services.AddSingleton<IShelterVaultCosmosDBService, ShelterVaultCosmosDBService>();
             services.AddSingleton<MainWindowViewModel>();
 
             // Managers
@@ -89,6 +90,7 @@ namespace ShelterVault
             services.AddScoped<IMasterKeyValidatorManager, MasterKeyValidatorManager>();
             services.AddScoped<ICredentialsManager, CredentialsManager>();
             services.AddScoped<ICredentialsReaderManager, CredentialsReaderManager>();
+            services.AddScoped<IVaultReaderManager, VaultReaderManager>();
 
             // Viewmodels
             services.AddTransient<NavigationViewModel>();

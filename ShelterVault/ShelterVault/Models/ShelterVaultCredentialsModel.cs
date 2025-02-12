@@ -42,5 +42,11 @@ namespace ShelterVault.Models
             Iv = shelterVaultCredentialsModel.Iv;
             ShelterVaultUuid = shelterVaultCredentialsModel.ShelterVaultUuid;
         }
+
+        public CosmosDBCredentials ToCosmosDBCredentials()
+        {
+            CosmosDBCredentials credentials = new(UUID, EncryptedValues, Iv, ShelterVaultUuid);
+            return credentials;
+        }
     }
 }

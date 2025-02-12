@@ -18,6 +18,7 @@ namespace ShelterVault.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;
+        private readonly IShelterVaultCosmosDBService _shelterVaultCosmosDBService;
 
         [ObservableProperty]
         private IList<CloudProviderType> _cloudProviders;
@@ -38,11 +39,12 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _containerPartitionKey;
 
-        public SettingsViewModel(ISettingsService settingsService, IDialogService dialogService, IProgressBarService progressBarService)
+        public SettingsViewModel(ISettingsService settingsService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVaultCosmosDBService shelterVaultCosmosDBService)
         {
             _settingsService = settingsService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
+            _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
             CloudProviders = new List<CloudProviderType>((CloudProviderType[])Enum.GetValues(typeof(CloudProviderType)));
             SelectedCloudProvider = _settingsService.GetCurrentCloudProviderType();
             ReadCosmosDBSettings();
@@ -100,6 +102,19 @@ namespace ShelterVault.ViewModels
             finally
             {
                 await _progressBarService.Hide();
+            }
+        }
+
+        [RelayCommand]
+        private async Task SyncVaults()
+        {
+            try
+            {
+                await _shelterVaultCosmosDBService.SyncAll();
+            }
+            catch (Exception ex)
+            {
+                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
             }
         }
     }

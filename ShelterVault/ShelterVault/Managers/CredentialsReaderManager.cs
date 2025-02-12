@@ -1,7 +1,6 @@
 ﻿using ShelterVault.DataLayer;
 using ShelterVault.Models;
 using ShelterVault.Services;
-using ShelterVault.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

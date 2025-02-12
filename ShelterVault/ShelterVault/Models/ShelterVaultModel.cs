@@ -13,5 +13,11 @@ namespace ShelterVault.Models
         public string MasterKeyHash { get; set; }
         public string Iv { get; set; }
         public string Salt { get; set; }
+
+        public CosmosDBVault ToCosmosDBVault()
+        {
+            CosmosDBVault vault = new(UUID, Name, MasterKeyHash, Iv, Salt);
+            return vault;
+        }
     }
 }
