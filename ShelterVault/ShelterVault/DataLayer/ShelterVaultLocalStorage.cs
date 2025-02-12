@@ -22,6 +22,7 @@ namespace ShelterVault.DataLayer
         IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials(string shelterVaultUuid);
         ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid);
         IEnumerable<ShelterVaultModel> GetAllVaults();
+        ShelterVaultModel GetVaultByUUID(string uuid);
     }
 
     internal class ShelterVaultLocalStorage : IShelterVaultLocalStorage
@@ -221,6 +222,22 @@ namespace ShelterVault.DataLayer
                 ";
 
                 IEnumerable<ShelterVaultModel> result = connection.Query<ShelterVaultModel>(query) ?? Enumerable.Empty<ShelterVaultModel>();
+                return result;
+            }
+        }
+
+        public ShelterVaultModel GetVaultByUUID(string uuid)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT * FROM shelter_vault
+                    WHERE uuid=$uuid
+                ";
+
+                ShelterVaultModel result = connection.QueryFirst<ShelterVaultModel>(query, new { uuid });
                 return result;
             }
         }

@@ -6,22 +6,33 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
+    internal interface ICosmosDBModel
+    {
+        public string id { get; set; }
+        public string type { get; set; }
+    }
     internal record CosmosDBVault
     (
         string id,
         string name,
         string masterKeyHash,
         string iv,
-        string salt,
-        string type = "shelter_vault"
-    );
+        string salt
+    ) : ICosmosDBModel
+    {
+        public string id { get; set; } = id;
+        public string type { get; set; } = "shelter_vault";
+    }
 
     internal record CosmosDBCredentials
     (
         string id,
         string encryptedValues,
         string iv,
-        string shelterVaultUuid,
-        string type = "shelter_vault_credentials"
-    );
+        string shelterVaultUuid
+    ) : ICosmosDBModel
+    {
+        public string id { get; set; } = id;
+        public string type { get; set; } = "shelter_vault_credentials";
+    }
 }

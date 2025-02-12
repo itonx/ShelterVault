@@ -264,4 +264,10 @@
   <data name="DialogCosmosDBSettingsTestError.Text" xml:space="preserve">
     <value>Cosmos DB parameters are not correct, check again.</value>
   </data>
+  <data name="DialogCosmosDBSyncDone.Text" xml:space="preserve">
+    <value>Synchronization's done!</value>
+  </data>
+  <data name="DialogCosmosDBSyncError.Text" xml:space="preserve">
+    <value>Synchronization failed!</value>
+  </data>
 </root>

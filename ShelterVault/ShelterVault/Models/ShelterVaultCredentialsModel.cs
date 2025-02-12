@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    internal class ShelterVaultCredentialsModel
+    internal class ShelterVaultCredentialsModel : IShelterVaultLocalModel
     {
         public string UUID { get; set; }
         public string EncryptedValues { get; set; }
@@ -43,7 +43,7 @@ namespace ShelterVault.Models
             ShelterVaultUuid = shelterVaultCredentialsModel.ShelterVaultUuid;
         }
 
-        public CosmosDBCredentials ToCosmosDBCredentials()
+        public ICosmosDBModel ToCosmosDBModel()
         {
             CosmosDBCredentials credentials = new(UUID, EncryptedValues, Iv, ShelterVaultUuid);
             return credentials;

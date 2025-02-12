@@ -83,7 +83,8 @@
                                         <Button
                                             Width="120"
                                             Command="{Binding SyncVaultsCommand}"
-                                            Style="{ThemeResource AccentButtonStyle}">
+                                            Style="{ThemeResource AccentButtonStyle}"
+                                            Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
                                             Synchronize
                                         </Button>
                                     </StackPanel>
