@@ -15,6 +15,7 @@ namespace ShelterVault.DataLayer
     {
         bool DBExists();
         bool CreateShelterVault(string uuid, string name,string masterKey, string iv, string salt, long version);
+        bool UpdateShelterVault(string uuid, string name, string masterKey, string iv, string salt, long version);
         bool IsMasterKeyValid(string masterKey);
         bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
         bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
@@ -79,6 +80,71 @@ namespace ShelterVault.DataLayer
                     }
 
                     using (var command = new SqliteCommand(insertMasterKeyQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("$uuid", uuid);
+                        command.Parameters.AddWithValue("$name", name);
+                        command.Parameters.AddWithValue("$masterKeyHash", masterKey);
+                        command.Parameters.AddWithValue("$iv", iv);
+                        command.Parameters.AddWithValue("$salt", salt);
+                        command.Parameters.AddWithValue("$version", version);
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateShelterVault(string uuid, string name, string masterKey, string iv, string salt, long version)
+        {
+            //TODO: Credentials must be decrypted with the old key and encrypted with the new one, it will be an expensive operation
+            try
+            {
+                using (var connection = new SqliteConnection(_dbConnectionString))
+                {
+                    connection.Open();
+
+                    string createShelterVaultMasterKeyTableQuery = @"
+                        CREATE TABLE IF NOT EXISTS shelter_vault (
+                            uuid TEXT PRIMARY KEY,
+                            name TEXT NOT NULL,
+                            masterKeyHash TEXT NOT NULL,
+                            iv TEXT NOT NULL,
+                            salt TEXT NOT NULL,
+                            version INTEGER NOT NULL,
+                            UNIQUE(name)
+                    )";
+
+                    string createShelterVaultEncryptedCredentialsTableQuery = @"
+                        CREATE TABLE IF NOT EXISTS shelter_vault_credentials (
+                            uuid TEXT PRIMARY KEY,
+                            encryptedValues TEXT NOT NULL,
+                            iv TEXT NOT NULL,
+                            shelterVaultUuid TEXT NOT NULL,
+                            version INTEGER NOT NULL,
+                            FOREIGN KEY(shelterVaultUuid) REFERENCES shelter_vault(uuid)
+                    )";
+
+                    string updateMasterKeyQuery = @"
+                        UPDATE shelter_vault SET uuid=$uuid, name=$name, masterKeyHash=$masterKeyHash, iv=$iv, salt=$salt, version=$version
+                        WHERE uuid=$uuid
+                    ";
+
+                    using (var command = new SqliteCommand(createShelterVaultMasterKeyTableQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = new SqliteCommand(createShelterVaultEncryptedCredentialsTableQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = new SqliteCommand(updateMasterKeyQuery, connection))
                     {
                         command.Parameters.AddWithValue("$uuid", uuid);
                         command.Parameters.AddWithValue("$name", name);

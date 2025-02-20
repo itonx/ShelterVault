@@ -47,6 +47,15 @@ namespace ShelterVault.Models
             Version = shelterVaultCredentialsModel.Version;
         }
 
+        public ShelterVaultCredentialsModel(CosmosDBCredentials cosmosDBCredentials)
+        {
+            UUID = cosmosDBCredentials.id;
+            EncryptedValues = cosmosDBCredentials.encryptedValues;
+            Iv = cosmosDBCredentials.iv;
+            ShelterVaultUuid = cosmosDBCredentials.shelterVaultUuid;
+            Version = cosmosDBCredentials.version;
+        }
+
         public ICosmosDBModel ToCosmosDBModel()
         {
             CosmosDBCredentials credentials = new(UUID, EncryptedValues, Iv, ShelterVaultUuid, Version);
