@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    internal class VaultModel
+    public class VaultModel
     {
         public ShelterVaultModel ShelterVault { get; set; }
         public IEnumerable<ShelterVaultCredentialsModel> ShelterVaultCredentials { get; set; }

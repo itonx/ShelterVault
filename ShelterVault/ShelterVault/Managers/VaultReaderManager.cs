@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Managers
 {
-    internal interface IVaultReaderManager
+    public interface IVaultReaderManager
     {
         IList<VaultModel> GetAllVaults();
     }
 
-    internal class VaultReaderManager : IVaultReaderManager
+    public class VaultReaderManager : IVaultReaderManager
     {
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
 

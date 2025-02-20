@@ -11,7 +11,7 @@ namespace ShelterVault.Models
         ICosmosDBModel ToCosmosDBModel();
     }
 
-    internal class ShelterVaultModel : IShelterVaultLocalModel
+    public class ShelterVaultModel : IShelterVaultLocalModel
     {
         public string UUID { get; set; }
         public string Name { get; set; }

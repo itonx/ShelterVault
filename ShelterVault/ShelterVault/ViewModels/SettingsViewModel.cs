@@ -111,7 +111,6 @@ namespace ShelterVault.ViewModels
             try
             {
                 await _progressBarService.Show();
-                await _shelterVaultCosmosDBService.SyncAllAsync();
                 _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(true));
                 await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_DONE);
             }

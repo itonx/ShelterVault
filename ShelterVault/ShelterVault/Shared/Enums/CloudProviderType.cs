@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Enums
 {
-    enum CloudProviderType
+    public enum CloudProviderType
     {
         None,
         Azure

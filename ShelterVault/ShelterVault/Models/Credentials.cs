@@ -5,7 +5,7 @@ using System.Text;
  
 namespace ShelterVault.Models
 {
-    internal class Credentials : ObservableObject
+    public class Credentials : ObservableObject
     {
         public string UUID { get; set; }
         public string Title { get; set; }

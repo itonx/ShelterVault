@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    internal interface ICosmosDBModel
+    public enum SourceType
+    {
+        Local,
+        CosmosDB
+    }
+    public interface ICosmosDBModel
     {
         public string id { get; set; }
         public string type { get; set; }
         public long version { get; set; }
     }
-    internal record CosmosDBVault
+    public record CosmosDBVault
     (
         string id,
         string name,
@@ -27,7 +32,7 @@ namespace ShelterVault.Models
         public long version { get; set; } = version;
     }
 
-    internal record CosmosDBCredentials
+    public record CosmosDBCredentials
     (
         string id,
         string encryptedValues,
@@ -39,5 +44,28 @@ namespace ShelterVault.Models
         public string id { get; set; } = id;
         public string type { get; set; } = "shelter_vault_credentials";
         public long version { get; set; } = version;
+    }
+
+    public record CosmosDBSyncModel
+    (
+        string id,
+        string type,
+        long version,
+        SourceType source
+    ) : ICosmosDBModel
+    {
+        public string id { get; set; } = id;
+        public string type { get; set; } = type;
+        public long version { get; set; } = version;
+
+        public virtual bool Equals(CosmosDBSyncModel other)
+        {
+            return id == other.id && type == other.type && version == other.version && source == other.source;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(id, type, version, source);
+        }
     }
 }
