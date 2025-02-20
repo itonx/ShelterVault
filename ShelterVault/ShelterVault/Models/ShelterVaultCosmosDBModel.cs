@@ -57,15 +57,38 @@ namespace ShelterVault.Models
         public string id { get; set; } = id;
         public string type { get; set; } = type;
         public long version { get; set; } = version;
+        public bool IsNew { get; set; } = false;
 
-        public virtual bool Equals(CosmosDBSyncModel other)
+        public virtual bool Equals(CosmosDBSyncModel? other)
         {
-            return id == other.id && type == other.type && version == other.version && source == other.source;
+            return id == other?.id && type == other?.type && version == other?.version && source == other?.source;
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(id, type, version, source);
+        }
+    }
+
+    public record CosmosDBTinyModel
+    (
+        string id,
+        string type,
+        long version
+    ) : ICosmosDBModel
+    {
+        public string id { get; set; } = id;
+        public string type { get; set; } = type;
+        public long version { get; set; } = version;
+
+        public static IList<CosmosDBSyncModel> ToCosmosDBSyncModel(IList<CosmosDBTinyModel> cosmosDBTinyModels)
+        {
+            IList<CosmosDBSyncModel> cosmosDBSyncModels = new List<CosmosDBSyncModel>();
+            foreach (CosmosDBTinyModel cosmosDBTinyModel in cosmosDBTinyModels)
+            {
+                cosmosDBSyncModels.Add(new CosmosDBSyncModel(cosmosDBTinyModel.id, cosmosDBTinyModel.type, cosmosDBTinyModel.version, SourceType.CosmosDB));
+            }
+            return cosmosDBSyncModels;
         }
     }
 }

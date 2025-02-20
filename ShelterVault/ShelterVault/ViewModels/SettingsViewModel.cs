@@ -111,7 +111,15 @@ namespace ShelterVault.ViewModels
             try
             {
                 await _progressBarService.Show();
-                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(true));
+                switch(SelectedCloudProvider)
+                {
+                    case CloudProviderType.Azure:
+                        await _shelterVaultCosmosDBService.SyncAllAsync();
+                        _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(true));
+                        break;
+                    default:
+                        return;
+                }
                 await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_DONE);
             }
             catch (Exception ex)

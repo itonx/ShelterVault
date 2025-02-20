@@ -1,4 +1,5 @@
 using Moq;
+using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
@@ -16,11 +17,12 @@ namespace ShelterVault.Test
         {
             var settingsService = new Mock<ISettingsService>();
             var vaultReaderManager = new Mock<IVaultReaderManager>();
-            _shelterVaultCosmosDBService = new ShelterVaultCosmosDBService(settingsService.Object, vaultReaderManager.Object);
+            var shelterVaultLocalStorage = new Mock<IShelterVaultLocalStorage>();
+            _shelterVaultCosmosDBService = new ShelterVaultCosmosDBService(settingsService.Object, vaultReaderManager.Object, shelterVaultLocalStorage.Object);
         }
 
         [Test]
-        public async Task IsSyncModelValidatorOK()
+        public async Task IsSynchronizationOK()
         {
             CosmosDBSyncModel model01 = new CosmosDBSyncModel("abcde01", VAULT_TYPE, 3, SourceType.CosmosDB);
             CosmosDBSyncModel model02 = new CosmosDBSyncModel("abcde02", VAULT_TYPE, 1, SourceType.CosmosDB);
@@ -57,7 +59,7 @@ namespace ShelterVault.Test
                 localModel06,
                 localModel07,
             };
-            var results = await _shelterVaultCosmosDBService.GetSynchronizedModelsAsync(cosmosDBSyncModels, shelterVaultSyncModels);
+            var results = await _shelterVaultCosmosDBService.SynchronizeModelsAsync(cosmosDBSyncModels, shelterVaultSyncModels);
             Assert.That(results.Count, Is.EqualTo(8));
             Assert.That(results.Find(x => x.id.Equals(model01.id)), Is.EqualTo(model01));
             Assert.That(results.Find(x => x.id.Equals(localModel02.id)), Is.EqualTo(localModel02));
