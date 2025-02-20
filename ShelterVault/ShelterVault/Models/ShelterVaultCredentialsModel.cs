@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    internal class ShelterVaultCredentialsModel : IShelterVaultLocalModel
+    public class ShelterVaultCredentialsModel : IShelterVaultLocalModel
     {
         public string UUID { get; set; }
         public string EncryptedValues { get; set; }

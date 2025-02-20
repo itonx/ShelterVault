@@ -9,7 +9,7 @@ using Windows.Storage;
 
 namespace ShelterVault.Services
 {
-    interface ISettingsService
+    public interface ISettingsService
     {
         CloudProviderType GetCurrentCloudProviderType();
         void SaveCloudProviderType(CloudProviderType cloudProviderType);
@@ -17,7 +17,7 @@ namespace ShelterVault.Services
         T ReadJsonValueAs<T>(string key);
     }
 
-    class SettingsService : ISettingsService
+    public class SettingsService : ISettingsService
     {
         readonly ApplicationDataContainer _localSettings;
 
