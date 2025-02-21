@@ -1,9 +1,11 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Core;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Shared.Constants;
+using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +56,9 @@ namespace ShelterVault.Services
         {
             try
             {
-                IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(new QueryDefinition("SELECT vault.id, vault.type, vault.version FROM vault"));
+                CosmosDBSettings currentConfiguration = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+                string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
+                IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(new QueryDefinition(cosmosDBquery));
                 IList<VaultModel> shelterVaults = _vaultReaderManager.GetAllVaults();
                 IList<CosmosDBSyncModel> cosmosDBModels = CosmosDBTinyModel.ToCosmosDBSyncModel(cosmosDBTinyModels);
                 IList<CosmosDBSyncModel> localDBVaults  = VaultModel.ToCosmosDBSyncModel(shelterVaults);
@@ -89,6 +93,21 @@ namespace ShelterVault.Services
                     ICosmosDBModel cosmosDBModel = credentials.ToCosmosDBModel();
                     await UpsertItemAsync(cosmosDBModel);
                 }
+
+                currentConfiguration.Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SETTINGS, currentConfiguration);
+
+                foreach (var model in synchronizedModels.Where(x => x.source == SourceType.Local && x.version == -1 && x.type.Equals("shelter_vault_credentials")))
+                {
+                    _shelterVaultLocalStorage.DeleteCredentials(model.id);
+                }
+
+                foreach (var model in synchronizedModels.Where(x => x.source == SourceType.Local && x.version == -1 && x.type.Equals("shelter_vault")))
+                {
+                    _shelterVaultLocalStorage.DeleteVault(model.id);
+                }
+
+                WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
             }
             catch (Exception ex)
             {

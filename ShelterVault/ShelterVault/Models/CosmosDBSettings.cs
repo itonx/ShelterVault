@@ -12,9 +12,11 @@ namespace ShelterVault.Models
         string CosmosEndpoint,
         string CosmosKey,
         string CosmosDatabase,
-        string CosmosContainer
+        string CosmosContainer,
+        long Timestamp = 0
     )
     {
+        public long Timestamp { get; set; } = Timestamp;
         public bool IsValid()
         {
             return !string.IsNullOrWhiteSpace(CosmosEndpoint) &&
