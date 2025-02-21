@@ -160,7 +160,7 @@ namespace ShelterVault.ViewModels
                 await _progressBarService.Show();
                 if (SelectedCredential == null || string.IsNullOrWhiteSpace(SelectedCredential.UUID)) return;
                 string uuid = SelectedCredential.UUID;
-                if (_credentialsManager.DeleteCredentials(uuid))
+                if (await _credentialsManager.DeleteCredentials(uuid))
                 {
                     WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
                     WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
@@ -176,7 +176,7 @@ namespace ShelterVault.ViewModels
 
         private async Task UpdateCredential()
         {
-            Credentials credentials = _credentialsManager.UpdateCredentials(SelectedCredential);
+            Credentials credentials = await _credentialsManager.UpdateCredentials(SelectedCredential);
             if (credentials != null)
             {
                 SelectedCredential = credentials;
@@ -191,7 +191,7 @@ namespace ShelterVault.ViewModels
 
         private async Task CreateCredential()
         {
-            Credentials credentials = _credentialsManager.InsertCredentials(SelectedCredential);
+            Credentials credentials = await _credentialsManager.InsertCredentials(SelectedCredential);
             if (credentials != null)
             {
                 SelectedCredential = credentials;

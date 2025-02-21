@@ -11,7 +11,7 @@ namespace ShelterVault.Managers
 {
     internal interface ICredentialsReaderManager
     {
-        IEnumerable<CredentialsViewItem> GetAllCredentials(string shelterVaultUuid);
+        IEnumerable<CredentialsViewItem> GetAllActiveCredentials(string shelterVaultUuid);
     }
 
     internal class CredentialsReaderManager : ICredentialsReaderManager
@@ -27,10 +27,10 @@ namespace ShelterVault.Managers
             _shelterVaultStateService = shelterVaultStateService;
         }
 
-        public IEnumerable<CredentialsViewItem> GetAllCredentials(string shelterVaultUuid)
+        public IEnumerable<CredentialsViewItem> GetAllActiveCredentials(string shelterVaultUuid)
         {
             IList<CredentialsViewItem> credentialsList = new List<CredentialsViewItem>();
-            IEnumerable<ShelterVaultCredentialsModel> shelterVaultCredentials = _shelterVaultLocalStorage.GetAllCredentials(shelterVaultUuid);
+            IEnumerable<ShelterVaultCredentialsModel> shelterVaultCredentials = _shelterVaultLocalStorage.GetAllActiveCredentials(shelterVaultUuid);
             byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
             byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
 

@@ -11,6 +11,7 @@ namespace ShelterVault.Managers
 {
     public interface IVaultReaderManager
     {
+        IList<VaultModel> GetAllActiveVaults();
         IList<VaultModel> GetAllVaults();
     }
 
@@ -21,6 +22,19 @@ namespace ShelterVault.Managers
         public VaultReaderManager(IShelterVaultLocalStorage shelterVaultLocalStorage)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
+        }
+
+        public IList<VaultModel> GetAllActiveVaults()
+        {
+            List<VaultModel> vaults = new List<VaultModel>();
+            foreach (ShelterVaultModel vault in _shelterVaultLocalStorage.GetAllActiveVaults())
+            {
+                IEnumerable<ShelterVaultCredentialsModel> credentials = _shelterVaultLocalStorage.GetAllActiveCredentials(vault.UUID);
+                VaultModel vaultModel = new(vault, credentials);
+                vaults.Add(vaultModel);
+            }
+
+            return vaults;
         }
 
         public IList<VaultModel> GetAllVaults()
