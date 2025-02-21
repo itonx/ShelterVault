@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace ShelterVault.Services
 {
     public interface IShelterVaultCosmosDBService
@@ -19,6 +20,7 @@ namespace ShelterVault.Services
         Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel;
         Task SyncAllAsync();
         Task<List<CosmosDBSyncModel>> SynchronizeModelsAsync(IList<CosmosDBSyncModel> cosmosDBSyncModels, IList<CosmosDBSyncModel> shelterVaultSyncModels);
+        Task<CosmosDBTinyModel> GetItemByIdAsync(string id);
     }
 
     public class ShelterVaultCosmosDBService : IShelterVaultCosmosDBService
@@ -50,6 +52,15 @@ namespace ShelterVault.Services
             Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
             Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
             ItemResponse<object> vaultResponse = await cosmosContainer.DeleteItemAsync<object>(id: shelterVault.id, partitionKey: new PartitionKey(shelterVault.type));
+        }
+
+        public async Task<CosmosDBTinyModel> GetItemByIdAsync(string id)
+        {
+            QueryDefinition query = new QueryDefinition("SELECT * FROM vault WHERE vault.id = @id")
+            .WithParameter("@id", id);
+
+            IList<CosmosDBTinyModel> results = await GetCosmosDBItems<CosmosDBTinyModel>(query);
+            return results.FirstOrDefault();
         }
 
         public async Task SyncAllAsync()

@@ -69,18 +69,29 @@ namespace ShelterVault.Managers
                 (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(credentials.GetJsonValues(), masterKey, salt);
 
                 ShelterVaultCredentialsModel shelterVaultCredentials = new(credentials, encryptedValues);
-                bool updated = _shelterVaultLocalStorage.UpdateCredentials(shelterVaultCredentials);
+                if(await CanSynchronize(shelterVaultCredentials))
+                {
+                    bool updated = _shelterVaultLocalStorage.UpdateCredentials(shelterVaultCredentials);
 
-                if(!updated) return null;
+                    if(!updated) return null;
 
-                string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials, masterKey, salt);
-                await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
-                return new(decryptedValues, shelterVaultCredentials);
+                    string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials, masterKey, salt);
+                    await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
+                    return new(decryptedValues, shelterVaultCredentials);
+                }
+
+                return null;
             }
             catch (Exception)
             {
                 return null;
             }
+        }
+
+        private async Task<bool> CanSynchronize(ShelterVaultCredentialsModel shelterVaultCredentials)
+        {
+            ICosmosDBModel cosmosDBModel = await _cloudSyncManager.GetItemAsync(shelterVaultCredentials);
+            return cosmosDBModel == null || cosmosDBModel.version <= shelterVaultCredentials.Version;
         }
 
         public Credentials GetCredentials(CredentialsViewItem credentialsViewItem)
@@ -97,9 +108,14 @@ namespace ShelterVault.Managers
             try
             {
                 ShelterVaultCredentialsModel tmpCredentials = _shelterVaultLocalStorage.GetCredentialsByUUID(uuid);
-                tmpCredentials.MarkAsDeleted();
-                _shelterVaultLocalStorage.UpdateCredentials(tmpCredentials);
-                return await _cloudSyncManager.UpsertItemAsync(tmpCredentials);
+                if(await CanSynchronize(tmpCredentials))
+                {
+                    tmpCredentials.MarkAsDeleted();
+                    _shelterVaultLocalStorage.UpdateCredentials(tmpCredentials);
+                    return await _cloudSyncManager.UpsertItemAsync(tmpCredentials);
+                }
+
+                return false;
             }
             catch (Exception)
             {
