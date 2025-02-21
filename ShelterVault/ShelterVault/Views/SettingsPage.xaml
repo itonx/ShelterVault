@@ -13,6 +13,7 @@
 
     <Page.Resources>
         <converters:ShowHideToVisibilityConverter x:Key="ShowHideToVisibility" />
+        <converters:CloudProviderTypeToVisibilityConverter x:Key="CloudProviderTypeToVisibility" />
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
@@ -57,7 +58,8 @@
                                 <StackPanel
                                     Grid.Column="1"
                                     Margin="100,20"
-                                    Spacing="10">
+                                    Spacing="10"
+                                    Visibility="{Binding SelectedCloudProvider, Converter={StaticResource CloudProviderTypeToVisibility}, ConverterParameter=1}">
                                     <TextBlock HorizontalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">Azure configuration</TextBlock>
                                     <InfoBar
                                         Title="Sync info:"
