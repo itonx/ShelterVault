@@ -68,7 +68,8 @@ namespace ShelterVault.Services
             try
             {
                 CosmosDBSettings currentConfiguration = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
-                string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
+                //TODO: string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
+                string cosmosDBquery = "SELECT vault.id, vault.type, vault.version FROM vault";
                 IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(new QueryDefinition(cosmosDBquery));
                 IList<VaultModel> shelterVaults = _vaultReaderManager.GetAllVaults();
                 IList<CosmosDBSyncModel> cosmosDBModels = CosmosDBTinyModel.ToCosmosDBSyncModel(cosmosDBTinyModels);
@@ -80,7 +81,7 @@ namespace ShelterVault.Services
                     CosmosDBVault cosmosDBVault = (CosmosDBVault)model;
                     CosmosDBSyncModel cosmosDBModel = cosmosDBModels.FirstOrDefault(x => x.id.Equals(cosmosDBVault.id));
                     if(cosmosDBModel != null && cosmosDBModel.IsNew) _shelterVaultLocalStorage.CreateShelterVault(cosmosDBVault.id, cosmosDBVault.name, cosmosDBVault.masterKeyHash, cosmosDBVault.iv, cosmosDBVault.salt, cosmosDBVault.version);
-                    //TODO: Implement update logic for master key, not needed?. It will affect the current vault.
+                    else _shelterVaultLocalStorage.UpdateShelterVault(cosmosDBVault.id, cosmosDBVault.name, cosmosDBVault.masterKeyHash, cosmosDBVault.iv, cosmosDBVault.salt, cosmosDBVault.version);
                 }
 
                 foreach (var model in await GetCosmosDBItemsByPartitionKey(synchronizedModels, "shelter_vault_credentials"))
@@ -119,6 +120,7 @@ namespace ShelterVault.Services
                 }
 
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
+                WeakReferenceMessenger.Default.Send(new RefreshVaultListRequestMessage(true));
             }
             catch (Exception ex)
             {
@@ -133,8 +135,8 @@ namespace ShelterVault.Services
             string baseQuery = partitionKey.Equals("shelter_vault") ? "SELECT vault.name, vault.masterKeyHash, vault.iv, vault.salt, vault.id, vault.type, vault.version FROM vault"
                 : "SELECT vault.encryptedValues, vault.iv, vault.shelterVaultUuid, vault.id, vault.type, vault.version FROM vault";
 
-            QueryDefinition query = new QueryDefinition(string.Concat(baseQuery, " where vault.id in (@ids) and vault.type = @type"))
-                .WithParameter("@ids", string.Join(",", cosmosDBModels.Where(x => x.source == SourceType.CosmosDB && x.type.Equals(partitionKey)).Select(x => x.id)))
+            QueryDefinition query = new QueryDefinition(string.Concat(baseQuery, " where ARRAY_CONTAINS(@ids, vault.id) and vault.type = @type"))
+                .WithParameter("@ids", cosmosDBModels.Where(x => x.source == SourceType.CosmosDB && x.type.Equals(partitionKey)).Select(x => x.id))
                 .WithParameter("@type", partitionKey);
 
             return partitionKey.Equals("shelter_vault") ? await GetCosmosDBItems<CosmosDBVault>(query) : await GetCosmosDBItems<CosmosDBCredentials>(query);

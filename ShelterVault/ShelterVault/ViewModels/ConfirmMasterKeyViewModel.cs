@@ -6,6 +6,7 @@ using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace ShelterVault.ViewModels
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
             if (Vaults.Any()) SelectedVault = Vaults.FirstOrDefault();
+            RegisterMessages();
         }
 
         [RelayCommand]
@@ -63,6 +65,25 @@ namespace ShelterVault.ViewModels
             {
                 await _progressBarService.Hide();
             }
+        }
+
+        private void RegisterMessages()
+        {
+            WeakReferenceMessenger.Default.Register<ConfirmMasterKeyViewModel, RefreshVaultListRequestMessage>(this, (receiver, message) =>
+            {
+                AppDispatcher.UIThreadDispatcher?.TryEnqueue(() => {
+                    if (message.Value)
+                    {
+                        string selectedVaultTmp = SelectedVault.UUID;
+                        Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
+                        if (Vaults.Any())
+                        {
+                            SelectedVault = null;
+                            SelectedVault = Vaults.Find(x => x.UUID.Equals(selectedVaultTmp));
+                        }
+                    }
+                });
+            });
         }
     }
 }
