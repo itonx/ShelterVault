@@ -144,7 +144,11 @@ namespace ShelterVault.Services
                     if (shelterVaultItems.ContainsKey(cosmosDBItem.Key))
                     {
                         if (shelterVaultItems[cosmosDBItem.Key].version == cosmosDBItem.Value.version) continue;
-                        if(shelterVaultItems[cosmosDBItem.Key].version < cosmosDBItem.Value.version)
+                        else if(cosmosDBItem.Value.version == -1)
+                            syncModels.Add(cosmosDBItem.Value);
+                        else if(shelterVaultItems[cosmosDBItem.Key].version == -1)
+                            syncModels.Add(shelterVaultItems[cosmosDBItem.Key]);
+                        else if(shelterVaultItems[cosmosDBItem.Key].version < cosmosDBItem.Value.version)
                             syncModels.Add(cosmosDBItem.Value);
                         else
                             syncModels.Add(shelterVaultItems[cosmosDBItem.Key]);

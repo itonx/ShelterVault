@@ -21,8 +21,10 @@ namespace ShelterVault.DataLayer
         bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
         bool DeleteCredentials(string uuid);
         IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials(string shelterVaultUuid);
+        IEnumerable<ShelterVaultCredentialsModel> GetAllActiveCredentials(string shelterVaultUuid);
         ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid);
         IEnumerable<ShelterVaultModel> GetAllVaults();
+        IEnumerable<ShelterVaultModel> GetAllActiveVaults();
         ShelterVaultModel GetVaultByUUID(string uuid);
     }
 
@@ -266,6 +268,11 @@ namespace ShelterVault.DataLayer
             }
         }
 
+        public IEnumerable<ShelterVaultCredentialsModel> GetAllActiveCredentials(string shelterVaultUuid)
+        {
+            return GetAllCredentials(shelterVaultUuid).Where(c => c.Version > 0);
+        }
+
         public ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
@@ -295,6 +302,11 @@ namespace ShelterVault.DataLayer
                 IEnumerable<ShelterVaultModel> result = connection.Query<ShelterVaultModel>(query) ?? Enumerable.Empty<ShelterVaultModel>();
                 return result;
             }
+        }
+
+        public IEnumerable<ShelterVaultModel> GetAllActiveVaults()
+        {
+            return GetAllVaults().Where(v => v.Version > 0);
         }
 
         public ShelterVaultModel GetVaultByUUID(string uuid)

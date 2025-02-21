@@ -61,5 +61,13 @@ namespace ShelterVault.Models
             CosmosDBCredentials credentials = new(UUID, EncryptedValues, Iv, ShelterVaultUuid, Version);
             return credentials;
         }
+
+        public void MarkAsDeleted()
+        {
+            EncryptedValues = string.Empty;
+            Iv = string.Empty;
+            ShelterVaultUuid = string.Empty;
+            Version = -1;
+        }
     }
 }

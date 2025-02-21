@@ -35,7 +35,7 @@ namespace ShelterVault.ViewModels
             _progressBarService = progressBarService;
             _masterKeyValidatorManager = masterKeyValidatorManager;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
-            Vaults = _shelterVaultLocalStorage.GetAllVaults().ToList();
+            Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
             if (Vaults.Any()) SelectedVault = Vaults.FirstOrDefault();
         }
 

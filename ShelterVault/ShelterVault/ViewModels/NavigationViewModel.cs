@@ -30,7 +30,7 @@ namespace ShelterVault.ViewModels
             RegisterMessages();
             _credentialsReaderManager = credentialsReaderManager;
             _shelterVaultStateService = shelterVaultStateService;
-            Credentials = _credentialsReaderManager.GetAllCredentials(_shelterVaultStateService.ShelterVault.UUID).ToList();
+            Credentials = _credentialsReaderManager.GetAllActiveCredentials(_shelterVaultStateService.ShelterVault.UUID).ToList();
             SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
             VaultName = _shelterVaultStateService.ShelterVault.Name;
         }
@@ -45,7 +45,7 @@ namespace ShelterVault.ViewModels
             {
                 if (message.Value)
                 {
-                    receiver.Credentials = receiver._credentialsReaderManager.GetAllCredentials(receiver._shelterVaultStateService.ShelterVault.UUID).ToList();
+                    receiver.Credentials = receiver._credentialsReaderManager.GetAllActiveCredentials(receiver._shelterVaultStateService.ShelterVault.UUID).ToList();
                 }
             });
             WeakReferenceMessenger.Default.Register<NavigationViewModel, SelectCredentialRequestMessage>(this, (receiver, message) =>

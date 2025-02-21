@@ -11,7 +11,7 @@ namespace ShelterVault.Managers
 {
     internal interface ICloudSyncManager
     {
-        Task UpsertItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
+        Task<bool> UpsertItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
         Task DeleteItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
     }
 
@@ -26,17 +26,26 @@ namespace ShelterVault.Managers
             _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
         }
 
-        public async Task UpsertItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
+        public async Task<bool> UpsertItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
         {
-            CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
-            switch (providerType)
+            try
             {
-                case CloudProviderType.Azure:
-                    ICosmosDBModel cosmosDBVault = shelterVaultModel.ToCosmosDBModel();
-                    await _shelterVaultCosmosDBService.UpsertItemAsync(cosmosDBVault);
-                    break;
-                default:
-                    break;
+                CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+                switch (providerType)
+                {
+                    case CloudProviderType.Azure:
+                        ICosmosDBModel cosmosDBVault = shelterVaultModel.ToCosmosDBModel();
+                        await _shelterVaultCosmosDBService.UpsertItemAsync(cosmosDBVault);
+                        break;
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

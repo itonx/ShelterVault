@@ -13,10 +13,10 @@ namespace ShelterVault.Managers
 {
     internal interface ICredentialsManager
     {
-        Credentials InsertCredentials(Credentials credentials);
-        Credentials UpdateCredentials(Credentials credentials);
+        Task<Credentials> InsertCredentials(Credentials credentials);
+        Task<Credentials> UpdateCredentials(Credentials credentials);
         Credentials GetCredentials(CredentialsViewItem credentialsViewItem);
-        bool DeleteCredentials(string uuid);
+        Task<bool> DeleteCredentials(string uuid);
     }
 
     internal class CredentialsManager : ICredentialsManager
@@ -34,7 +34,7 @@ namespace ShelterVault.Managers
             _cloudSyncManager = cloudSyncManager;
         }
 
-        public Credentials InsertCredentials(Credentials credentials)
+        public async Task<Credentials> InsertCredentials(Credentials credentials)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace ShelterVault.Managers
 
                 credentials.UUID = shelterVaultCredentials.UUID;
                 credentials.Iv = shelterVaultCredentials.Iv;
-                _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
+                await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
                 return credentials;
             }
             catch (Exception)
@@ -59,7 +59,7 @@ namespace ShelterVault.Managers
             }
         }
 
-        public Credentials UpdateCredentials(Credentials credentials)
+        public async Task<Credentials> UpdateCredentials(Credentials credentials)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace ShelterVault.Managers
                 if(!updated) return null;
 
                 string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials, masterKey, salt);
-                _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
+                await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
                 return new(decryptedValues, shelterVaultCredentials);
             }
             catch (Exception)
@@ -92,13 +92,14 @@ namespace ShelterVault.Managers
             return new(jsonValues, credentialsViewItem);
         }
 
-        public bool DeleteCredentials(string uuid)
+        public async Task<bool> DeleteCredentials(string uuid)
         {
             try
             {
                 ShelterVaultCredentialsModel tmpCredentials = _shelterVaultLocalStorage.GetCredentialsByUUID(uuid);
-                _cloudSyncManager.DeleteItemAsync(tmpCredentials);
-                return _shelterVaultLocalStorage.DeleteCredentials(uuid);
+                tmpCredentials.MarkAsDeleted();
+                _shelterVaultLocalStorage.UpdateCredentials(tmpCredentials);
+                return await _cloudSyncManager.UpsertItemAsync(tmpCredentials);
             }
             catch (Exception)
             {
