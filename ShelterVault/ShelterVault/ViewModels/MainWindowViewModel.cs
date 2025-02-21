@@ -2,12 +2,14 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ShelterVault.DataLayer;
+using ShelterVault.Managers;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,6 +40,7 @@ namespace ShelterVault.ViewModels
         private readonly IShelterVaultThemeService _shelterVaultThemeService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ILanguageService _languageService;
+        private readonly ICloudSyncManager _cloudSyncManager;
 
         [RelayCommand]
         private void SwitchVault()
@@ -52,12 +55,13 @@ namespace ShelterVault.ViewModels
             CurrentTheme = _shelterVaultThemeService.GetNextTheme(CurrentTheme);
         }
 
-        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService)
+        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _shelterVaultThemeService = shelterVaultThemeService;
             _shelterVaultStateService = shelterVaultStateService;
             _languageService = languageService;
+            _cloudSyncManager = cloudSyncManager;
             InitialSetup();
         }
 
@@ -69,6 +73,7 @@ namespace ShelterVault.ViewModels
             ShowLangOptions = true;
             ShowSwitchVault = false;
             SetLangText();
+            InitSyncDaemon();
         }
 
         private void RegisterMessages()
@@ -102,6 +107,24 @@ namespace ShelterVault.ViewModels
             EnglishLangOptionText = _languageService.GetLangValue(LangResourceKeys.ENGLISH_OPTION);
             SpanishLangOptionText = _languageService.GetLangValue(LangResourceKeys.SPANISH_OPTION);
             SwitchVaultText = _languageService.GetLangValue(LangResourceKeys.SWITCH_VAULT);
+        }
+
+        private async Task InitSyncDaemon()
+        {
+            Task.Run(async () =>
+            {
+                while(true)
+                {
+                    try
+                    {
+                        await _cloudSyncManager.SyncVaults();
+                    }
+                    finally
+                    {
+                        await Task.Delay(60 * 1000);
+                    }
+                }
+            });
         }
     }
 }

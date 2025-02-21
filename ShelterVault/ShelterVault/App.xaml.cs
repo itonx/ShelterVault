@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -48,6 +49,7 @@ namespace ShelterVault
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
+            AppDispatcher.UIThreadDispatcher = DispatcherQueue.GetForCurrentThread();
             m_window.Activate();
         }
 
@@ -103,5 +105,10 @@ namespace ShelterVault
 
             return services.BuildServiceProvider();
         }
+    }
+
+    public static class AppDispatcher
+    {
+        public static DispatcherQueue UIThreadDispatcher { get; set; }
     }
 }
