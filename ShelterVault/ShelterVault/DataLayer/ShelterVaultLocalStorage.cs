@@ -20,6 +20,7 @@ namespace ShelterVault.DataLayer
         bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
         bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
         bool DeleteCredentials(string uuid);
+        bool DeleteVault(string uuid);
         IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials(string shelterVaultUuid);
         IEnumerable<ShelterVaultCredentialsModel> GetAllActiveCredentials(string shelterVaultUuid);
         ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid);
@@ -250,6 +251,44 @@ namespace ShelterVault.DataLayer
                 int result = command.ExecuteNonQuery();
                 return result == 1;
             }
+        }
+
+        public bool DeleteCredentialsByVaultId(string shelterVaultUuid)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    DELETE FROM shelter_vault_credentials
+                    WHERE shelterVaultUuid=$shelterVaultUuid
+                ";
+                command.Parameters.AddWithValue("shelterVaultUuid", shelterVaultUuid);
+
+                int result = command.ExecuteNonQuery();
+                return result > 1;
+            }
+        }
+
+        public bool DeleteVault(string uuid)
+        {
+            int vaultsDeleted = 0;
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    DELETE FROM shelter_vault
+                    WHERE uuid=$uuid
+                ";
+                command.Parameters.AddWithValue("uuid", uuid);
+
+                vaultsDeleted = command.ExecuteNonQuery();
+            }
+
+            return DeleteCredentialsByVaultId(uuid) || vaultsDeleted > 0;
         }
 
         public IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials(string shelterVaultUuid)
