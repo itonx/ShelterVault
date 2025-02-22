@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShelterVault.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    internal class CosmosDBSyncStatus
+    public class CosmosDBSyncStatus
     {
-        public bool IsFirstSyncDone { get; set; }
+        public CloudSyncStatus CurrentSyncStatus { get; set; } = CloudSyncStatus.None;
 
-        public CosmosDBSyncStatus(bool isFirstSyncDone)
+        public CosmosDBSyncStatus()
         {
-            IsFirstSyncDone = isFirstSyncDone;
+            
+        }
+
+        public CosmosDBSyncStatus(CloudSyncStatus currentSyncStatus)
+        {
+            CurrentSyncStatus = currentSyncStatus;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace ShelterVault.Services
         Task SyncAllAsync();
         Task<List<CosmosDBSyncModel>> SynchronizeModelsAsync(IList<CosmosDBSyncModel> cosmosDBSyncModels, IList<CosmosDBSyncModel> shelterVaultSyncModels);
         Task<CosmosDBTinyModel> GetItemByIdAsync(string id);
+        CosmosDBSyncStatus GetCurrentSyncStatus();
     }
 
     public class ShelterVaultCosmosDBService : IShelterVaultCosmosDBService
@@ -67,6 +68,7 @@ namespace ShelterVault.Services
         {
             try
             {
+                WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchInProcess));
                 CosmosDBSettings currentConfiguration = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
                 string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
                 //string cosmosDBquery = "SELECT vault.id, vault.type, vault.version FROM vault";
@@ -121,9 +123,12 @@ namespace ShelterVault.Services
 
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                 WeakReferenceMessenger.Default.Send(new RefreshVaultListRequestMessage(true));
+                
+                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(Shared.Enums.CloudSyncStatus.UpToDate));
             }
             catch (Exception ex)
             {
+                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(Shared.Enums.CloudSyncStatus.SynchFailed));
                 throw ex;
             }
         }
@@ -202,6 +207,12 @@ namespace ShelterVault.Services
 
                 return syncModels;
             });
+        }
+
+        public CosmosDBSyncStatus GetCurrentSyncStatus()
+        {
+            CosmosDBSyncStatus currentSyncStatus = _settingsService.ReadJsonValueAs<CosmosDBSyncStatus>(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS);
+            return currentSyncStatus;
         }
     }
 }

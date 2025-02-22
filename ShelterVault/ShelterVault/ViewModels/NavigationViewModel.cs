@@ -43,7 +43,8 @@ namespace ShelterVault.ViewModels
         {
             WeakReferenceMessenger.Default.Register<NavigationViewModel, ShowPageRequestMessage>(this, (receiver, message) =>
             {
-                if (message.Value == Shared.Enums.ShelterVaultPage.HOME) receiver.SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
+                if (message.Value == Shared.Enums.ShelterVaultPage.HOME || message.Value == Shared.Enums.ShelterVaultPage.SETTINGS) 
+                    receiver.SelectedMenuItem = message.Value.ToString();
             });
             WeakReferenceMessenger.Default.Register<NavigationViewModel, RefreshCredentialListRequestMessage>(this, (receiver, message) =>
             {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ShelterVault.Shared.Attributes;
+using ShelterVault.Shared.Constants;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,21 +9,26 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Enums
 {
-    enum CloudSyncStatus
+    public enum CloudSyncStatus
     {
-        [Description("Configuration pending")]
-        ConfigurationPending,
-        [Description("Analyzing")]
-        Analyzing,
-        [Description("Sync in process")]
+        [Description("")]
+        [GlyphAttribute("\uE783")]
+        None,
+
+        [Description(LangResourceKeys.SYNC_PENDING)]
+        [GlyphAttribute("\uE814")]
+        PendingConfiguration,
+
+        [Description(LangResourceKeys.SYNC_IN_PROGRESS)]
+        [GlyphAttribute("\uEDAB")]
         SynchInProcess,
-        [Description("Sync faield")]
+
+        [Description(LangResourceKeys.SYNC_FAILED)]
+        [GlyphAttribute("\uEA6A")]
         SynchFailed,
-        [Description("Sync completed")]
-        SynchCompleted,
-        [Description("Up to date")]
-        UpToDate,
-        [Description("Outdated")]
-        Outdated,
+
+        [Description(LangResourceKeys.SYNC_UP_TO_DATE)]
+        [GlyphAttribute("\uE753")]
+        UpToDate
     }
 }

@@ -34,4 +34,12 @@ namespace ShelterVault.Services
             return ResourceManager.Current.MainResourceMap.GetSubtree(LangResourceKeys.LANG_TREE).GetValue(resourceKey).ValueAsString ?? string.Empty;
         }
     }
+
+    public static class LangService
+    {
+        public static string GetLangValue(string resourceKey)
+        {
+            return ResourceManager.Current.MainResourceMap.GetSubtree(LangResourceKeys.LANG_TREE).GetValue(resourceKey).ValueAsString ?? string.Empty;
+        }
+    }
 }
