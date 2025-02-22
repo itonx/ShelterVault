@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Azure.Cosmos;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
+using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +55,7 @@ namespace ShelterVault.ViewModels
         partial void OnSelectedCloudProviderChanged(CloudProviderType value)
         {
             _settingsService.SaveCloudProviderType(value);
+            WeakReferenceMessenger.Default.Send(new CloudProviderChangedMessage(true));
         }
 
         private void ReadCosmosDBSettings()
@@ -115,7 +118,6 @@ namespace ShelterVault.ViewModels
                 {
                     case CloudProviderType.Azure:
                         await _shelterVaultCosmosDBService.SyncAllAsync();
-                        _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(true));
                         break;
                     default:
                         return;

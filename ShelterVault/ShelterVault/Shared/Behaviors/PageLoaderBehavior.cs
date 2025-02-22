@@ -35,13 +35,27 @@ namespace ShelterVault.Shared.Behaviors
                 typeof(PageLoaderBehavior),
                 new PropertyMetadata(null, OnSelectedItemChanged));
 
-        private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue == null || e.NewValue == e.OldValue) return;
+            var behavior = (d as PageLoaderBehavior);
+            if (e.NewValue == null || e.NewValue == e.OldValue || (bool)behavior.GetValue(SkipSelectionProperty)) return;
             NavigationView navigationView = d.GetDependencyObjectFromBehavior<NavigationView>();
+            if (navigationView.Content is not Frame pageContainer) throw new InvalidOperationException("The NavigationView must contain a Frame.");
+            if (e.NewValue.ToString().Equals(Enums.ShelterVaultPage.SETTINGS.ToString(), StringComparison.CurrentCultureIgnoreCase) && pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted)
+            {
+                bool discardChanges = await pendingChangesChallenge.DiscardChangesAsync(completeChallenge: true);
+                if (!discardChanges)
+                {
+                    behavior.SetValue(SkipSelectionProperty, true);
+                    behavior.SelectedItem = e.OldValue;
+                    behavior.SetValue(SkipSelectionProperty, false);
+                    return;
+                }
+            }
+
             if (navigationView.MenuItems.Count == 0) return;
 
-            NavigationViewItem itemFound = RecursiveLookup(navigationView.MenuItems, e.NewValue);
+            NavigationViewItem itemFound = RecursiveLookup(navigationView.MenuItems, e.NewValue, navigationView.SettingsItem);
             if (itemFound != null && (NavigationViewItem)navigationView.SelectedItem != itemFound)
             {
                 bool shouldRestore = !navigationView.IsPaneOpen;
@@ -55,7 +69,6 @@ namespace ShelterVault.Shared.Behaviors
                 SelectMenuIfCollapsed(navigationView, e.NewValue);
                 RestorePane(navigationView, shouldRestore);
             }
-
         }
 
         public object SelectedItem
@@ -125,7 +138,7 @@ namespace ShelterVault.Shared.Behaviors
                 bool discardChanges = await pendingChangesChallenge.DiscardChangesAsync();
                 if(!discardChanges)
                 {
-                    NavigationViewItem itemFound = RecursiveLookup(sender.MenuItems, lastSelectedItemByTag);
+                    NavigationViewItem itemFound = RecursiveLookup(sender.MenuItems, lastSelectedItemByTag, sender.SettingsItem);
                     AssociatedObject.SetValue(PageLoaderBehavior.SkipSelectionProperty, true);
                     sender.SelectedItem = itemFound;
                     SelectMenuIfCollapsed(AssociatedObject, itemFound.Tag);
@@ -142,20 +155,26 @@ namespace ShelterVault.Shared.Behaviors
             {
                 Type selectedPageType = (Type)selectedItem.GetValue(PageTypeProperty);
                 object navigationParameter = selectedItem.Tag;
-                this.SelectedItem = navigationParameter;
+                this.
+                    SelectedItem = navigationParameter;
                 if (selectedPageType == null) return;
                 pageContainer.Navigate(selectedPageType, navigationParameter);
             }
         }
 
-        public static NavigationViewItem RecursiveLookup(IList<object> menuItems, object tag)
+        public static NavigationViewItem RecursiveLookup(IList<object> menuItems, object tag, object settingsItem)
         {
+            if (tag.ToString().Equals(Enums.ShelterVaultPage.SETTINGS.ToString(), StringComparison.CurrentCultureIgnoreCase))
+            {
+                return (NavigationViewItem)settingsItem;
+            }
+
             foreach (var item in menuItems)
             {
                 NavigationViewItem navItem = item as NavigationViewItem;
                 bool found = AreTagEqual(navItem, tag);
                 if (found) return navItem;
-                if (navItem.MenuItems.Count > 0) return RecursiveLookup(navItem.MenuItems, tag);
+                if (navItem.MenuItems.Count > 0) return RecursiveLookup(navItem.MenuItems, tag, settingsItem);
             }
 
             return null;

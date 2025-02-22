@@ -270,4 +270,16 @@
   <data name="DialogCosmosDBSyncError.Text" xml:space="preserve">
     <value>Synchronization failed!</value>
   </data>
+  <data name="SyncPendingConfiguration.Text" xml:space="preserve">
+    <value>Pending configuration</value>
+  </data>
+  <data name="SyncInProgress.Text" xml:space="preserve">
+    <value>Synchronizing</value>
+  </data>
+  <data name="SyncFailed.Text" xml:space="preserve">
+    <value>Sync failed</value>
+  </data>
+  <data name="SyncUpToDate.Text" xml:space="preserve">
+    <value>Up to date</value>
+  </data>
 </root>

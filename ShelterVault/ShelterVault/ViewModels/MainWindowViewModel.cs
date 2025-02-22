@@ -3,12 +3,15 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
+using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
+using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -28,6 +31,8 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private bool _showSwitchVault;
         [ObservableProperty]
+        private bool _showSync;
+        [ObservableProperty]
         private bool _showLangOptions;
         [ObservableProperty]
         private string _englishLangOptionText;
@@ -35,18 +40,21 @@ namespace ShelterVault.ViewModels
         private string _spanishLangOptionText;
         [ObservableProperty]
         private string _switchVaultText;
+        [ObservableProperty]
+        private CloudSyncStatus _currentCloudSyncStatus;
 
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IShelterVaultThemeService _shelterVaultThemeService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ILanguageService _languageService;
         private readonly ICloudSyncManager _cloudSyncManager;
+        private readonly IUIThreadService _uiThreadService;
 
         [RelayCommand]
         private void SwitchVault()
         {
             _shelterVaultStateService.ResetState();
-            WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
+            WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(ShelterVaultAppState.ConfirmMasterKey));
         }
 
         [RelayCommand]
@@ -55,13 +63,23 @@ namespace ShelterVault.ViewModels
             CurrentTheme = _shelterVaultThemeService.GetNextTheme(CurrentTheme);
         }
 
-        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager)
+        [RelayCommand]
+        private void Sync()
+        {
+            if(ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
+            {
+                WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(ShelterVaultPage.SETTINGS));
+            }
+        }
+
+        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _shelterVaultThemeService = shelterVaultThemeService;
             _shelterVaultStateService = shelterVaultStateService;
             _languageService = languageService;
             _cloudSyncManager = cloudSyncManager;
+            _uiThreadService = uiThreadService;
             InitialSetup();
         }
 
@@ -73,7 +91,7 @@ namespace ShelterVault.ViewModels
             ShowLangOptions = true;
             ShowSwitchVault = false;
             SetLangText();
-            InitSyncDaemon();
+            StartSynchronizationTask();
         }
 
         private void RegisterMessages()
@@ -100,6 +118,22 @@ namespace ShelterVault.ViewModels
             {
                 IsProgressBarVisible = message.Value;
             });
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, RefreshCurrentSyncStatusMessage>(this, (receiver, message) =>
+            {
+                _uiThreadService.Execute(() =>
+                {
+                    CurrentCloudSyncStatus = message.Value;
+                });
+            });
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, CloudProviderChangedMessage>(this, (receiver, message) =>
+            {
+                _uiThreadService.Execute(() =>
+                {
+                    CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
+                    ShowSync = cloudSyncInformation.HasCloudConfiguration;
+                    CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
+                });
+            });
         }
 
         private void SetLangText()
@@ -107,26 +141,47 @@ namespace ShelterVault.ViewModels
             EnglishLangOptionText = _languageService.GetLangValue(LangResourceKeys.ENGLISH_OPTION);
             SpanishLangOptionText = _languageService.GetLangValue(LangResourceKeys.SPANISH_OPTION);
             SwitchVaultText = _languageService.GetLangValue(LangResourceKeys.SWITCH_VAULT);
+            CloudSyncStatus tmpStatus = CurrentCloudSyncStatus;
+            CurrentCloudSyncStatus = CloudSyncStatus.None;
+            CurrentCloudSyncStatus = tmpStatus;
         }
 
-        private async Task InitSyncDaemon()
+        private void RefreshSyncStatusInfo()
         {
-            Task.Run(async () =>
+            CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
+            ShowSync = cloudSyncInformation.HasCloudConfiguration;
+            CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
+        }
+
+        private void StartSynchronizationTask()
+        {
+            RefreshSyncStatusInfo();
+            _ = Task.Run(async () =>
             {
-                while(true)
+                while (true)
                 {
+                    CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
                     try
                     {
-                        await _cloudSyncManager.SyncVaults();
+                        if (cloudSyncInformation.HasCloudConfiguration)
+                            await _cloudSyncManager.SyncVaults();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Debug.WriteLine(ex);
                     }
                     finally
                     {
-                        await Task.Delay(60 * 1000);
+                        if (cloudSyncInformation.HasCloudConfiguration)
+                        {
+                            _uiThreadService.Execute(() =>
+                            {
+                                RefreshSyncStatusInfo();
+                            });
+                        }
                     }
+
+                    await Task.Delay(60 * 1000);
                 }
             });
         }

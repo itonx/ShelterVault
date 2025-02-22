@@ -21,6 +21,8 @@
         <Grid.Resources>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIconConverter" />
+            <converters:CloudSyncStatusToTextConverter x:Key="CloudSyncStatusToTextConverter" />
+            <converters:CloudSyncStatusToGlyphConverter x:Key="CloudSyncStatusToGlyphConverter" />
             <Thickness x:Key="ShelterVaultTitleMargin">50,0,0,0</Thickness>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -46,12 +48,6 @@
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"
                 Spacing="5">
-                <FontIcon
-                    Margin="0,2,0,0"
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    Glyph="&#xE930;" />
-                <TextBlock Grid.Column="1" VerticalAlignment="Center">Up to date</TextBlock>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <interactivity:Interaction.Behaviors>
                         <behaviors:InteractiveAppTitleBarControlBehavior />
@@ -69,6 +65,26 @@
                         <ComboBoxItem Content="{Binding EnglishLangOptionText, Mode=OneWay}" Tag="en-US" />
                         <ComboBoxItem Content="{Binding SpanishLangOptionText, Mode=OneWay}" Tag="es-MX" />
                     </ComboBox>
+                    <Button
+                        x:Name="AppTitleBarSyncButton"
+                        Height="{Binding ElementName=AppTitleBar, Path=Height}"
+                        Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
+                        BorderThickness="0"
+                        Command="{Binding SyncCommand}"
+                        CornerRadius="0"
+                        Visibility="{Binding ShowSync, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon FontSize="14" Glyph="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToGlyphConverter}}" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Text="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToTextConverter}}" />
+                        </Grid>
+                    </Button>
                     <Button
                         x:Name="AppTitleBarSwitchVaultButton"
                         Height="{Binding ElementName=AppTitleBar, Path=Height}"

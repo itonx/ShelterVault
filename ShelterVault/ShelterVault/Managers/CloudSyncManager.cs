@@ -15,6 +15,7 @@ namespace ShelterVault.Managers
         Task DeleteItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
         Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
         Task SyncVaults();
+        CloudSyncInformation GetCurrentCloudSyncInformation();
     }
 
     internal class CloudSyncManager : ICloudSyncManager
@@ -99,6 +100,19 @@ namespace ShelterVault.Managers
                     break;
                 default:
                     break;
+            }
+        }
+
+        public CloudSyncInformation GetCurrentCloudSyncInformation()
+        {
+            CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+
+            switch (providerType)
+            {
+                case CloudProviderType.Azure:
+                    return new(_shelterVaultCosmosDBService.GetCurrentSyncStatus());
+                default:
+                    return new();
             }
         }
     }
