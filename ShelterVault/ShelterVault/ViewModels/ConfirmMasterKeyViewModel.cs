@@ -23,13 +23,14 @@ namespace ShelterVault.ViewModels
         private readonly IProgressBarService _progressBarService;
         private readonly IMasterKeyValidatorManager _masterKeyValidatorManager;
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
- 
+        private readonly IUIThreadService _uiThreadService;
+
         [ObservableProperty]
         private List<ShelterVaultModel> _vaults;
         [ObservableProperty]
         private ShelterVaultModel _selectedVault;
 
-        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogService dialogService, IProgressBarService progressBarService, IMasterKeyValidatorManager masterKeyValidatorManager, IShelterVaultLocalStorage shelterVaultLocalStorage)
+        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogService dialogService, IProgressBarService progressBarService, IMasterKeyValidatorManager masterKeyValidatorManager, IShelterVaultLocalStorage shelterVaultLocalStorage, IUIThreadService uiThreadService)
         {
             _shelterVaultStateService = shelterVaultStateService;
             _dialogService = dialogService;
@@ -37,6 +38,7 @@ namespace ShelterVault.ViewModels
             _masterKeyValidatorManager = masterKeyValidatorManager;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
+            _uiThreadService = uiThreadService;
             if (Vaults.Any()) SelectedVault = Vaults.FirstOrDefault();
             RegisterMessages();
         }
@@ -71,7 +73,7 @@ namespace ShelterVault.ViewModels
         {
             WeakReferenceMessenger.Default.Register<ConfirmMasterKeyViewModel, RefreshVaultListRequestMessage>(this, (receiver, message) =>
             {
-                AppDispatcher.UIThreadDispatcher?.TryEnqueue(() => {
+                _uiThreadService.Execute(() => {
                     if (message.Value)
                     {
                         string selectedVaultTmp = SelectedVault.UUID;

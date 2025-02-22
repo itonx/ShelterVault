@@ -13,6 +13,7 @@ namespace ShelterVault.Managers
     {
         IList<VaultModel> GetAllActiveVaults();
         IList<VaultModel> GetAllVaults();
+        ShelterVaultModel GetVaultById(string uuid);
     }
 
     public class VaultReaderManager : IVaultReaderManager
@@ -48,6 +49,12 @@ namespace ShelterVault.Managers
             }
 
             return vaults;
+        }
+
+        public ShelterVaultModel GetVaultById(string uuid)
+        {
+            ShelterVaultModel shelterVaultModel = _shelterVaultLocalStorage.GetVaultByUUID(uuid);
+            return shelterVaultModel;
         }
     }
 }

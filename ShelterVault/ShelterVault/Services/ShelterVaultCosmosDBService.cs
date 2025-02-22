@@ -68,8 +68,8 @@ namespace ShelterVault.Services
             try
             {
                 CosmosDBSettings currentConfiguration = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
-                //TODO: string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
-                string cosmosDBquery = "SELECT vault.id, vault.type, vault.version FROM vault";
+                string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
+                //string cosmosDBquery = "SELECT vault.id, vault.type, vault.version FROM vault";
                 IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(new QueryDefinition(cosmosDBquery));
                 IList<VaultModel> shelterVaults = _vaultReaderManager.GetAllVaults();
                 IList<CosmosDBSyncModel> cosmosDBModels = CosmosDBTinyModel.ToCosmosDBSyncModel(cosmosDBTinyModels);

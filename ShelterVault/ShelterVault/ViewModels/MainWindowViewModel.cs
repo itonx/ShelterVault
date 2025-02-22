@@ -119,6 +119,10 @@ namespace ShelterVault.ViewModels
                     {
                         await _cloudSyncManager.SyncVaults();
                     }
+                    catch(Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                    }
                     finally
                     {
                         await Task.Delay(60 * 1000);
