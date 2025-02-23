@@ -24,21 +24,23 @@ namespace ShelterVault.ViewModels
         private readonly IMasterKeyValidatorManager _masterKeyValidatorManager;
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IUIThreadService _uiThreadService;
+        private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
         [ObservableProperty]
         private List<ShelterVaultModel> _vaults;
         [ObservableProperty]
         private ShelterVaultModel _selectedVault;
 
-        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogService dialogService, IProgressBarService progressBarService, IMasterKeyValidatorManager masterKeyValidatorManager, IShelterVaultLocalStorage shelterVaultLocalStorage, IUIThreadService uiThreadService)
+        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogService dialogService, IProgressBarService progressBarService, IMasterKeyValidatorManager masterKeyValidatorManager, IShelterVaultLocalStorage shelterVaultLocalStorage, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
             _shelterVaultStateService = shelterVaultStateService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
             _masterKeyValidatorManager = masterKeyValidatorManager;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
-            Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
             _uiThreadService = uiThreadService;
+            _weakReferenceInstanceManager = weakReferenceInstanceManager;
+            Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
             if (Vaults.Any()) SelectedVault = Vaults.FirstOrDefault();
             RegisterMessages();
         }
@@ -71,6 +73,7 @@ namespace ShelterVault.ViewModels
 
         private void RegisterMessages()
         {
+            _weakReferenceInstanceManager.AddInstance(this);
             WeakReferenceMessenger.Default.Register<ConfirmMasterKeyViewModel, RefreshVaultListRequestMessage>(this, (receiver, message) =>
             {
                 _uiThreadService.Execute(() => {

@@ -19,6 +19,7 @@ namespace ShelterVault.ViewModels
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly IUIThreadService _uiThreadService;
         private readonly IVaultReaderManager _vaultReaderManager;
+        private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
         [ObservableProperty]
         private IList<CredentialsViewItem> _credentials;
@@ -27,20 +28,22 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _vaultName;
 
-        public NavigationViewModel(ICredentialsReaderManager credentialsReaderManager, IShelterVaultStateService shelterVaultStateService, IUIThreadService uiThreadService, IVaultReaderManager vaultReaderManager)
+        public NavigationViewModel(ICredentialsReaderManager credentialsReaderManager, IShelterVaultStateService shelterVaultStateService, IUIThreadService uiThreadService, IVaultReaderManager vaultReaderManager, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
-            RegisterMessages();
             _credentialsReaderManager = credentialsReaderManager;
             _shelterVaultStateService = shelterVaultStateService;
             _uiThreadService = uiThreadService;
             _vaultReaderManager = vaultReaderManager;
+            _weakReferenceInstanceManager = weakReferenceInstanceManager;
             Credentials = _credentialsReaderManager.GetAllActiveCredentials(_shelterVaultStateService.ShelterVault.UUID).ToList();
             SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
             VaultName = _shelterVaultStateService.ShelterVault.Name;
+            RegisterMessages();
         }
 
         private void RegisterMessages()
         {
+            _weakReferenceInstanceManager.AddInstance(this);
             WeakReferenceMessenger.Default.Register<NavigationViewModel, ShowPageRequestMessage>(this, (receiver, message) =>
             {
                 if (message.Value == Shared.Enums.ShelterVaultPage.HOME || message.Value == Shared.Enums.ShelterVaultPage.SETTINGS) 
@@ -52,11 +55,19 @@ namespace ShelterVault.ViewModels
                 {
                     if (message.Value)
                     {
-                        WeakReferenceMessenger.Default.Send(new CheckSelectedCredentialsAfterSyncMessage(true));
                         receiver.Credentials = receiver._credentialsReaderManager.GetAllActiveCredentials(receiver._shelterVaultStateService.ShelterVault.UUID).ToList();
-                        object tmpObject = receiver.SelectedMenuItem;
-                        receiver.SelectedMenuItem = null;
-                        receiver.SelectedMenuItem = tmpObject;
+                        if (receiver.SelectedMenuItem is CredentialsViewItem item)
+                        {
+                            CredentialsViewItem newSelectedItem = receiver.Credentials.FirstOrDefault(x => x.UUID.Equals(item.UUID));
+                            if(newSelectedItem != null)
+                            {
+                                newSelectedItem.SkipPageLoader = true;
+                                receiver.SelectedMenuItem = null;
+                                receiver.SelectedMenuItem = newSelectedItem;
+                                item.SkipPageLoader = false;
+                            }
+                            WeakReferenceMessenger.Default.Send(new CheckSelectedCredentialsAfterSyncMessage(true));
+                        }
                     }
                 });
             });

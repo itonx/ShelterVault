@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
-    internal class CredentialsViewItem : ShelterVaultCredentialsModel
+    public class CredentialsViewItem : ShelterVaultCredentialsModel
     {
         public string Title { get; set; }
+        public bool SkipPageLoader { get; set; } = false;
 
         public CredentialsViewItem(ShelterVaultCredentialsModel shelterVaultCredentialsModel, Credentials decryptedCredentials) : base(shelterVaultCredentialsModel)
         {

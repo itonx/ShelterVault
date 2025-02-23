@@ -49,6 +49,7 @@ namespace ShelterVault.ViewModels
         private readonly ILanguageService _languageService;
         private readonly ICloudSyncManager _cloudSyncManager;
         private readonly IUIThreadService _uiThreadService;
+        private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
         [RelayCommand]
         private void SwitchVault()
@@ -72,7 +73,7 @@ namespace ShelterVault.ViewModels
             }
         }
 
-        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService)
+        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _shelterVaultThemeService = shelterVaultThemeService;
@@ -80,6 +81,7 @@ namespace ShelterVault.ViewModels
             _languageService = languageService;
             _cloudSyncManager = cloudSyncManager;
             _uiThreadService = uiThreadService;
+            _weakReferenceInstanceManager = weakReferenceInstanceManager;
             InitialSetup();
         }
 
@@ -96,6 +98,7 @@ namespace ShelterVault.ViewModels
 
         private void RegisterMessages()
         {
+            _weakReferenceInstanceManager.AddInstance(this);
             WeakReferenceMessenger.Default.Register<MainWindowViewModel, CurrentAppStateRequestMessage>(this, (receiver, message) =>
             {
                 receiver.ShelterVaultCurrentAppState = message.Value;
@@ -155,9 +158,11 @@ namespace ShelterVault.ViewModels
 
         private void StartSynchronizationTask()
         {
+            int syncInterval = 60 * 1000;
             RefreshSyncStatusInfo();
             _ = Task.Run(async () =>
             {
+                await Task.Delay(syncInterval);
                 while (true)
                 {
                     CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
@@ -181,7 +186,7 @@ namespace ShelterVault.ViewModels
                         }
                     }
 
-                    await Task.Delay(60 * 1000);
+                    await Task.Delay(syncInterval);
                 }
             });
         }
