@@ -52,7 +52,11 @@ namespace ShelterVault.ViewModels
                 {
                     if (message.Value)
                     {
+                        WeakReferenceMessenger.Default.Send(new CheckSelectedCredentialsAfterSyncMessage(true));
                         receiver.Credentials = receiver._credentialsReaderManager.GetAllActiveCredentials(receiver._shelterVaultStateService.ShelterVault.UUID).ToList();
+                        object tmpObject = receiver.SelectedMenuItem;
+                        receiver.SelectedMenuItem = null;
+                        receiver.SelectedMenuItem = tmpObject;
                     }
                 });
             });

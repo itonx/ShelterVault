@@ -34,6 +34,8 @@ namespace ShelterVault.Shared.Constants
         public const string DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR = "DialogCosmosDBSettingsTestError/Text";
         public const string DIALOG_COSMOS_DB_SYNC_DONE = "DialogCosmosDBSyncDone/Text";
         public const string DIALOG_COSMOS_DB_SYNC_ERROR = "DialogCosmosDBSyncError/Text";
+        public const string DIALOG_CREDENTIALS_REMOVED_FROM_CLOUD = "DialogCredentialsRemovedFromCloud/Text";
+        public const string DIALOG_CREDENTIALS_UPDATED_IN_CLOUD = "DialogCredentialsUpdatedInCloud/Text";
 
         public const string SYNC_PENDING = "SyncPendingConfiguration/Text";
         public const string SYNC_IN_PROGRESS = "SyncInProgress/Text";

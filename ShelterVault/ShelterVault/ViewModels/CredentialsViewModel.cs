@@ -26,6 +26,7 @@ namespace ShelterVault.ViewModels
         private readonly ICredentialsManager _credentialsManager;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ILanguageService _languageService;
+        private readonly IUIThreadService _uiThreadService;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Credentials _selectedCredentialBackup;
@@ -43,22 +44,24 @@ namespace ShelterVault.ViewModels
 
         public bool ChallengeCompleted { get; private set; } = false;
 
-        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService)
+        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IUIThreadService uiThreadService)
         {
             _dialogService = dialogService;
             _progressBarService = progressBarService;
             _credentialsManager = credentialsManager;
             _languageService = languageService;
+            _shelterVaultStateService = shelterVaultStateService;
+            _uiThreadService = uiThreadService;
             PasswordRequirementsVM = passwordConfirmationViewModel;
             PasswordRequirementsVM.HeaderText = _languageService.GetLangValue(LangResourceKeys.PASSWORD_MUST);
             RequestFocusOnFirstField = true;
-            _shelterVaultStateService = shelterVaultStateService;
             NewCredentials();
+            RegisterMessages();
         }
 
         public void OnNavigated(object parameter)
         {
-            CredentialsViewItem credentialParameter = ((CredentialsViewItem)parameter).Clone(); 
+            CredentialsViewItem credentialParameter = ((CredentialsViewItem)parameter).Clone();
             SelectedCredential = _credentialsManager.GetCredentials(credentialParameter);
             _selectedCredentialBackup = SelectedCredential.Clone();
             State = CredentialsViewModelState.Updating;
@@ -102,13 +105,13 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void SetClipboard()
         {
-            if(_cancellationTokenSource != null)
+            if (_cancellationTokenSource != null)
             {
                 try
                 {
                     _cancellationTokenSource.Cancel();
                 }
-                finally 
+                finally
                 {
                     _cancellationTokenSource.Dispose();
                 }
@@ -203,6 +206,31 @@ namespace ShelterVault.ViewModels
             else await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_NOT_SAVED);
 
             RequestFocusOnFirstField = true;
+        }
+
+        public void RegisterMessages()
+        {
+            WeakReferenceMessenger.Default.Register<CredentialsViewModel, CheckSelectedCredentialsAfterSyncMessage>(this, (r, m) =>
+            {
+                if (State == CredentialsViewModelState.Updating)
+                {
+                    Credentials updatedCredentials = _credentialsManager.GetCredentials(SelectedCredential.UUID);
+                    if (updatedCredentials == null)
+                    {
+                        _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_REMOVED_FROM_CLOUD);
+                        WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
+                    }
+                    else
+                    {
+                        if (!SelectedCredential.Equals(updatedCredentials))
+                        {
+                            _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_UPDATED_IN_CLOUD);
+                            SelectedCredential = updatedCredentials;
+                            _selectedCredentialBackup = SelectedCredential.Clone();
+                        }
+                    }
+                }
+            });
         }
     }
 }

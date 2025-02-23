@@ -16,6 +16,7 @@ namespace ShelterVault.Managers
         Task<Credentials> InsertCredentials(Credentials credentials);
         Task<Credentials> UpdateCredentials(Credentials credentials);
         Credentials GetCredentials(CredentialsViewItem credentialsViewItem);
+        Credentials GetCredentials(string uuid);
         Task<bool> DeleteCredentials(string uuid);
     }
 
@@ -101,6 +102,17 @@ namespace ShelterVault.Managers
 
             string jsonValues = _encryptionService.DecryptAes(credentialsViewItem, masterKey, salt);
             return new(jsonValues, credentialsViewItem);
+        }
+
+        public Credentials GetCredentials(string uuid)
+        {
+            ShelterVaultCredentialsModel shelterVaultCredentialsModel = _shelterVaultLocalStorage.GetCredentialsByUUID(uuid);
+            if(shelterVaultCredentialsModel == null) return null;
+            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
+            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
+
+            string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentialsModel, masterKey, salt);
+            return new(decryptedValues, shelterVaultCredentialsModel);
         }
 
         public async Task<bool> DeleteCredentials(string uuid)

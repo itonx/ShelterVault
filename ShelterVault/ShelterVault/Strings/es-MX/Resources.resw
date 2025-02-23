@@ -282,4 +282,10 @@
   <data name="SyncPendingConfiguration.Text" xml:space="preserve">
     <value>Configurar</value>
   </data>
+  <data name="DialogCredentialsRemovedFromCloud.Text" xml:space="preserve">
+    <value>Estas credenciales fueron eliminadas en la nube. Serás redirigido a la pagina de inicio.</value>
+  </data>
+  <data name="DialogCredentialsUpdatedInCloud.Text" xml:space="preserve">
+    <value>This credentials were updated in the cloud. Your local changes for this credentials will be replaced by the new values.</value>
+  </data>
 </root>
