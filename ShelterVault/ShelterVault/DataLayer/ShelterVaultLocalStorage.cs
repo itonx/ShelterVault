@@ -323,7 +323,7 @@ namespace ShelterVault.DataLayer
                     WHERE uuid=$uuid
                 ";
 
-                ShelterVaultCredentialsModel result = connection.QueryFirst<ShelterVaultCredentialsModel>(query, new { uuid });
+                ShelterVaultCredentialsModel result = connection.QueryFirstOrDefault<ShelterVaultCredentialsModel>(query, new { uuid });
                 return result;
             }
         }

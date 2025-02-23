@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Behaviors
 {
-    class CredentialItemsGeneratorBehavior : Behavior<NavigationViewItem>
+    public class CredentialItemsGeneratorBehavior : Behavior<NavigationViewItem>
     {
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(

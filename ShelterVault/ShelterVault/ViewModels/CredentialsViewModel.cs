@@ -26,7 +26,7 @@ namespace ShelterVault.ViewModels
         private readonly ICredentialsManager _credentialsManager;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ILanguageService _languageService;
-        private readonly IUIThreadService _uiThreadService;
+        private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Credentials _selectedCredentialBackup;
@@ -44,14 +44,14 @@ namespace ShelterVault.ViewModels
 
         public bool ChallengeCompleted { get; private set; } = false;
 
-        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IUIThreadService uiThreadService)
+        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
             _dialogService = dialogService;
             _progressBarService = progressBarService;
             _credentialsManager = credentialsManager;
             _languageService = languageService;
             _shelterVaultStateService = shelterVaultStateService;
-            _uiThreadService = uiThreadService;
+            _weakReferenceInstanceManager = weakReferenceInstanceManager;
             PasswordRequirementsVM = passwordConfirmationViewModel;
             PasswordRequirementsVM.HeaderText = _languageService.GetLangValue(LangResourceKeys.PASSWORD_MUST);
             RequestFocusOnFirstField = true;
@@ -210,6 +210,7 @@ namespace ShelterVault.ViewModels
 
         public void RegisterMessages()
         {
+            _weakReferenceInstanceManager.AddInstance(this);
             WeakReferenceMessenger.Default.Register<CredentialsViewModel, CheckSelectedCredentialsAfterSyncMessage>(this, (r, m) =>
             {
                 if (State == CredentialsViewModelState.Updating)
@@ -222,7 +223,7 @@ namespace ShelterVault.ViewModels
                     }
                     else
                     {
-                        if (!SelectedCredential.Equals(updatedCredentials))
+                        if (SelectedCredential.Version != updatedCredentials.Version)
                         {
                             _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_UPDATED_IN_CLOUD);
                             SelectedCredential = updatedCredentials;
