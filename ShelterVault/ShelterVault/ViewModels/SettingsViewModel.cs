@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Azure.Cosmos;
+using ShelterVault.DataLayer;
+using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
@@ -21,6 +23,7 @@ namespace ShelterVault.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;
         private readonly IShelterVaultCosmosDBService _shelterVaultCosmosDBService;
+        private readonly ICloudProviderManager _cloudProviderManager;
 
         [ObservableProperty]
         private IList<CloudProviderType> _cloudProviders;
@@ -41,12 +44,13 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _containerPartitionKey;
 
-        public SettingsViewModel(ISettingsService settingsService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVaultCosmosDBService shelterVaultCosmosDBService)
+        public SettingsViewModel(ISettingsService settingsService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVaultCosmosDBService shelterVaultCosmosDBService, ICloudProviderManager cloudProviderManager)
         {
             _settingsService = settingsService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
             _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
+            _cloudProviderManager = cloudProviderManager;
             CloudProviders = new List<CloudProviderType>((CloudProviderType[])Enum.GetValues(typeof(CloudProviderType)));
             SelectedCloudProvider = _settingsService.GetCurrentCloudProviderType();
             ReadCosmosDBSettings();
@@ -54,13 +58,19 @@ namespace ShelterVault.ViewModels
 
         partial void OnSelectedCloudProviderChanged(CloudProviderType value)
         {
+            if(value == CloudProviderType.None)
+            {
+                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.PendingConfiguration));
+                ReadCosmosDBSettings();
+            }
             _settingsService.SaveCloudProviderType(value);
             WeakReferenceMessenger.Default.Send(new CloudProviderChangedMessage(true));
         }
 
         private void ReadCosmosDBSettings()
         {
-            CosmosDBSettings cosmosDBSettings = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+
+            CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
             if (cosmosDBSettings == null) return;
             CosmosEndpoint = cosmosDBSettings.CosmosEndpoint;
             CosmosKey = cosmosDBSettings.CosmosKey;
@@ -93,10 +103,14 @@ namespace ShelterVault.ViewModels
                             DatabaseThroughput = databaseThroughput?.ToString() ?? "Err";
                             ContainerPartitionKey = containerResponse?.Resource?.PartitionKeyPath ?? "Err";
 
-                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SETTINGS, cosmosDBSettings);
+                            _cloudProviderManager.UpsertCloudConfiguration(CloudProviderType.Azure, cosmosDBSettings);
+                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.PendingConfiguration));
+                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.PendingConfiguration));
                         }
                         catch
                         {
+                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.None));
+                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.None));
                             await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
                         }
                     }
@@ -117,7 +131,18 @@ namespace ShelterVault.ViewModels
                 switch(SelectedCloudProvider)
                 {
                     case CloudProviderType.Azure:
-                        await _shelterVaultCosmosDBService.SyncAllAsync();
+                        try
+                        {
+                            await _shelterVaultCosmosDBService.SyncAllAsync();
+                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.UpToDate));
+                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.UpToDate));
+                        }
+                        catch (Exception)
+                        {
+                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.SynchFailed));
+                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchFailed));
+                            throw;
+                        }
                         break;
                     default:
                         return;

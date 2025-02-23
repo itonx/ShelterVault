@@ -27,6 +27,8 @@ namespace ShelterVault.DataLayer
         IEnumerable<ShelterVaultModel> GetAllVaults();
         IEnumerable<ShelterVaultModel> GetAllActiveVaults();
         ShelterVaultModel GetVaultByUUID(string uuid);
+        bool UpsertCloudConfiguration(string name, string encryptedValues, string iv);
+        ShelterVaultCloudConfigModel GetCloudConfiguration(string name);
     }
 
     public class ShelterVaultLocalStorage : IShelterVaultLocalStorage
@@ -67,6 +69,13 @@ namespace ShelterVault.DataLayer
                             FOREIGN KEY(shelterVaultUuid) REFERENCES shelter_vault(uuid)
                     )";
 
+                    string createShelterVaultEncryptedCloudConfigurationTableQuery = @"
+                        CREATE TABLE IF NOT EXISTS shelter_vault_cloud_config (
+                            name TEXT PRIMARY KEY,
+                            encryptedValues TEXT NOT NULL,
+                            iv TEXT NOT NULL
+                    )";
+
                     string insertMasterKeyQuery = @"
                         INSERT INTO shelter_vault
                         VALUES ($uuid, $name, $masterKeyHash, $iv, $salt, $version)
@@ -78,6 +87,11 @@ namespace ShelterVault.DataLayer
                     }
 
                     using (var command = new SqliteCommand(createShelterVaultEncryptedCredentialsTableQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = new SqliteCommand(createShelterVaultEncryptedCloudConfigurationTableQuery, connection))
                     {
                         command.ExecuteNonQuery();
                     }
@@ -132,6 +146,13 @@ namespace ShelterVault.DataLayer
                             FOREIGN KEY(shelterVaultUuid) REFERENCES shelter_vault(uuid)
                     )";
 
+                    string createShelterVaultEncryptedCloudConfigurationTableQuery = @"
+                        CREATE TABLE IF NOT EXISTS shelter_vault_cloud_config (
+                            name TEXT PRIMARY KEY,
+                            encryptedValues TEXT NOT NULL,
+                            iv TEXT NOT NULL
+                    )";
+
                     string updateMasterKeyQuery = @"
                         UPDATE shelter_vault SET uuid=$uuid, name=$name, masterKeyHash=$masterKeyHash, iv=$iv, salt=$salt, version=$version
                         WHERE uuid=$uuid
@@ -143,6 +164,11 @@ namespace ShelterVault.DataLayer
                     }
 
                     using (var command = new SqliteCommand(createShelterVaultEncryptedCredentialsTableQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = new SqliteCommand(createShelterVaultEncryptedCloudConfigurationTableQuery, connection))
                     {
                         command.ExecuteNonQuery();
                     }
@@ -360,6 +386,58 @@ namespace ShelterVault.DataLayer
                 ";
 
                 ShelterVaultModel result = connection.QueryFirst<ShelterVaultModel>(query, new { uuid });
+                return result;
+            }
+        }
+
+        public bool UpsertCloudConfiguration(string name, string encryptedValues, string iv)
+        {
+            ShelterVaultCloudConfigModel model = GetCloudConfiguration(name);
+            string queryString = string.Empty;
+            if (model == null)
+            {
+                queryString = @"
+                    INSERT INTO shelter_vault_cloud_config
+                    VALUES($name, $encryptedValues, $iv)
+                ";
+            }
+            else
+            {
+                queryString = @"
+                    UPDATE shelter_vault_cloud_config
+                    SET
+                    encryptedValues=$encryptedValues, iv=$iv
+                    WHERE name=$name
+                ";
+            }
+
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = queryString;
+                command.Parameters.AddWithValue("$encryptedValues", encryptedValues);
+                command.Parameters.AddWithValue("$name", name);
+                command.Parameters.AddWithValue("$iv", iv);
+
+                int result = command.ExecuteNonQuery();
+                return result == 1;
+            }
+        }
+
+        public ShelterVaultCloudConfigModel GetCloudConfiguration(string name)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT * FROM shelter_vault_cloud_config
+                    WHERE name=$name
+                ";
+
+                ShelterVaultCloudConfigModel result = connection.QueryFirstOrDefault<ShelterVaultCloudConfigModel>(query, new { name });
                 return result;
             }
         }

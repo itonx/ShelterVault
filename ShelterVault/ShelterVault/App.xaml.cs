@@ -87,6 +87,7 @@ namespace ShelterVault
             services.AddSingleton<IShelterVaultCosmosDBService, ShelterVaultCosmosDBService>();
             services.AddSingleton<IUIThreadService, UIThreadService>();
             services.AddSingleton<IWeakReferenceInstanceManager, WeakReferenceInstanceManager>();
+            services.AddSingleton<ICloudProviderManager, CloudProviderManager>();
             services.AddSingleton<MainWindowViewModel>();
 
             // Managers

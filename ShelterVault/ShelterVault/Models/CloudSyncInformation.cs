@@ -23,7 +23,7 @@ namespace ShelterVault.Models
         public CloudSyncInformation(CosmosDBSyncStatus cosmosDBSyncStatus)
         {
             CurrentSyncStatus = cosmosDBSyncStatus.CurrentSyncStatus;
-            HasCloudConfiguration = true;
+            HasCloudConfiguration = cosmosDBSyncStatus.CurrentSyncStatus != CloudSyncStatus.None;
         }
 
         public string GetSyncStatusLangKey()

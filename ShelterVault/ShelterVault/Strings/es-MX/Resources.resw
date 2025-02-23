@@ -274,13 +274,13 @@
     <value>Actualizado</value>
   </data>
   <data name="SyncFailed.Text" xml:space="preserve">
-    <value>Error de sincronizacion</value>
+    <value>Error de sincronización</value>
   </data>
   <data name="SyncInProgress.Text" xml:space="preserve">
     <value>Sincronizando</value>
   </data>
   <data name="SyncPendingConfiguration.Text" xml:space="preserve">
-    <value>Configurar</value>
+    <value>Sincronización pendiente</value>
   </data>
   <data name="DialogCredentialsRemovedFromCloud.Text" xml:space="preserve">
     <value>Estas credenciales fueron eliminadas en la nube. Serás redirigido a la pagina de inicio.</value>
