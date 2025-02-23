@@ -271,7 +271,7 @@
     <value>Synchronization failed!</value>
   </data>
   <data name="SyncPendingConfiguration.Text" xml:space="preserve">
-    <value>Pending configuration</value>
+    <value>Sync not started</value>
   </data>
   <data name="SyncInProgress.Text" xml:space="preserve">
     <value>Synchronizing</value>

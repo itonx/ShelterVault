@@ -10,17 +10,18 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.Services
 {
-    internal interface IEncryptionService
+    public interface IEncryptionService
     {
         (byte[], byte[]) EncryptAes(string plainText, byte[] key, byte[] salt);
         string DecryptAes(byte[] cipherText, byte[] key, byte[] iv, byte[] salt);
         string DecryptAes(ShelterVaultCredentialsModel shelterVaultCredentialsModel, byte[] key, byte[] salt);
         string DecryptAes(ShelterVaultModel shelterVaultModel, byte[] key);
         string DecryptAes(CredentialsViewItem credentialsViewItem, byte[] key, byte[] salt);
+        string DecryptAes(ShelterVaultCloudConfigModel shelterVaultCloudConfigModel, byte[] key, byte[] salt);
         byte[] DeriveKeyFromPassword(string password, byte[] salt, int keyLength = 32);
     }
 
-    internal class EncryptionService : IEncryptionService
+    public class EncryptionService : IEncryptionService
     {
         public (byte[], byte[]) EncryptAes(string plainText, byte[] key, byte[] salt)
         {
@@ -67,6 +68,11 @@ namespace ShelterVault.Services
         public string DecryptAes(CredentialsViewItem credentialsViewItem, byte[] key, byte[] salt)
         {
             return DecryptAes(credentialsViewItem.EncryptedValues.FromBase64ToBytes(), key, credentialsViewItem.Iv.FromBase64ToBytes(), salt);
+        }
+
+        public string DecryptAes(ShelterVaultCloudConfigModel shelterVaultCloudConfigModel, byte[] key, byte[] salt)
+        {
+            return DecryptAes(shelterVaultCloudConfigModel.EncryptedValues.FromBase64ToBytes(), key, shelterVaultCloudConfigModel.Iv.FromBase64ToBytes(), salt);
         }
 
         public string DecryptAes(byte[] cipherText, byte[] key, byte[] iv, byte[] salt)

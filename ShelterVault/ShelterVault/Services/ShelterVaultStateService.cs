@@ -9,7 +9,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.Services
 {
-    internal interface IShelterVaultStateService
+    public interface IShelterVaultStateService
     {
         byte[] GetMasterKeyUnprotected();
         byte[] GetMasterKeySaltUnprotected();
@@ -19,7 +19,7 @@ namespace ShelterVault.Services
         ShelterVaultModel ShelterVault { get; }
     }
 
-    internal class ShelterVaultStateService : IShelterVaultStateService
+    public class ShelterVaultStateService : IShelterVaultStateService
     {
         private byte[] _inMemoryMasterKeyProtected;
         private byte[] _inMemoryMasterKeySaltProtected;

@@ -5,6 +5,7 @@ using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Shared.Constants;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.Generic;
@@ -29,17 +30,19 @@ namespace ShelterVault.Services
         private readonly ISettingsService _settingsService;
         private readonly IVaultReaderManager _vaultReaderManager;
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
+        private readonly ICloudProviderManager _cloudProviderManager;
 
-        public ShelterVaultCosmosDBService(ISettingsService settingsService, IVaultReaderManager vaultReaderManager, IShelterVaultLocalStorage shelterVaultLocalStorage)
+        public ShelterVaultCosmosDBService(ISettingsService settingsService, IVaultReaderManager vaultReaderManager, IShelterVaultLocalStorage shelterVaultLocalStorage, ICloudProviderManager cloudProviderManager)
         {
             _settingsService = settingsService;
             _vaultReaderManager = vaultReaderManager;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
+            _cloudProviderManager = cloudProviderManager;
         }
 
         public async Task UpsertItemAsync<T>(T shelterVault) where T : ICosmosDBModel
         {
-            CosmosDBSettings cosmosDBSettings = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+            CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
             using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
             Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
             Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
@@ -48,7 +51,7 @@ namespace ShelterVault.Services
 
         public async Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel
         {
-            CosmosDBSettings cosmosDBSettings = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+            CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
             using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
             Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
             Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
@@ -69,7 +72,7 @@ namespace ShelterVault.Services
             try
             {
                 WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchInProcess));
-                CosmosDBSettings currentConfiguration = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+                CosmosDBSettings currentConfiguration = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
                 string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
                 //string cosmosDBquery = "SELECT vault.id, vault.type, vault.version FROM vault";
                 IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(new QueryDefinition(cosmosDBquery));
@@ -109,8 +112,7 @@ namespace ShelterVault.Services
                 }
 
                 currentConfiguration.Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SETTINGS, currentConfiguration);
-
+                _cloudProviderManager.UpsertCloudConfiguration(CloudProviderType.Azure, currentConfiguration);
                 foreach (var model in synchronizedModels.Where(x => x.source == SourceType.Local && x.version == -1 && x.type.Equals("shelter_vault_credentials")))
                 {
                     _shelterVaultLocalStorage.DeleteCredentials(model.id);
@@ -149,7 +151,7 @@ namespace ShelterVault.Services
 
         private async Task<IList<T>> GetCosmosDBItems<T>(QueryDefinition query) where T : ICosmosDBModel
         {
-            CosmosDBSettings cosmosDBSettings = _settingsService.ReadJsonValueAs<CosmosDBSettings>(ShelterVaultConstants.COSMOS_DB_SETTINGS);
+            CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
             using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
             Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
             Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
@@ -212,7 +214,7 @@ namespace ShelterVault.Services
         public CosmosDBSyncStatus GetCurrentSyncStatus()
         {
             CosmosDBSyncStatus currentSyncStatus = _settingsService.ReadJsonValueAs<CosmosDBSyncStatus>(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS);
-            return currentSyncStatus;
+            return currentSyncStatus ?? new();
         }
     }
 }
