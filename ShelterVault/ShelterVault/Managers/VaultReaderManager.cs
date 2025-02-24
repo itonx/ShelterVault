@@ -28,7 +28,7 @@ namespace ShelterVault.Managers
         {
             List<VaultModel> vaults = new List<VaultModel>();
             ShelterVaultModel vault = _shelterVaultLocalStorage.GetCurrentVault();
-            IEnumerable<ShelterVaultCredentialsModel> credentials = _shelterVaultLocalStorage.GetAllActiveCredentials(vault.UUID);
+            IEnumerable<ShelterVaultCredentialsModel> credentials = _shelterVaultLocalStorage.GetAllCredentials(vault.UUID);
             VaultModel vaultModel = new(vault, credentials);
             vaults.Add(vaultModel);
 

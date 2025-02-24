@@ -44,7 +44,7 @@ namespace ShelterVault.ViewModels
             _progressBarService = progressBarService;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             PasswordRequirementsVM = passwordConfirmationViewModel;
-            ShowCancel = _shelterVaultLocalStorage.GetAllActiveVaults().Count() > 1;
+            ShowCancel = _shelterVaultLocalStorage.GetAllActiveVaults().Any();
             _shelterVaultDefaultPath = _shelterVaultLocalStorage.GetDefaultShelterVaultDBPath();
             DefaultPath = _shelterVaultDefaultPath;
         }
