@@ -65,7 +65,7 @@
                                         Title="Sync info:"
                                         IsClosable="False"
                                         IsOpen="True"
-                                        Message="This is a global configuration, all vaults will be synchronized with Cosmos DB." />
+                                        Message="This configuration is for the current vault." />
                                     <TextBox Header="Cosmos Endpoint *" Text="{Binding CosmosEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     <TextBox Header="Comos Key *" Text="{Binding CosmosKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     <TextBox Header="Database *" Text="{Binding CosmosDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

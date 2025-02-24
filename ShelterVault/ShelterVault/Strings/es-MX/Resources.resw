@@ -288,4 +288,13 @@
   <data name="DialogCredentialsUpdatedInCloud.Text" xml:space="preserve">
     <value>This credentials were updated in the cloud. Your local changes for this credentials will be replaced by the new values.</value>
   </data>
+  <data name="SelectVaultLocation.Content" xml:space="preserve">
+    <value>Selecciona ubicación</value>
+  </data>
+  <data name="CancelVault.Content" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="SaveVault.Content" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
 </root>

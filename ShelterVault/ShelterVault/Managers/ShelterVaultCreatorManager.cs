@@ -38,7 +38,7 @@ namespace ShelterVault.Managers
                 byte[] saltBytes = salt.GetBytes();
 
                 (byte[] encryptedMasterKeyHash, byte[] iv) = _encryptionService.EncryptAes(masterKeyHash, masterKeyBytes, saltBytes);
-
+                _shelterVaultLocalStorage.SetDbName(name);
                 bool vaultCreated = _shelterVaultLocalStorage.CreateShelterVault(uuid, name, encryptedMasterKeyHash.ToBase64(), iv.ToBase64(), saltBytes.ToBase64(), 1);
                 if (vaultCreated)
                 {
