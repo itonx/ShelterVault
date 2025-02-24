@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
 using ShelterVault.Models;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Extensions;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace ShelterVault.DataLayer
     {
         bool DBExists();
         bool CreateShelterVault(string uuid, string name,string masterKey, string iv, string salt, long version);
+        bool UpdateVaultCloudProvider(int cloudProvider);
         bool UpdateShelterVault(string uuid, string name, string masterKey, string iv, string salt, long version);
         bool IsMasterKeyValid(string masterKey);
         bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
@@ -27,7 +29,11 @@ namespace ShelterVault.DataLayer
         IEnumerable<ShelterVaultModel> GetAllActiveVaults();
         ShelterVaultModel GetVaultByUUID(string uuid);
         bool UpsertCloudConfiguration(string name, string encryptedValues, string iv);
+        bool UpsertSyncStatus(string name, long timestamp, bool isSyncEnabled, CloudSyncStatus cloudSyncStatus);
+        bool UpdateSyncStatus(string name, CloudSyncStatus cloudSyncStatus);
+        bool UpdateSyncTimestamp(string name, long timestamp);
         ShelterVaultCloudConfigModel GetCloudConfiguration(string name);
+        ShelterVaultSyncStatusModel GetSyncStatus(string name);
         void SetDbName(string dbName);
         string GetDefaultShelterVaultDBPath();
         string GetCurrentUUIDVault();
@@ -65,6 +71,7 @@ namespace ShelterVault.DataLayer
                             iv TEXT NOT NULL,
                             salt TEXT NOT NULL,
                             version INTEGER NOT NULL,
+                            cloudProvider INTEGER NOT NULL,
                             UNIQUE(name)
                     )";
 
@@ -85,9 +92,17 @@ namespace ShelterVault.DataLayer
                             iv TEXT NOT NULL
                     )";
 
+                    string createShelterVaultSyncStatusTableQuery = @"
+                        CREATE TABLE IF NOT EXISTS shelter_vault_sync_status (
+                            name TEXT PRIMARY KEY,
+                            timestamp INTEGER NOT NULL,
+                            isSyncEnabled BOOLEAN NOT NULL CHECK (isSyncEnabled IN (0, 1)),
+                            syncStatus INTEGER NOT NULL
+                    )";
+
                     string insertMasterKeyQuery = @"
                         INSERT INTO shelter_vault
-                        VALUES ($uuid, $name, $masterKeyHash, $iv, $salt, $version)
+                        VALUES ($uuid, $name, $masterKeyHash, $iv, $salt, $version, 0)
                     ";
 
                     using (var command = new SqliteCommand(createShelterVaultMasterKeyTableQuery, connection))
@@ -105,6 +120,11 @@ namespace ShelterVault.DataLayer
                         command.ExecuteNonQuery();
                     }
 
+                    using (var command = new SqliteCommand(createShelterVaultSyncStatusTableQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
                     using (var command = new SqliteCommand(insertMasterKeyQuery, connection))
                     {
                         command.Parameters.AddWithValue("$uuid", uuid);
@@ -113,6 +133,35 @@ namespace ShelterVault.DataLayer
                         command.Parameters.AddWithValue("$iv", iv);
                         command.Parameters.AddWithValue("$salt", salt);
                         command.Parameters.AddWithValue("$version", version);
+                        command.Parameters.AddWithValue("$cloudProvider", 0);
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateVaultCloudProvider(int cloudProvider)
+        {
+            try
+            {
+                using (var connection = new SqliteConnection(_dbConnectionString))
+                {
+                    connection.Open();
+
+                    string insertMasterKeyQuery = @"
+                        UPDATE shelter_vault
+                        SET cloudProvider=$cloudProvider
+                    ";
+
+                    using (var command = new SqliteCommand(insertMasterKeyQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("$cloudProvider", cloudProvider);
                         command.ExecuteNonQuery();
                     }
                 }
@@ -142,6 +191,7 @@ namespace ShelterVault.DataLayer
                             iv TEXT NOT NULL,
                             salt TEXT NOT NULL,
                             version INTEGER NOT NULL,
+                            cloudProvider INTEGER NOT NULL,
                             UNIQUE(name)
                     )";
 
@@ -459,6 +509,89 @@ namespace ShelterVault.DataLayer
             }
         }
 
+        public bool UpsertSyncStatus(string name, long timestamp, bool isSyncEnabled, CloudSyncStatus cloudSyncStatus)
+        {
+            ShelterVaultSyncStatusModel model = GetSyncStatus(name);
+            string queryString = string.Empty;
+            if (model == null)
+            {
+                queryString = @"
+                    INSERT INTO shelter_vault_sync_status
+                    VALUES($name, $timestamp, $isSyncEnabled, $cloudSyncStatus)
+                ";
+            }
+            else
+            {
+                queryString = @"
+                    UPDATE shelter_vault_sync_status
+                    SET
+                    timestamp=$timestamp, isSyncEnabled=$isSyncEnabled, syncStatus=$cloudSyncStatus
+                    WHERE name=$name
+                ";
+            }
+
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = queryString;
+                command.Parameters.AddWithValue("$name", name);
+                command.Parameters.AddWithValue("$timestamp", timestamp);
+                command.Parameters.AddWithValue("$isSyncEnabled", isSyncEnabled ? 1 : 0);
+                command.Parameters.AddWithValue("$cloudSyncStatus", (int)cloudSyncStatus);
+
+                int result = command.ExecuteNonQuery();
+                return result == 1;
+            }
+        }
+
+        public bool UpdateSyncTimestamp(string name, long timestamp)
+        {
+            string queryString = @"
+                UPDATE shelter_vault_sync_status
+                SET
+                timestamp=$timestamp
+                WHERE name=$name
+            ";
+
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = queryString;
+                command.Parameters.AddWithValue("$name", name);
+                command.Parameters.AddWithValue("$timestamp", timestamp);
+
+                int result = command.ExecuteNonQuery();
+                return result == 1;
+            }
+        }
+
+        public bool UpdateSyncStatus(string name, CloudSyncStatus cloudSyncStatus)
+        {
+            string queryString = @"
+                UPDATE shelter_vault_sync_status
+                SET
+                syncStatus=$cloudSyncStatus
+                WHERE name=$name
+            ";
+
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = queryString;
+                command.Parameters.AddWithValue("$name", name);
+                command.Parameters.AddWithValue("$cloudSyncStatus", cloudSyncStatus);
+
+                int result = command.ExecuteNonQuery();
+                return result == 1;
+            }
+        }
+
         public ShelterVaultCloudConfigModel GetCloudConfiguration(string name)
         {
             using (var connection = new SqliteConnection(_dbConnectionString))
@@ -472,6 +605,22 @@ namespace ShelterVault.DataLayer
 
                 ShelterVaultCloudConfigModel result = connection.QueryFirstOrDefault<ShelterVaultCloudConfigModel>(query, new { name });
                 return result;
+            }
+        }
+
+        public ShelterVaultSyncStatusModel GetSyncStatus(string name)
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT * FROM shelter_vault_sync_status
+                    WHERE name=$name
+                ";
+
+                ShelterVaultSyncStatusModel result = connection.QueryFirstOrDefault<ShelterVaultSyncStatusModel>(query, new { name });
+                return result ?? new();
             }
         }
 

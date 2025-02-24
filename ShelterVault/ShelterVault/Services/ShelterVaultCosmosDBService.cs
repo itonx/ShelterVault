@@ -27,14 +27,12 @@ namespace ShelterVault.Services
 
     public class ShelterVaultCosmosDBService : IShelterVaultCosmosDBService
     {
-        private readonly ISettingsService _settingsService;
         private readonly IVaultReaderManager _vaultReaderManager;
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly ICloudProviderManager _cloudProviderManager;
 
-        public ShelterVaultCosmosDBService(ISettingsService settingsService, IVaultReaderManager vaultReaderManager, IShelterVaultLocalStorage shelterVaultLocalStorage, ICloudProviderManager cloudProviderManager)
+        public ShelterVaultCosmosDBService(IVaultReaderManager vaultReaderManager, IShelterVaultLocalStorage shelterVaultLocalStorage, ICloudProviderManager cloudProviderManager)
         {
-            _settingsService = settingsService;
             _vaultReaderManager = vaultReaderManager;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _cloudProviderManager = cloudProviderManager;
@@ -42,24 +40,34 @@ namespace ShelterVault.Services
 
         public async Task UpsertItemAsync<T>(T shelterVault) where T : ICosmosDBModel
         {
-            CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
-            using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
-            Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
-            Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
-            ItemResponse<object> vaultResponse = await cosmosContainer.UpsertItemAsync(item: (object)shelterVault);
+            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _cloudProviderManager.GetSyncStatus(CloudProviderType.Azure);
+            if (shelterVaultSyncStatusModel.IsSyncEnabled)
+            {
+                CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
+                using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
+                Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
+                Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
+                ItemResponse<object> vaultResponse = await cosmosContainer.UpsertItemAsync(item: (object)shelterVault);
+            }
         }
 
         public async Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel
         {
-            CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
-            using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
-            Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
-            Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
-            ItemResponse<object> vaultResponse = await cosmosContainer.DeleteItemAsync<object>(id: shelterVault.id, partitionKey: new PartitionKey(shelterVault.type));
+            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _cloudProviderManager.GetSyncStatus(CloudProviderType.Azure);
+            if (shelterVaultSyncStatusModel.IsSyncEnabled)
+            {
+                CosmosDBSettings cosmosDBSettings = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
+                using CosmosClient cosmosClient = new(accountEndpoint: cosmosDBSettings.CosmosEndpoint, authKeyOrResourceToken: cosmosDBSettings.CosmosKey);
+                Database cosmosDb = cosmosClient.GetDatabase(cosmosDBSettings.CosmosDatabase);
+                Container cosmosContainer = cosmosDb.GetContainer(cosmosDBSettings.CosmosContainer);
+                ItemResponse<object> vaultResponse = await cosmosContainer.DeleteItemAsync<object>(id: shelterVault.id, partitionKey: new PartitionKey(shelterVault.type));
+            }
         }
 
         public async Task<CosmosDBTinyModel> GetItemByIdAsync(string id)
         {
+            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _cloudProviderManager.GetSyncStatus(CloudProviderType.Azure);
+            if (!shelterVaultSyncStatusModel.IsSyncEnabled) return null;
             QueryDefinition query = new QueryDefinition("SELECT * FROM vault WHERE vault.id = @id")
             .WithParameter("@id", id);
 
@@ -72,10 +80,11 @@ namespace ShelterVault.Services
             try
             {
                 //TODO: look at this, lol (It's a POC)
+                ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _cloudProviderManager.GetSyncStatus(CloudProviderType.Azure);
+                if (!shelterVaultSyncStatusModel.IsSyncEnabled) return;
                 WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchInProcess));
-                CosmosDBSettings currentConfiguration = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
                 string uuidVaultClause = $" WHERE ((vault.type = 'shelter_vault' and vault.id='{uuidVault}') or (vault.type = 'shelter_vault_credentials' and vault.shelterVaultUuid = '{uuidVault}'))";
-                string timestampClause = currentConfiguration.Timestamp != 0 ? $" and vault._ts > {currentConfiguration.Timestamp}" : string.Empty;
+                string timestampClause = shelterVaultSyncStatusModel.Timestamp != 0 ? $" and vault._ts > {shelterVaultSyncStatusModel.Timestamp}" : string.Empty;
                 string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", uuidVaultClause, timestampClause);
                 QueryDefinition queryDefinition = new QueryDefinition(cosmosDBquery);
                 IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(queryDefinition);
@@ -114,8 +123,7 @@ namespace ShelterVault.Services
                     await UpsertItemAsync(cosmosDBModel);
                 }
 
-                currentConfiguration.Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-                _cloudProviderManager.UpsertCloudConfiguration(CloudProviderType.Azure, currentConfiguration);
+                _cloudProviderManager.UpdateSyncTimestamp(CloudProviderType.Azure, DateTimeOffset.Now.ToUnixTimeSeconds());
                 foreach (var model in synchronizedModels.Where(x => x.source == SourceType.Local && x.version == -1 && x.type.Equals("shelter_vault_credentials")))
                 {
                     _shelterVaultLocalStorage.DeleteCredentials(model.id);
@@ -129,11 +137,11 @@ namespace ShelterVault.Services
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                 WeakReferenceMessenger.Default.Send(new RefreshVaultListRequestMessage(true));
                 
-                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(Shared.Enums.CloudSyncStatus.UpToDate));
+                _cloudProviderManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
             }
             catch (Exception ex)
             {
-                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(Shared.Enums.CloudSyncStatus.SynchFailed));
+                _cloudProviderManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
                 throw ex;
             }
         }
@@ -216,8 +224,9 @@ namespace ShelterVault.Services
 
         public CosmosDBSyncStatus GetCurrentSyncStatus()
         {
-            CosmosDBSyncStatus currentSyncStatus = _settingsService.ReadJsonValueAs<CosmosDBSyncStatus>(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS);
-            return currentSyncStatus ?? new();
+            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _cloudProviderManager.GetSyncStatus(CloudProviderType.Azure);
+            CosmosDBSyncStatus currentSyncStatus = new(shelterVaultSyncStatusModel);
+            return currentSyncStatus;
         }
     }
 }

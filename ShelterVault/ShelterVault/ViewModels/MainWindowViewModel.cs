@@ -126,6 +126,7 @@ namespace ShelterVault.ViewModels
                 _uiThreadService.Execute(() =>
                 {
                     CurrentCloudSyncStatus = message.Value;
+                    RefreshSyncStatusInfo();
                 });
             });
             WeakReferenceMessenger.Default.Register<MainWindowViewModel, CloudProviderChangedMessage>(this, (receiver, message) =>

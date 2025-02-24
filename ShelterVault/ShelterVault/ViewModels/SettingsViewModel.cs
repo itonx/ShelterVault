@@ -54,7 +54,7 @@ namespace ShelterVault.ViewModels
             _cloudProviderManager = cloudProviderManager;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
             CloudProviders = new List<CloudProviderType>((CloudProviderType[])Enum.GetValues(typeof(CloudProviderType)));
-            SelectedCloudProvider = _settingsService.GetCurrentCloudProviderType();
+            SelectedCloudProvider = _cloudProviderManager.GetCurrentCloudProvider();
             ReadCosmosDBSettings();
         }
 
@@ -62,10 +62,11 @@ namespace ShelterVault.ViewModels
         {
             if(value == CloudProviderType.None)
             {
-                _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.PendingConfiguration));
+                _cloudProviderManager.DisableSync(CloudProviderType.Azure);
+                ShowThroughput = false;
                 ReadCosmosDBSettings();
             }
-            _settingsService.SaveCloudProviderType(value);
+            _cloudProviderManager.UpdateVaultCloudProvider(value);
             WeakReferenceMessenger.Default.Send(new CloudProviderChangedMessage(true));
         }
 
@@ -106,13 +107,13 @@ namespace ShelterVault.ViewModels
                             ContainerPartitionKey = containerResponse?.Resource?.PartitionKeyPath ?? "Err";
 
                             _cloudProviderManager.UpsertCloudConfiguration(CloudProviderType.Azure, cosmosDBSettings);
-                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.PendingConfiguration));
-                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.PendingConfiguration));
+                            _cloudProviderManager.UpsertSyncStatus(CloudProviderType.Azure, 0, true, CloudSyncStatus.PendingConfiguration);
+                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.PendingConfiguration));
                         }
                         catch
                         {
-                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.None));
-                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.None));
+                            _cloudProviderManager.UpsertSyncStatus(CloudProviderType.Azure, 0, true, CloudSyncStatus.None);
+                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.None));
                             await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
                         }
                     }
@@ -137,12 +138,12 @@ namespace ShelterVault.ViewModels
                         try
                         {
                             await _shelterVaultCosmosDBService.SyncAllAsync(uuidVault);
-                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.UpToDate));
+                            _cloudProviderManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
                             WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.UpToDate));
                         }
                         catch (Exception)
                         {
-                            _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.SynchFailed));
+                            _cloudProviderManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
                             WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchFailed));
                             throw;
                         }

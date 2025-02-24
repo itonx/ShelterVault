@@ -1,4 +1,6 @@
-﻿using ShelterVault.Shared.Constants;
+﻿using ShelterVault.DataLayer;
+using ShelterVault.Managers;
+using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
 using System;
 using System.Collections.Generic;
@@ -11,8 +13,6 @@ namespace ShelterVault.Services
 {
     public interface ISettingsService
     {
-        CloudProviderType GetCurrentCloudProviderType();
-        void SaveCloudProviderType(CloudProviderType cloudProviderType);
         void SaveAsJsonValue(string key, object settingObj);
         T ReadJsonValueAs<T>(string key);
     }
@@ -21,22 +21,9 @@ namespace ShelterVault.Services
     {
         readonly ApplicationDataContainer _localSettings;
 
-        public SettingsService()
+        public SettingsService(ICloudProviderManager cloudProviderManager)
         {
             _localSettings = ApplicationData.Current.LocalSettings;
-        }
-
-        public CloudProviderType GetCurrentCloudProviderType()
-        {
-            string cloudProviderTypeStr = _localSettings.Values[ShelterVaultConstants.SETTINGS_CLOUD_PROVIDER] as string;
-            Enum.TryParse(typeof(CloudProviderType), cloudProviderTypeStr, true, out object cloudProviderTypeObj);
-            
-            return cloudProviderTypeObj == null ? CloudProviderType.None : (CloudProviderType)cloudProviderTypeObj;
-        }
-
-        public void SaveCloudProviderType(CloudProviderType cloudProviderType)
-        {
-            _localSettings.Values[ShelterVaultConstants.SETTINGS_CLOUD_PROVIDER] = cloudProviderType.ToString();
         }
 
         public void SaveAsJsonValue(string key, object settingObj)

@@ -19,6 +19,7 @@ namespace ShelterVault.Models
         public string Iv { get; set; }
         public string Salt { get; set; }
         public long Version { get; set; }
+        public int CloudProvider { get; set; }
 
         public ICosmosDBModel ToCosmosDBModel()
         {
