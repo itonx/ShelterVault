@@ -21,22 +21,22 @@ namespace ShelterVault.Managers
 
     internal class CloudSyncManager : ICloudSyncManager
     {
-        private readonly ISettingsService _settingsService;
         private readonly IShelterVaultCosmosDBService _shelterVaultCosmosDBService;
         private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
+        private readonly ICloudProviderManager _cloudProviderManager;
 
-        public CloudSyncManager(ISettingsService settingsService, IShelterVaultCosmosDBService shelterVaultCosmosDBService, IShelterVaultLocalStorage shelterVaultLocalStorage)
+        public CloudSyncManager(IShelterVaultCosmosDBService shelterVaultCosmosDBService, IShelterVaultLocalStorage shelterVaultLocalStorage, ICloudProviderManager cloudProviderManager)
         {
-            _settingsService = settingsService;
             _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
             _shelterVaultLocalStorage = shelterVaultLocalStorage;
+            _cloudProviderManager = cloudProviderManager;
         }
 
         public async Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
         {
             try
             {
-                CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+                CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
                 ICosmosDBModel result = null;
                 switch (providerType)
                 {
@@ -60,7 +60,7 @@ namespace ShelterVault.Managers
         {
             try
             {
-                CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+                CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
                 switch (providerType)
                 {
                     case CloudProviderType.Azure:
@@ -81,7 +81,7 @@ namespace ShelterVault.Managers
 
         public async Task DeleteItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
         {
-            CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+            CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
             switch (providerType)
             {
                 case CloudProviderType.Azure:
@@ -95,7 +95,7 @@ namespace ShelterVault.Managers
 
         public async Task SyncVaults()
         {
-            CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+            CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
             string uuidVault = _shelterVaultLocalStorage.GetCurrentUUIDVault();
             switch (providerType)
             {
@@ -109,7 +109,7 @@ namespace ShelterVault.Managers
 
         public CloudSyncInformation GetCurrentCloudSyncInformation()
         {
-            CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+            CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
 
             switch (providerType)
             {

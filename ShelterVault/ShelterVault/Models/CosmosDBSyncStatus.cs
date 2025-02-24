@@ -10,6 +10,7 @@ namespace ShelterVault.Models
     public class CosmosDBSyncStatus
     {
         public CloudSyncStatus CurrentSyncStatus { get; set; } = CloudSyncStatus.None;
+        public bool IsSyncEnabled { get; set; } = false;
 
         public CosmosDBSyncStatus()
         {
@@ -19,6 +20,12 @@ namespace ShelterVault.Models
         public CosmosDBSyncStatus(CloudSyncStatus currentSyncStatus)
         {
             CurrentSyncStatus = currentSyncStatus;
+        }
+
+        public CosmosDBSyncStatus(ShelterVaultSyncStatusModel shelterVaultSyncStatusModel)
+        {
+            CurrentSyncStatus = shelterVaultSyncStatusModel?.SyncStatus ?? CloudSyncStatus.None;
+            IsSyncEnabled = shelterVaultSyncStatusModel?.IsSyncEnabled ?? false;
         }
     }
 }

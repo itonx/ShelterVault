@@ -64,7 +64,7 @@ namespace ShelterVault.ViewModels
                                 newSelectedItem.SkipPageLoader = true;
                                 receiver.SelectedMenuItem = null;
                                 receiver.SelectedMenuItem = newSelectedItem;
-                                item.SkipPageLoader = false;
+                                newSelectedItem.SkipPageLoader = false;
                             }
                             WeakReferenceMessenger.Default.Send(new CheckSelectedCredentialsAfterSyncMessage(true));
                         }

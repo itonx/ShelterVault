@@ -15,6 +15,13 @@ namespace ShelterVault.Managers
     {
         bool UpsertCloudConfiguration<T>(CloudProviderType cloudProviderType, T cloudConfigurationModel);
         T GetCloudConfiguration<T>(CloudProviderType cloudProviderType);
+        ShelterVaultSyncStatusModel GetSyncStatus(CloudProviderType cloudProviderType);
+        bool DisableSync(CloudProviderType cloudProviderType);
+        bool UpdateSyncTimestamp(CloudProviderType cloudProviderType, long timestamp);
+        bool UpdateSyncStatus(CloudProviderType cloudProviderType, CloudSyncStatus cloudSyncStatus);
+        bool UpsertSyncStatus(CloudProviderType cloudProviderType, long timestamp, bool isSyncEnabled, CloudSyncStatus cloudSyncStatus);
+        bool UpdateVaultCloudProvider(CloudProviderType cloudProviderType);
+        CloudProviderType GetCurrentCloudProvider();
     }
 
     public class CloudProviderManager : ICloudProviderManager
@@ -40,6 +47,31 @@ namespace ShelterVault.Managers
             return System.Text.Json.JsonSerializer.Deserialize<T>(decryptedJsonModel);
         }
 
+        public ShelterVaultSyncStatusModel GetSyncStatus(CloudProviderType cloudProviderType)
+        {
+            return _shelterVaultLocalStorage.GetSyncStatus(cloudProviderType.ToString());
+        }
+
+        public bool UpsertSyncStatus(CloudProviderType cloudProviderType, long timestamp, bool isSyncEnabled, CloudSyncStatus cloudSyncStatus)
+        {
+            return _shelterVaultLocalStorage.UpsertSyncStatus(cloudProviderType.ToString(), timestamp, isSyncEnabled, cloudSyncStatus);
+        }
+
+        public bool DisableSync(CloudProviderType cloudProviderType)
+        {
+            return UpsertSyncStatus(cloudProviderType, 0, false, CloudSyncStatus.None);
+        }
+
+        public bool UpdateSyncTimestamp(CloudProviderType cloudProviderType, long timestamp)
+        {
+            return _shelterVaultLocalStorage.UpdateSyncTimestamp(cloudProviderType.ToString(), timestamp);
+        }
+
+        public bool UpdateSyncStatus(CloudProviderType cloudProviderType, CloudSyncStatus cloudSyncStatus)
+        {
+            return _shelterVaultLocalStorage.UpdateSyncStatus(cloudProviderType.ToString(), cloudSyncStatus);
+        }
+
         public bool UpsertCloudConfiguration<T>(CloudProviderType cloudProviderType, T cloudConfigurationModel)
         {
             try
@@ -59,6 +91,16 @@ namespace ShelterVault.Managers
             {
                 return false;
             }
+        }
+
+        public bool UpdateVaultCloudProvider(CloudProviderType cloudProviderType)
+        {
+            return _shelterVaultLocalStorage.UpdateVaultCloudProvider((int)cloudProviderType);
+        }
+
+        public CloudProviderType GetCurrentCloudProvider()
+        {
+            return (CloudProviderType)(_shelterVaultLocalStorage.GetCurrentVault()?.CloudProvider ?? 0);
         }
     }
 }
