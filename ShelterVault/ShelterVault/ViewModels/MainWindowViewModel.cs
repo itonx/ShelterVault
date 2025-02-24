@@ -93,7 +93,7 @@ namespace ShelterVault.ViewModels
             ShowLangOptions = true;
             ShowSwitchVault = false;
             SetLangText();
-            //StartSynchronizationTask();
+            StartSynchronizationTask();
         }
 
         private void RegisterMessages()
@@ -126,7 +126,6 @@ namespace ShelterVault.ViewModels
                 _uiThreadService.Execute(() =>
                 {
                     CurrentCloudSyncStatus = message.Value;
-                    RefreshSyncStatusInfo();
                 });
             });
             WeakReferenceMessenger.Default.Register<MainWindowViewModel, CloudProviderChangedMessage>(this, (receiver, message) =>
