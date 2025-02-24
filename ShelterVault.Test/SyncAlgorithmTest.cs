@@ -18,7 +18,8 @@ namespace ShelterVault.Test
             var settingsService = new Mock<ISettingsService>();
             var vaultReaderManager = new Mock<IVaultReaderManager>();
             var shelterVaultLocalStorage = new Mock<IShelterVaultLocalStorage>();
-            _shelterVaultCosmosDBService = new ShelterVaultCosmosDBService(settingsService.Object, vaultReaderManager.Object, shelterVaultLocalStorage.Object);
+            var cloudProviderManager = new Mock<ICloudProviderManager>();
+            _shelterVaultCosmosDBService = new ShelterVaultCosmosDBService(settingsService.Object, vaultReaderManager.Object, shelterVaultLocalStorage.Object, cloudProviderManager.Object);
         }
 
         [Test]

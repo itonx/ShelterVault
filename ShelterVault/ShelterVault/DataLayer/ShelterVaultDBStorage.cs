@@ -11,7 +11,7 @@ using System.Threading.Tasks;
  
 namespace ShelterVault.DataLayer
 {
-    public interface IShelterVaultLocalStorage
+    public interface IShelterVaultDBStorage
     {
         bool DBExists();
         bool CreateShelterVault(string uuid, string name,string masterKey, string iv, string salt, long version);
@@ -29,24 +29,16 @@ namespace ShelterVault.DataLayer
         ShelterVaultModel GetVaultByUUID(string uuid);
         bool UpsertCloudConfiguration(string name, string encryptedValues, string iv);
         ShelterVaultCloudConfigModel GetCloudConfiguration(string name);
-        void SetDbName(string dbName);
-        string GetDefaultShelterVaultDBPath();
     }
 
-    public class ShelterVaultLocalStorage : IShelterVaultLocalStorage
+    public class ShelterVaultDBStorage : IShelterVaultDBStorage
     {
-        private string _dbName = "ShelterVault.db";
+        private readonly string _dbName = "ShelterVault.db";
         private string _userPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        private string _shelterVaultPath => Path.Combine(_userPath, ".sheltervault");
-        private string _dbPath => Path.Combine(_shelterVaultPath, _dbName);
+        private string _dbPath => Path.Combine(_userPath, ".sheltervault", _dbName);
         private string _dbConnectionString => $"Data Source={_dbPath}";
 
-        public bool DBExists() => GetAllActiveVaults().Count() > 0;
-
-        public void SetDbName(string dbName)
-        {
-            _dbName = $"{dbName}.db";
-        }
+        public bool DBExists() => File.Exists(_dbPath);
 
         public bool CreateShelterVault(string uuid,string name, string masterKey, string iv, string salt, long version)
         {
@@ -379,31 +371,7 @@ namespace ShelterVault.DataLayer
 
         public IEnumerable<ShelterVaultModel> GetAllActiveVaults()
         {
-            var ext = new List<string> { "db"};
-            var vaultPaths = Directory
-                .EnumerateFiles(_shelterVaultPath, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(s => ext.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()));
-            IList<ShelterVaultModel> result = new List<ShelterVaultModel>();
-
-            string query = @"
-                SELECT * FROM shelter_vault
-                WHERE version > 0
-            ";
-
-            foreach (var path in vaultPaths)
-            {
-                string fileName = Path.GetFileNameWithoutExtension(path);
-                SetDbName(fileName);
-                using (var connection = new SqliteConnection(_dbConnectionString))
-                {
-                    connection.Open();
-                    ShelterVaultModel vault = connection.QueryFirstOrDefault<ShelterVaultModel>(query);
-                    if (vault != null)
-                        result.Add(vault);
-                }
-            }
-
-            return result;
+            return GetAllVaults().Where(v => v.Version > 0);
         }
 
         public ShelterVaultModel GetVaultByUUID(string uuid)
@@ -472,11 +440,6 @@ namespace ShelterVault.DataLayer
                 ShelterVaultCloudConfigModel result = connection.QueryFirstOrDefault<ShelterVaultCloudConfigModel>(query, new { name });
                 return result;
             }
-        }
-
-        public string GetDefaultShelterVaultDBPath()
-        {
-            return _shelterVaultPath;
         }
     }
 }

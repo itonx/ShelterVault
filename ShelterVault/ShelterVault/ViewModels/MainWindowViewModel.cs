@@ -93,7 +93,7 @@ namespace ShelterVault.ViewModels
             ShowLangOptions = true;
             ShowSwitchVault = false;
             SetLangText();
-            StartSynchronizationTask();
+            //StartSynchronizationTask();
         }
 
         private void RegisterMessages()

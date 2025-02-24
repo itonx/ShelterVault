@@ -60,6 +60,7 @@ namespace ShelterVault.ViewModels
                 await _progressBarService.Show();
                 if (_masterKeyValidatorManager.IsValid(parameter?.ToString(), SelectedVault))
                 {
+                    _shelterVaultLocalStorage.SetDbName(SelectedVault.Name);
                     _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
                     WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.NavigationView));
                 }
