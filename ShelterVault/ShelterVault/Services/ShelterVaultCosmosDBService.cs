@@ -19,7 +19,7 @@ namespace ShelterVault.Services
     {
         Task UpsertItemAsync<T>(T shelterVault) where T : ICosmosDBModel;
         Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel;
-        Task SyncAllAsync();
+        Task SyncAllAsync(string uuidVault);
         Task<List<CosmosDBSyncModel>> SynchronizeModelsAsync(IList<CosmosDBSyncModel> cosmosDBSyncModels, IList<CosmosDBSyncModel> shelterVaultSyncModels);
         Task<CosmosDBTinyModel> GetItemByIdAsync(string id);
         CosmosDBSyncStatus GetCurrentSyncStatus();
@@ -67,16 +67,19 @@ namespace ShelterVault.Services
             return results.FirstOrDefault();
         }
 
-        public async Task SyncAllAsync()
+        public async Task SyncAllAsync(string uuidVault)
         {
             try
             {
+                //TODO: look at this, lol (It's a POC)
                 WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchInProcess));
                 CosmosDBSettings currentConfiguration = _cloudProviderManager.GetCloudConfiguration<CosmosDBSettings>(CloudProviderType.Azure);
-                string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", currentConfiguration.Timestamp != 0 ? $" WHERE vault._ts > {currentConfiguration.Timestamp}" : string.Empty);
-                //string cosmosDBquery = "SELECT vault.id, vault.type, vault.version FROM vault";
-                IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(new QueryDefinition(cosmosDBquery));
-                IList<VaultModel> shelterVaults = _vaultReaderManager.GetAllVaults();
+                string uuidVaultClause = $" WHERE ((vault.type = 'shelter_vault' and vault.id='{uuidVault}') or (vault.type = 'shelter_vault_credentials' and vault.shelterVaultUuid = '{uuidVault}'))";
+                string timestampClause = currentConfiguration.Timestamp != 0 ? $" and vault._ts > {currentConfiguration.Timestamp}" : string.Empty;
+                string cosmosDBquery = string.Concat("SELECT vault.id, vault.type, vault.version FROM vault", uuidVaultClause, timestampClause);
+                QueryDefinition queryDefinition = new QueryDefinition(cosmosDBquery);
+                IList<CosmosDBTinyModel> cosmosDBTinyModels = await GetCosmosDBItems<CosmosDBTinyModel>(queryDefinition);
+                IList<VaultModel> shelterVaults = _vaultReaderManager.GetCurrentVault();
                 IList<CosmosDBSyncModel> cosmosDBModels = CosmosDBTinyModel.ToCosmosDBSyncModel(cosmosDBTinyModels);
                 IList<CosmosDBSyncModel> localDBVaults  = VaultModel.ToCosmosDBSyncModel(shelterVaults);
                 List<CosmosDBSyncModel> synchronizedModels = await SynchronizeModelsAsync(cosmosDBModels, localDBVaults);

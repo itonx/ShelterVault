@@ -1,4 +1,5 @@
-﻿using ShelterVault.Models;
+﻿using ShelterVault.DataLayer;
+using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Enums;
 using System;
@@ -22,11 +23,13 @@ namespace ShelterVault.Managers
     {
         private readonly ISettingsService _settingsService;
         private readonly IShelterVaultCosmosDBService _shelterVaultCosmosDBService;
+        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
 
-        public CloudSyncManager(ISettingsService settingsService, IShelterVaultCosmosDBService shelterVaultCosmosDBService)
+        public CloudSyncManager(ISettingsService settingsService, IShelterVaultCosmosDBService shelterVaultCosmosDBService, IShelterVaultLocalStorage shelterVaultLocalStorage)
         {
             _settingsService = settingsService;
             _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
+            _shelterVaultLocalStorage = shelterVaultLocalStorage;
         }
 
         public async Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
@@ -93,10 +96,11 @@ namespace ShelterVault.Managers
         public async Task SyncVaults()
         {
             CloudProviderType providerType = _settingsService.GetCurrentCloudProviderType();
+            string uuidVault = _shelterVaultLocalStorage.GetCurrentUUIDVault();
             switch (providerType)
             {
                 case CloudProviderType.Azure:
-                    await _shelterVaultCosmosDBService.SyncAllAsync();
+                    await _shelterVaultCosmosDBService.SyncAllAsync(uuidVault);
                     break;
                 default:
                     break;
