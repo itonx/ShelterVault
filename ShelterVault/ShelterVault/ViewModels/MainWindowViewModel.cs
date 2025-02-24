@@ -102,7 +102,8 @@ namespace ShelterVault.ViewModels
             WeakReferenceMessenger.Default.Register<MainWindowViewModel, CurrentAppStateRequestMessage>(this, (receiver, message) =>
             {
                 receiver.ShelterVaultCurrentAppState = message.Value;
-                if(message.Value == ShelterVaultAppState.NavigationView)
+                RefreshSyncStatusInfo();
+                if (message.Value == ShelterVaultAppState.NavigationView)
                 {
                     ShowLangOptions = false;
                     ShowSwitchVault = true;
@@ -137,6 +138,14 @@ namespace ShelterVault.ViewModels
                     CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
                 });
             });
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ShowSyncStatusMessage>(this, (receiver, message) =>
+            {
+                _uiThreadService.Execute(() =>
+                {
+                    if (message.Value)
+                        RefreshSyncStatusInfo();
+                });
+            });
         }
 
         private void SetLangText()
@@ -151,42 +160,50 @@ namespace ShelterVault.ViewModels
 
         private void RefreshSyncStatusInfo()
         {
-            CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
-            ShowSync = cloudSyncInformation.HasCloudConfiguration;
-            CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
+            if(ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
+            {
+                CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
+                ShowSync = cloudSyncInformation.HasCloudConfiguration;
+                CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
+            }
+            else
+            {
+                ShowSync = false;
+                CurrentCloudSyncStatus = CloudSyncStatus.None;
+            }
         }
 
         private void StartSynchronizationTask()
         {
-            int syncInterval = 60 * 1000;
             RefreshSyncStatusInfo();
             _ = Task.Run(async () =>
             {
-                await Task.Delay(syncInterval);
                 while (true)
                 {
-                    CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
-                    try
+                    await Task.Delay(60 * 1000);
+                    if (ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
                     {
-                        if (cloudSyncInformation.HasCloudConfiguration)
-                            await _cloudSyncManager.SyncVaults();
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
-                    finally
-                    {
-                        if (cloudSyncInformation.HasCloudConfiguration)
+                        CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
+                        try
                         {
-                            _uiThreadService.Execute(() =>
+                            if (cloudSyncInformation.HasCloudConfiguration)
+                                await _cloudSyncManager.SyncVaults();
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex);
+                        }
+                        finally
+                        {
+                            if (cloudSyncInformation.HasCloudConfiguration)
                             {
-                                RefreshSyncStatusInfo();
-                            });
+                                _uiThreadService.Execute(() =>
+                                {
+                                    RefreshSyncStatusInfo();
+                                });
+                            }
                         }
                     }
-
-                    await Task.Delay(syncInterval);
                 }
             });
         }

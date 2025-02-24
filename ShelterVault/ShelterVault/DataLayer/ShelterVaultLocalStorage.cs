@@ -48,7 +48,7 @@ namespace ShelterVault.DataLayer
         private string _dbPath => Path.Combine(_shelterVaultPath, _dbName);
         private string _dbConnectionString => $"Data Source={_dbPath}";
 
-        public bool DBExists() => GetAllActiveVaults().Count() > 0;
+        public bool DBExists() => GetAllActiveVaults().Any();
 
         public void SetDbName(string dbName)
         {

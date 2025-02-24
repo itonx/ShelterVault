@@ -108,13 +108,16 @@ namespace ShelterVault.ViewModels
 
                             _cloudProviderManager.UpsertCloudConfiguration(CloudProviderType.Azure, cosmosDBSettings);
                             _cloudProviderManager.UpsertSyncStatus(CloudProviderType.Azure, 0, true, CloudSyncStatus.PendingConfiguration);
-                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.PendingConfiguration));
+
                         }
                         catch
                         {
-                            _cloudProviderManager.UpsertSyncStatus(CloudProviderType.Azure, 0, true, CloudSyncStatus.None);
-                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.None));
+                            _cloudProviderManager.UpsertSyncStatus(CloudProviderType.Azure, 0, false, CloudSyncStatus.None);
                             await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
+                        }
+                        finally
+                        {
+                            WeakReferenceMessenger.Default.Send(new ShowSyncStatusMessage(true));
                         }
                     }
                 }

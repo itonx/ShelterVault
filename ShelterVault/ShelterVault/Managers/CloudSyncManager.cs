@@ -109,14 +109,21 @@ namespace ShelterVault.Managers
 
         public CloudSyncInformation GetCurrentCloudSyncInformation()
         {
-            CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
-
-            switch (providerType)
+            try
             {
-                case CloudProviderType.Azure:
-                    return new(_shelterVaultCosmosDBService.GetCurrentSyncStatus());
-                default:
-                    return new();
+                CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
+
+                switch (providerType)
+                {
+                    case CloudProviderType.Azure:
+                        return new(_shelterVaultCosmosDBService.GetCurrentSyncStatus());
+                    default:
+                        return new();
+                }
+            }
+            catch (Exception)
+            {
+                return new();
             }
         }
     }
