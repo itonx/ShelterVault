@@ -24,6 +24,7 @@ namespace ShelterVault.ViewModels
         private readonly IProgressBarService _progressBarService;
         private readonly IShelterVaultCosmosDBService _shelterVaultCosmosDBService;
         private readonly ICloudProviderManager _cloudProviderManager;
+        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
 
         [ObservableProperty]
         private IList<CloudProviderType> _cloudProviders;
@@ -44,13 +45,14 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _containerPartitionKey;
 
-        public SettingsViewModel(ISettingsService settingsService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVaultCosmosDBService shelterVaultCosmosDBService, ICloudProviderManager cloudProviderManager)
+        public SettingsViewModel(ISettingsService settingsService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVaultCosmosDBService shelterVaultCosmosDBService, ICloudProviderManager cloudProviderManager, IShelterVaultLocalStorage shelterVaultLocalStorage)
         {
             _settingsService = settingsService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
             _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
             _cloudProviderManager = cloudProviderManager;
+            _shelterVaultLocalStorage = shelterVaultLocalStorage;
             CloudProviders = new List<CloudProviderType>((CloudProviderType[])Enum.GetValues(typeof(CloudProviderType)));
             SelectedCloudProvider = _settingsService.GetCurrentCloudProviderType();
             ReadCosmosDBSettings();
@@ -128,12 +130,13 @@ namespace ShelterVault.ViewModels
             try
             {
                 await _progressBarService.Show();
-                switch(SelectedCloudProvider)
+                string uuidVault = _shelterVaultLocalStorage.GetCurrentUUIDVault();
+                switch (SelectedCloudProvider)
                 {
                     case CloudProviderType.Azure:
                         try
                         {
-                            await _shelterVaultCosmosDBService.SyncAllAsync();
+                            await _shelterVaultCosmosDBService.SyncAllAsync(uuidVault);
                             _settingsService.SaveAsJsonValue(ShelterVaultConstants.COSMOS_DB_SYNC_STATUS, new CosmosDBSyncStatus(CloudSyncStatus.UpToDate));
                             WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.UpToDate));
                         }

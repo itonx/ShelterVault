@@ -24,13 +24,14 @@ namespace ShelterVault.DataLayer
         IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials(string shelterVaultUuid);
         IEnumerable<ShelterVaultCredentialsModel> GetAllActiveCredentials(string shelterVaultUuid);
         ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid);
-        IEnumerable<ShelterVaultModel> GetAllVaults();
         IEnumerable<ShelterVaultModel> GetAllActiveVaults();
         ShelterVaultModel GetVaultByUUID(string uuid);
         bool UpsertCloudConfiguration(string name, string encryptedValues, string iv);
         ShelterVaultCloudConfigModel GetCloudConfiguration(string name);
         void SetDbName(string dbName);
         string GetDefaultShelterVaultDBPath();
+        string GetCurrentUUIDVault();
+        ShelterVaultModel GetCurrentVault();
     }
 
     public class ShelterVaultLocalStorage : IShelterVaultLocalStorage
@@ -362,21 +363,6 @@ namespace ShelterVault.DataLayer
             }
         }
 
-        public IEnumerable<ShelterVaultModel> GetAllVaults()
-        {
-            using (var connection = new SqliteConnection(_dbConnectionString))
-            {
-                connection.Open();
-
-                string query = @"
-                    SELECT * FROM shelter_vault
-                ";
-
-                IEnumerable<ShelterVaultModel> result = connection.Query<ShelterVaultModel>(query) ?? Enumerable.Empty<ShelterVaultModel>();
-                return result;
-            }
-        }
-
         public IEnumerable<ShelterVaultModel> GetAllActiveVaults()
         {
             var ext = new List<string> { "db"};
@@ -404,6 +390,21 @@ namespace ShelterVault.DataLayer
             }
 
             return result;
+        }
+
+        public ShelterVaultModel GetCurrentVault()
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT * FROM shelter_vault
+                ";
+
+                ShelterVaultModel result = connection.QueryFirst<ShelterVaultModel>(query);
+                return result;
+            }
         }
 
         public ShelterVaultModel GetVaultByUUID(string uuid)
@@ -477,6 +478,21 @@ namespace ShelterVault.DataLayer
         public string GetDefaultShelterVaultDBPath()
         {
             return _shelterVaultPath;
+        }
+
+        public string GetCurrentUUIDVault()
+        {
+            using (var connection = new SqliteConnection(_dbConnectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                    SELECT * FROM shelter_vault
+                ";
+
+                ShelterVaultModel result = connection.QueryFirst<ShelterVaultModel>(query);
+                return result.UUID;
+            }
         }
     }
 }
