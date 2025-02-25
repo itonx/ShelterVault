@@ -30,12 +30,12 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _defaultPath;
 
-        private readonly IVaultManager _vaultManager;
+        private readonly IVaultCreatorManager _vaultCreatorManager;
         private readonly IProgressBarService _progressBarService;
 
-        public CreateMasterKeyViewModel(IVaultManager shelterVaultCreatorManager, PasswordConfirmationViewModel passwordConfirmationViewModel, IProgressBarService progressBarService, IShelterVault shelterVault, IShelterVaultLocalDb shelterVaultLocalDb)
+        public CreateMasterKeyViewModel(IVaultCreatorManager shelterVaultCreatorManager, PasswordConfirmationViewModel passwordConfirmationViewModel, IProgressBarService progressBarService, IShelterVault shelterVault, IShelterVaultLocalDb shelterVaultLocalDb)
         {
-            _vaultManager = shelterVaultCreatorManager;
+            _vaultCreatorManager = shelterVaultCreatorManager;
             _progressBarService = progressBarService;
             _shelterVaultDefaultPath = shelterVaultLocalDb.DefaultShelterVaultPath;
             PasswordRequirementsVM = passwordConfirmationViewModel;
@@ -58,7 +58,7 @@ namespace ShelterVault.ViewModels
                     await _progressBarService.Show();
                     string salt = Guid.NewGuid().ToString();
                     string uuid = Guid.NewGuid().ToString();
-                    bool wasVaultCreated = _vaultManager.CreateVault(uuid, Name, Password, salt);
+                    bool wasVaultCreated = _vaultCreatorManager.CreateVault(uuid, Name, Password, salt);
                     if (wasVaultCreated) WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
                 }
             }

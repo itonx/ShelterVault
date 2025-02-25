@@ -3,18 +3,12 @@
     x:Class="ShelterVault.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:ShelterVault.Shared.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
-    <Page.Resources>
-        <converters:ShowHideToVisibilityConverter x:Key="ShowHideToVisibility" />
-        <converters:CloudProviderTypeToVisibilityConverter x:Key="CloudProviderTypeToVisibility" />
-    </Page.Resources>
 
     <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>

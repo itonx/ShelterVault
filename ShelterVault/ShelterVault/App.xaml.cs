@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using ShelterVault.DataLayer;
@@ -60,6 +61,15 @@ namespace ShelterVault
         {
             var services = new ServiceCollection();
 
+            //Logging
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
+
+
             //LocalDb
             services.AddSingleton<IShelterVaultLocalDb, ShelterVaultLocalDb>();
             services.AddSingleton<IShelterVault, DataLayer.ShelterVault>();
@@ -81,6 +91,7 @@ namespace ShelterVault
             services.AddSingleton<MainWindowViewModel>();
 
             // Managers
+            services.AddScoped<IVaultCreatorManager, VaultCreatorManager>();
             services.AddScoped<IVaultManager, VaultManager>();
             services.AddScoped<ICredentialsManager, CredentialsManager>();
             services.AddScoped<ICloudSyncManager, CloudSyncManager>();

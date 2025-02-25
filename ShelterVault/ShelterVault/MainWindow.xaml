@@ -19,10 +19,6 @@
             <behaviors:MaximizeWindowAtStartupBehavior />
         </interactivity:Interaction.Behaviors>
         <Grid.Resources>
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIconConverter" />
-            <converters:CloudSyncStatusToTextConverter x:Key="CloudSyncStatusToTextConverter" />
-            <converters:CloudSyncStatusToGlyphConverter x:Key="CloudSyncStatusToGlyphConverter" />
             <Thickness x:Key="ShelterVaultTitleMargin">50,0,0,0</Thickness>
         </Grid.Resources>
         <Grid.RowDefinitions>

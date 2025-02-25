@@ -44,6 +44,17 @@ namespace ShelterVault.ViewModels
         private readonly IUIThreadService _uiThreadService;
         private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
+        public MainWindowViewModel(IShelterVault shelterVault, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        {
+            _shelterVaultThemeService = shelterVaultThemeService;
+            _shelterVaultStateService = shelterVaultStateService;
+            _languageService = languageService;
+            _cloudSyncManager = cloudSyncManager;
+            _uiThreadService = uiThreadService;
+            _weakReferenceInstanceManager = weakReferenceInstanceManager;
+            InitialSetup(shelterVault);
+        }
+
         [RelayCommand]
         private void SwitchVault()
         {
@@ -66,16 +77,6 @@ namespace ShelterVault.ViewModels
             }
         }
 
-        public MainWindowViewModel(IShelterVault shelterVault, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
-        {
-            _shelterVaultThemeService = shelterVaultThemeService;
-            _shelterVaultStateService = shelterVaultStateService;
-            _languageService = languageService;
-            _cloudSyncManager = cloudSyncManager;
-            _uiThreadService = uiThreadService;
-            _weakReferenceInstanceManager = weakReferenceInstanceManager;
-            InitialSetup(shelterVault);
-        }
 
         private void InitialSetup(IShelterVault shelterVault)
         {

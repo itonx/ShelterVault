@@ -1,7 +1,6 @@
 ﻿using ShelterVault.DataLayer;
 using ShelterVault.Models;
 using ShelterVault.Services;
-using ShelterVault.Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +16,6 @@ namespace ShelterVault.Managers
         Credentials GetCredentials(string uuid, bool active = true);
         Task<bool> DeleteCredentials(string uuid);
         IEnumerable<CredentialsViewItem> GetAllActiveCredentials(string shelterVaultUuid);
-        void DeleteMany(IEnumerable<CosmosDBSyncModel> synchronizedModels);
     }
 
     public class CredentialsManager : ICredentialsManager
@@ -150,12 +148,6 @@ namespace ShelterVault.Managers
             }
 
             return credentialsList.Any() ? credentialsList : Enumerable.Empty<CredentialsViewItem>();
-        }
-
-        public void DeleteMany(IEnumerable<CosmosDBSyncModel> synchronizedModels)
-        {
-            foreach (string id in synchronizedModels.Where(x => x.source == SourceType.Local && x.version == -1 && x.type.Equals(ShelterVaultConstants.PARTITION_SHELTER_VAULT_CREDENTIALS)).Select(x => x.id))
-                _shelterVaultCredentials.DeleteCredentials(id);
         }
     }
 }

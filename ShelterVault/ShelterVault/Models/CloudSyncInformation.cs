@@ -13,10 +13,10 @@ namespace ShelterVault.Models
             HasCloudConfiguration = false;
         }
 
-        public CloudSyncInformation(CosmosDBSyncStatus cosmosDBSyncStatus)
+        public CloudSyncInformation(ShelterVaultSyncStatusModel shelterVaultSyncStatusModel)
         {
-            CurrentSyncStatus = cosmosDBSyncStatus.CurrentSyncStatus;
-            HasCloudConfiguration = cosmosDBSyncStatus.IsSyncEnabled;
+            CurrentSyncStatus = shelterVaultSyncStatusModel.SyncStatus;
+            HasCloudConfiguration = shelterVaultSyncStatusModel.IsSyncEnabled;
         }
     }
 }

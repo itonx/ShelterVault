@@ -61,7 +61,8 @@ namespace ShelterVault.Shared.Extensions
         {
             return Directory
                 .EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(s => extension.Equals(Path.GetExtension(s).TrimStart('.'), StringComparison.CurrentCultureIgnoreCase));
+                .Where(s => extension.TrimStart('.').Equals(Path.GetExtension(s).TrimStart('.'), StringComparison.CurrentCultureIgnoreCase))
+                .Select(p => Path.GetFileNameWithoutExtension(p));
         }
     }
 }

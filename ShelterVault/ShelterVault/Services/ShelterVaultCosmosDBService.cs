@@ -30,19 +30,17 @@ namespace ShelterVault.Services
         private readonly IShelterVault _shelterVault;
         private readonly IShelterVaultCredentials _shelterVaultCredentials;
         private readonly ICloudProviderManager _cloudProviderManager;
-        private readonly ICloudSyncManager _cloudSyncManager;
-        private readonly ICredentialsManager _credentialsManager;
+        private readonly IShelterVaultSyncStatus _shelterVaultSyncStatus;
         private readonly ILogger<ShelterVaultCosmosDBService> _logger;
 
-        public ShelterVaultCosmosDBService(IVaultManager shelterVaultCreatorManager, IShelterVault shelterVault, ICloudProviderManager cloudProviderManager, IShelterVaultCredentials shelterVaultCredentials, ICloudSyncManager cloudSyncManager, ILogger<ShelterVaultCosmosDBService> logger, ICredentialsManager credentialsManager)
+        public ShelterVaultCosmosDBService(IVaultManager shelterVaultCreatorManager, IShelterVault shelterVault, ICloudProviderManager cloudProviderManager, IShelterVaultCredentials shelterVaultCredentials, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<ShelterVaultCosmosDBService> logger)
         {
             _vaultManager = shelterVaultCreatorManager;
             _shelterVault = shelterVault;
             _cloudProviderManager = cloudProviderManager;
             _shelterVaultCredentials = shelterVaultCredentials;
-            _cloudSyncManager = cloudSyncManager;
+            _shelterVaultSyncStatus = shelterVaultSyncStatus;
             _logger = logger;
-            _credentialsManager = credentialsManager;
         }
 
         public async Task UpsertItemAsync<T>(T shelterVault) where T : ICosmosDBModel
@@ -90,19 +88,19 @@ namespace ShelterVault.Services
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
                 WeakReferenceMessenger.Default.Send(new RefreshVaultListRequestMessage(true));
 
-                _cloudSyncManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
+                _shelterVaultSyncStatus.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error syncing CosmosDB vaults");
-                _cloudSyncManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
+                _shelterVaultSyncStatus.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
                 throw;
             }
         }
 
         public CosmosDBSyncStatus GetCurrentSyncStatus()
         {
-            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _cloudSyncManager.GetSyncStatus(CloudProviderType.Azure);
+            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _shelterVaultSyncStatus.GetSyncStatus(CloudProviderType.Azure);
             CosmosDBSyncStatus currentSyncStatus = new(shelterVaultSyncStatusModel);
             return currentSyncStatus;
         }
@@ -121,9 +119,20 @@ namespace ShelterVault.Services
             UpsertLocalCredentials(await GetCosmosDBItemsByPartitionKey(syncModels, ShelterVaultConstants.PARTITION_SHELTER_VAULT_CREDENTIALS), cosmosDBSyncModels);
             await UpsertCosmosDbItems(syncModels, ShelterVaultConstants.PARTITION_SHELTER_VAULT);
             await UpsertCosmosDbItems(syncModels, ShelterVaultConstants.PARTITION_SHELTER_VAULT_CREDENTIALS);
-            _cloudSyncManager.UpdateSyncTimestamp(CloudProviderType.Azure, DateTimeOffset.Now.ToUnixTimeSeconds());
-            _vaultManager.DeleteMany(syncModels);
-            _credentialsManager.DeleteMany(syncModels);
+            _shelterVaultSyncStatus.UpdateSyncTimestamp(CloudProviderType.Azure, DateTimeOffset.Now.ToUnixTimeSeconds());
+            DeleteManyLocal(syncModels, ShelterVaultConstants.PARTITION_SHELTER_VAULT);
+            DeleteManyLocal(syncModels, ShelterVaultConstants.PARTITION_SHELTER_VAULT_CREDENTIALS);
+        }
+
+        private void DeleteManyLocal(IEnumerable<CosmosDBSyncModel> synchronizedModels, string partitionKey)
+        {
+            foreach (string id in synchronizedModels.Where(x => x.source == SourceType.Local && x.version == -1 && x.type.Equals(partitionKey)).Select(x => x.id))
+            {
+                if (partitionKey.Equals(ShelterVaultConstants.PARTITION_SHELTER_VAULT))
+                    _shelterVault.DeleteVault(id);
+                else if (partitionKey.Equals(ShelterVaultConstants.PARTITION_SHELTER_VAULT_CREDENTIALS))
+                    _shelterVaultCredentials.DeleteCredentials(id);
+            }
         }
 
         private void UpsertLocalVaults(IEnumerable<ICosmosDBModel> cosmosDbModels, IEnumerable<CosmosDBSyncModel> cosmosDBSyncModels)
@@ -206,13 +215,13 @@ namespace ShelterVault.Services
 
         private bool IsSyncEnabled()
         {
-            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _cloudSyncManager.GetSyncStatus(CloudProviderType.Azure);
+            ShelterVaultSyncStatusModel shelterVaultSyncStatusModel = _shelterVaultSyncStatus.GetSyncStatus(CloudProviderType.Azure);
             return shelterVaultSyncStatusModel.IsSyncEnabled;
         }
 
         private bool IsSyncEnabled(out ShelterVaultSyncStatusModel shelterVaultSyncStatusModel)
         {
-            shelterVaultSyncStatusModel = _cloudSyncManager.GetSyncStatus(CloudProviderType.Azure);
+            shelterVaultSyncStatusModel = _shelterVaultSyncStatus.GetSyncStatus(CloudProviderType.Azure);
             return shelterVaultSyncStatusModel.IsSyncEnabled;
         }
     }
