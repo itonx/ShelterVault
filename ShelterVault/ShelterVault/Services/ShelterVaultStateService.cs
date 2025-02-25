@@ -1,12 +1,9 @@
 ﻿using ShelterVault.Models;
 using ShelterVault.Shared.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
- 
+
 namespace ShelterVault.Services
 {
     public interface IShelterVaultStateService

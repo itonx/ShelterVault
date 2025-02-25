@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Azure.Cosmos;
-using ShelterVault.DataLayer;
+using Microsoft.Extensions.Logging;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
@@ -11,20 +11,17 @@ using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
-    partial class SettingsViewModel : ObservableObject
+    internal partial class SettingsViewModel : ObservableObject
     {
-        private readonly ISettingsService _settingsService;
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;
-        private readonly IShelterVaultCosmosDBService _shelterVaultCosmosDBService;
         private readonly ICloudProviderManager _cloudProviderManager;
-        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
+        private readonly ICloudSyncManager _cloudSyncManager;
+        private readonly ILogger<SettingsViewModel> _logger;
 
         [ObservableProperty]
         private IList<CloudProviderType> _cloudProviders;
@@ -45,14 +42,13 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _containerPartitionKey;
 
-        public SettingsViewModel(ISettingsService settingsService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVaultCosmosDBService shelterVaultCosmosDBService, ICloudProviderManager cloudProviderManager, IShelterVaultLocalStorage shelterVaultLocalStorage)
+        public SettingsViewModel(IDialogService dialogService, IProgressBarService progressBarService, ICloudProviderManager cloudProviderManager, ICloudSyncManager cloudSyncManager, ILogger<SettingsViewModel> logger)
         {
-            _settingsService = settingsService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
-            _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
             _cloudProviderManager = cloudProviderManager;
-            _shelterVaultLocalStorage = shelterVaultLocalStorage;
+            _cloudSyncManager = cloudSyncManager;
+            _logger = logger;
             CloudProviders = new List<CloudProviderType>((CloudProviderType[])Enum.GetValues(typeof(CloudProviderType)));
             SelectedCloudProvider = _cloudProviderManager.GetCurrentCloudProvider();
             ReadCosmosDBSettings();
@@ -60,9 +56,9 @@ namespace ShelterVault.ViewModels
 
         partial void OnSelectedCloudProviderChanged(CloudProviderType value)
         {
-            if(value == CloudProviderType.None)
+            if (value == CloudProviderType.None)
             {
-                _cloudProviderManager.DisableSync(CloudProviderType.Azure);
+                _cloudSyncManager.DisableSync(CloudProviderType.Azure);
                 ShowThroughput = false;
                 ReadCosmosDBSettings();
             }
@@ -107,12 +103,12 @@ namespace ShelterVault.ViewModels
                             ContainerPartitionKey = containerResponse?.Resource?.PartitionKeyPath ?? "Err";
 
                             _cloudProviderManager.UpsertCloudConfiguration(CloudProviderType.Azure, cosmosDBSettings);
-                            _cloudProviderManager.UpsertSyncStatus(CloudProviderType.Azure, 0, true, CloudSyncStatus.PendingConfiguration);
+                            _cloudSyncManager.UpsertSyncStatus(CloudProviderType.Azure, 0, true, CloudSyncStatus.PendingConfiguration);
 
                         }
                         catch
                         {
-                            _cloudProviderManager.UpsertSyncStatus(CloudProviderType.Azure, 0, false, CloudSyncStatus.None);
+                            _cloudSyncManager.UpsertSyncStatus(CloudProviderType.Azure, 0, false, CloudSyncStatus.None);
                             await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
                         }
                         finally
@@ -134,30 +130,12 @@ namespace ShelterVault.ViewModels
             try
             {
                 await _progressBarService.Show();
-                string uuidVault = _shelterVaultLocalStorage.GetCurrentUUIDVault();
-                switch (SelectedCloudProvider)
-                {
-                    case CloudProviderType.Azure:
-                        try
-                        {
-                            await _shelterVaultCosmosDBService.SyncAllAsync(uuidVault);
-                            _cloudProviderManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
-                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.UpToDate));
-                        }
-                        catch (Exception)
-                        {
-                            _cloudProviderManager.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
-                            WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchFailed));
-                            throw;
-                        }
-                        break;
-                    default:
-                        return;
-                }
+                await _cloudSyncManager.SyncVaults();
                 await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_DONE);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error syncing vaults");
                 await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_ERROR);
             }
             finally

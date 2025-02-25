@@ -1,10 +1,4 @@
 ﻿using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
@@ -21,14 +15,6 @@ namespace ShelterVault.Models
             Timestamp = 0;
             IsSyncEnabled = false;
             SyncStatus = CloudSyncStatus.None;
-        }
-
-        public ShelterVaultSyncStatusModel(string name, long timestamp, bool isSyncEnabled, CloudSyncStatus syncStatus)
-        {
-            Name = name;
-            Timestamp = timestamp;
-            SyncStatus = syncStatus;
-            IsSyncEnabled = isSyncEnabled;
         }
     }
 }

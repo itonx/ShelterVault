@@ -1,0 +1,85 @@
+﻿using ShelterVault.Models;
+using ShelterVault.Shared.Enums;
+
+namespace ShelterVault.DataLayer
+{
+    public interface IShelterVaultSyncStatus
+    {
+        bool UpsertSyncStatus(string name, long timestamp, bool isSyncEnabled, int cloudSyncStatus);
+        bool UpdateSyncStatus(string name, CloudSyncStatus cloudSyncStatus);
+        bool UpdateSyncStatus(string name, long timestamp);
+        ShelterVaultSyncStatusModel GetSyncStatus(string name);
+    }
+
+    public class ShelterVaultSyncStatus : IShelterVaultSyncStatus
+    {
+        private readonly IShelterVaultLocalDb _shelterVaultLocalDb;
+
+        public ShelterVaultSyncStatus(IShelterVaultLocalDb shelterVaultLocalDb)
+        {
+            _shelterVaultLocalDb = shelterVaultLocalDb;
+        }
+
+        public bool UpsertSyncStatus(string name, long timestamp, bool isSyncEnabled, int cloudSyncStatus)
+        {
+            ShelterVaultSyncStatusModel model = GetSyncStatus(name);
+            string query = string.Empty;
+            if (model == null)
+            {
+                query = @"
+                    INSERT INTO shelter_vault_sync_status
+                    VALUES($name, $timestamp, $isSyncEnabled, $cloudSyncStatus)
+                ";
+            }
+            else
+            {
+                query = @"
+                    UPDATE shelter_vault_sync_status
+                    SET
+                    timestamp=$timestamp, isSyncEnabled=$isSyncEnabled, syncStatus=$cloudSyncStatus
+                    WHERE name=$name
+                ";
+            }
+
+            int result = _shelterVaultLocalDb.Execute(query, new { name, timestamp, isSyncEnabled = isSyncEnabled ? 1 : 0, cloudSyncStatus = cloudSyncStatus });
+            return result == 1;
+        }
+
+        public bool UpdateSyncStatus(string name, long timestamp)
+        {
+            string query = @"
+                UPDATE shelter_vault_sync_status
+                SET
+                timestamp=$timestamp
+                WHERE name=$name
+            ";
+
+            int updatedRecords = _shelterVaultLocalDb.Execute(query, new { name, timestamp });
+            return updatedRecords == 1;
+        }
+
+        public bool UpdateSyncStatus(string name, CloudSyncStatus cloudSyncStatus)
+        {
+            string query = @"
+                UPDATE shelter_vault_sync_status
+                SET
+                syncStatus=$cloudSyncStatus
+                WHERE name=$name
+            ";
+
+            int updatedRecords = _shelterVaultLocalDb.Execute(query, new { name, cloudSyncStatus });
+            return updatedRecords == 1;
+        }
+
+        public ShelterVaultSyncStatusModel GetSyncStatus(string name)
+        {
+            string query = @"
+                SELECT * FROM shelter_vault_sync_status
+                WHERE name=$name
+            ";
+
+            ShelterVaultSyncStatusModel result = _shelterVaultLocalDb.QueryFirstOrDefault<ShelterVaultSyncStatusModel>(query, new { name });
+            return result ?? new();
+        }
+    }
+}

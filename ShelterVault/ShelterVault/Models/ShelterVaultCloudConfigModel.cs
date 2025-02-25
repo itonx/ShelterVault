@@ -1,9 +1,4 @@
 ﻿using ShelterVault.Shared.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
@@ -15,7 +10,9 @@ namespace ShelterVault.Models
 
         public ShelterVaultCloudConfigModel()
         {
-            
+            Name = string.Empty;
+            EncryptedValues = string.Empty;
+            Iv = string.Empty;
         }
 
         public ShelterVaultCloudConfigModel(string name, (byte[], byte[]) encyptedValues)

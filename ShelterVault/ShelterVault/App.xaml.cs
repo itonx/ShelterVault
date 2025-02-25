@@ -1,26 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Services;
 using ShelterVault.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -75,15 +60,20 @@ namespace ShelterVault
         {
             var services = new ServiceCollection();
 
+            //LocalDb
+            services.AddSingleton<IShelterVaultLocalDb, ShelterVaultLocalDb>();
+            services.AddSingleton<IShelterVault, DataLayer.ShelterVault>();
+            services.AddSingleton<IShelterVaultCredentials, ShelterVaultCredentials>();
+            services.AddSingleton<IShelterVaultCloudConfig, ShelterVaultCloudConfig>();
+            services.AddSingleton<IShelterVaultSyncStatus, ShelterVaultSyncStatus>();
+
             // Services
-            services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IProgressBarService, ProgressBarService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IShelterVaultStateService, ShelterVaultStateService>();
             services.AddSingleton<IShelterVaultThemeService, ShelterVaultThemeService>();
-            services.AddSingleton<IShelterVaultLocalStorage, ShelterVaultLocalStorage>();
             services.AddSingleton<IShelterVaultCosmosDBService, ShelterVaultCosmosDBService>();
             services.AddSingleton<IUIThreadService, UIThreadService>();
             services.AddSingleton<IWeakReferenceInstanceManager, WeakReferenceInstanceManager>();
@@ -91,11 +81,8 @@ namespace ShelterVault
             services.AddSingleton<MainWindowViewModel>();
 
             // Managers
-            services.AddScoped<IShelterVaultCreatorManager, ShelterVaultCreatorManager>();
-            services.AddScoped<IMasterKeyValidatorManager, MasterKeyValidatorManager>();
+            services.AddScoped<IVaultManager, VaultManager>();
             services.AddScoped<ICredentialsManager, CredentialsManager>();
-            services.AddScoped<ICredentialsReaderManager, CredentialsReaderManager>();
-            services.AddScoped<IVaultReaderManager, VaultReaderManager>();
             services.AddScoped<ICloudSyncManager, CloudSyncManager>();
 
             // Viewmodels

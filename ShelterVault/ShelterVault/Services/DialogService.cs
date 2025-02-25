@@ -1,25 +1,22 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using ShelterVault.Shared.Constants;
+using ShelterVault.Shared.Helpers;
 using ShelterVault.Views;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ShelterVault.Shared.Helpers;
-using ShelterVault.Shared.Constants;
 
 namespace ShelterVault.Services
 {
-    internal interface IDialogService
+    public interface IDialogService
     {
         Task ShowConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = LangResourceKeys.DIALOG_TITLE_DEFAULT, string primaryButtonTextResourceKey = LangResourceKeys.DIALOG_CLOSE_DEFAULT);
         Task<bool> ShowContinueConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = LangResourceKeys.DIALOG_TITLE_DEFAULT, string primaryButtonTextResourceKey = LangResourceKeys.DIALOG_CLOSE_NO, string secondaryButtonResourceKey = LangResourceKeys.DIALOG_CLOSE_YES, ContentDialogResult expectedResult = ContentDialogResult.Primary);
     }
-    internal class DialogService : IDialogService
+    public class DialogService : IDialogService
     {
         private readonly ILanguageService _languageService;
-        
+
         public DialogService(ILanguageService languageService)
         {
             _languageService = languageService;

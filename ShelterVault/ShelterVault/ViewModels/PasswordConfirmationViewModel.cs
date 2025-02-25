@@ -4,12 +4,8 @@ using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
- 
+
 namespace ShelterVault.ViewModels
 {
     internal partial class PasswordConfirmationViewModel : ObservableObject
@@ -47,7 +43,7 @@ namespace ShelterVault.ViewModels
 
         public async Task<bool> AreCredentialsValid(Credentials credentials)
         {
-            if (string.IsNullOrWhiteSpace(credentials.Title)) 
+            if (string.IsNullOrWhiteSpace(credentials.Title))
             {
                 await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_EMPTY_TITLE);
                 return false;

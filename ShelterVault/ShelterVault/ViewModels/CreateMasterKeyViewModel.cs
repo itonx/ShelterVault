@@ -1,19 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Azure.Cosmos.Core;
-using Microsoft.UI.Xaml.Controls;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Services;
 using ShelterVault.Shared.Messages;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
- 
+
 namespace ShelterVault.ViewModels
 {
     internal partial class CreateMasterKeyViewModel : ObservableObject
@@ -34,18 +30,16 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _defaultPath;
 
-        private readonly IShelterVaultCreatorManager _shelterVaultCreatorManager;
+        private readonly IVaultManager _vaultManager;
         private readonly IProgressBarService _progressBarService;
-        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
 
-        public CreateMasterKeyViewModel(IShelterVaultCreatorManager shelterVaultCreatorManager, PasswordConfirmationViewModel passwordConfirmationViewModel, IProgressBarService progressBarService, IShelterVaultLocalStorage shelterVaultLocalStorage)
+        public CreateMasterKeyViewModel(IVaultManager shelterVaultCreatorManager, PasswordConfirmationViewModel passwordConfirmationViewModel, IProgressBarService progressBarService, IShelterVault shelterVault, IShelterVaultLocalDb shelterVaultLocalDb)
         {
-            _shelterVaultCreatorManager = shelterVaultCreatorManager;
+            _vaultManager = shelterVaultCreatorManager;
             _progressBarService = progressBarService;
-            _shelterVaultLocalStorage = shelterVaultLocalStorage;
+            _shelterVaultDefaultPath = shelterVaultLocalDb.DefaultShelterVaultPath;
             PasswordRequirementsVM = passwordConfirmationViewModel;
-            ShowCancel = _shelterVaultLocalStorage.GetAllActiveVaults().Any();
-            _shelterVaultDefaultPath = _shelterVaultLocalStorage.GetDefaultShelterVaultDBPath();
+            ShowCancel = shelterVault.GetAllActiveVaults().Any();
             DefaultPath = _shelterVaultDefaultPath;
         }
 
@@ -64,7 +58,7 @@ namespace ShelterVault.ViewModels
                     await _progressBarService.Show();
                     string salt = Guid.NewGuid().ToString();
                     string uuid = Guid.NewGuid().ToString();
-                    bool wasVaultCreated = _shelterVaultCreatorManager.CreateVault(uuid, Name, Password, salt);
+                    bool wasVaultCreated = _vaultManager.CreateVault(uuid, Name, Password, salt);
                     if (wasVaultCreated) WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
                 }
             }

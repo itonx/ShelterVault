@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ShelterVault.Models
+﻿namespace ShelterVault.Models
 {
-    internal interface IShelterVaultLocalModel
+    public interface IShelterVaultLocalModel
     {
         ICosmosDBModel ToCosmosDBModel();
     }

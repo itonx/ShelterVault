@@ -1,22 +1,17 @@
 ﻿using ShelterVault.Shared.Constants;
-using ShelterVault.Shared.Helpers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources.Core;
 
 namespace ShelterVault.Services
 {
-    internal interface ILanguageService
+    public interface ILanguageService
     {
         IReadOnlyList<string> GetShelterVaultSupportedLanguages();
         IReadOnlyList<string> GetUserMachineSupportedLanguages();
         string GetLangValue(string resourceKey);
     }
 
-    internal class LanguageService : ILanguageService
+    public class LanguageService : ILanguageService
     {
         public IReadOnlyList<string> GetShelterVaultSupportedLanguages()
         {

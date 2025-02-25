@@ -2,21 +2,17 @@
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Interop;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace ShelterVault.Services
 {
-    internal interface IShelterVaultThemeService
+    public interface IShelterVaultThemeService
     {
         ShelterVaultTheme GetTheme();
         ShelterVaultTheme GetNextTheme(ShelterVaultTheme currentShelterVaultTheme);
     }
 
-    internal class ShelterVaultThemeService : IShelterVaultThemeService
+    public class ShelterVaultThemeService : IShelterVaultThemeService
     {
         public ShelterVaultTheme GetTheme()
         {

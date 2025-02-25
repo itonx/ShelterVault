@@ -1,19 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ShelterVault.Shared.Messages;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
- 
+
 namespace ShelterVault.Services
 {
-    internal interface IProgressBarService
+    public interface IProgressBarService
     {
         Task Show();
         Task Hide();
     }
-    internal class ProgressBarService : IProgressBarService
+    public class ProgressBarService : IProgressBarService
     {
         public async Task Show()
         {

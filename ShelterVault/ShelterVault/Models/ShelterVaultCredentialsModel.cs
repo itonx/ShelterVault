@@ -1,9 +1,5 @@
 ﻿using ShelterVault.Shared.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
@@ -17,7 +13,11 @@ namespace ShelterVault.Models
 
         public ShelterVaultCredentialsModel()
         {
-            
+            UUID = string.Empty;
+            EncryptedValues = string.Empty;
+            Iv = string.Empty;
+            ShelterVaultUuid = string.Empty;
+            Version = 0;
         }
 
         public ShelterVaultCredentialsModel(string shelterVaultUuid, (byte[], byte[]) encyptedValues)
