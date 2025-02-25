@@ -80,10 +80,10 @@ namespace ShelterVault.DataLayer
 
             try
             {
-                using SqliteConnection connection = GetOpenSqliteConnection();
                 foreach (var path in dbPaths)
                 {
                     SetDbName(path);
+                    using SqliteConnection connection = GetOpenSqliteConnection();
                     T result = connection.QueryFirstOrDefault<T>(query);
                     if (result != null) results.Add(result);
                 }

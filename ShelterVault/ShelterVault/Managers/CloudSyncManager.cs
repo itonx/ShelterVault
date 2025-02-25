@@ -17,11 +17,6 @@ namespace ShelterVault.Managers
         Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
         Task SyncVaults();
         CloudSyncInformation GetCurrentCloudSyncInformation();
-        ShelterVaultSyncStatusModel GetSyncStatus(CloudProviderType cloudProviderType);
-        bool DisableSync(CloudProviderType cloudProviderType);
-        bool UpdateSyncTimestamp(CloudProviderType cloudProviderType, long timestamp);
-        bool UpdateSyncStatus(CloudProviderType cloudProviderType, CloudSyncStatus cloudSyncStatus);
-        bool UpsertSyncStatus(CloudProviderType cloudProviderType, long timestamp, bool isSyncEnabled, CloudSyncStatus cloudSyncStatus);
     }
 
     public class CloudSyncManager : ICloudSyncManager
@@ -113,13 +108,13 @@ namespace ShelterVault.Managers
                     try
                     {
                         await _shelterVaultCosmosDBService.SyncAllAsync(shelterVaultModel.UUID);
-                        UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
-                        WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.UpToDate));
+                        _shelterVaultSyncStatus.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
+                        WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.UpToDate));
                     }
                     catch (Exception)
                     {
-                        UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
-                        WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(Shared.Enums.CloudSyncStatus.SynchFailed));
+                        _shelterVaultSyncStatus.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
+                        WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.SynchFailed));
                         throw;
                     }
                     break;
@@ -128,49 +123,11 @@ namespace ShelterVault.Managers
             }
         }
 
-        public CloudSyncInformation GetCurrentCloudSyncInformation()
+        CloudSyncInformation ICloudSyncManager.GetCurrentCloudSyncInformation()
         {
-            try
-            {
-                CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
-
-                switch (providerType)
-                {
-                    case CloudProviderType.Azure:
-                        return new(_shelterVaultCosmosDBService.GetCurrentSyncStatus());
-                    default:
-                        return new();
-                }
-            }
-            catch (Exception)
-            {
-                return new();
-            }
-        }
-
-        public ShelterVaultSyncStatusModel GetSyncStatus(CloudProviderType cloudProviderType)
-        {
-            return _shelterVaultSyncStatus.GetSyncStatus(cloudProviderType.ToString());
-        }
-
-        public bool UpsertSyncStatus(CloudProviderType cloudProviderType, long timestamp, bool isSyncEnabled, CloudSyncStatus cloudSyncStatus)
-        {
-            return _shelterVaultSyncStatus.UpsertSyncStatus(cloudProviderType.ToString(), timestamp, isSyncEnabled, (int)cloudSyncStatus);
-        }
-
-        public bool DisableSync(CloudProviderType cloudProviderType)
-        {
-            return UpsertSyncStatus(cloudProviderType, 0, false, CloudSyncStatus.None);
-        }
-
-        public bool UpdateSyncTimestamp(CloudProviderType cloudProviderType, long timestamp)
-        {
-            return _shelterVaultSyncStatus.UpdateSyncStatus(cloudProviderType.ToString(), timestamp);
-        }
-
-        public bool UpdateSyncStatus(CloudProviderType cloudProviderType, CloudSyncStatus cloudSyncStatus)
-        {
-            return _shelterVaultSyncStatus.UpdateSyncStatus(cloudProviderType.ToString(), cloudSyncStatus);
+            CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
+            ShelterVaultSyncStatusModel model = _shelterVaultSyncStatus.GetSyncStatus(providerType);
+            return new(model);
         }
     }
 }
