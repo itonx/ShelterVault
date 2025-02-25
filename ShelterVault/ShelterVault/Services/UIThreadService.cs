@@ -1,9 +1,4 @@
-﻿using Microsoft.Azure.Cosmos.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace ShelterVault.Services
 {
@@ -16,7 +11,8 @@ namespace ShelterVault.Services
     {
         public void Execute(Action rutine)
         {
-            AppDispatcher.UIThreadDispatcher?.TryEnqueue(() => {
+            AppDispatcher.UIThreadDispatcher?.TryEnqueue(() =>
+            {
                 rutine.Invoke();
             });
         }

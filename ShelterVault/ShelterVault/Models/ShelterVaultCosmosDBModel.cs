@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
@@ -11,12 +8,14 @@ namespace ShelterVault.Models
         Local,
         CosmosDB
     }
+
     public interface ICosmosDBModel
     {
         public string id { get; set; }
         public string type { get; set; }
         public long version { get; set; }
     }
+
     public record CosmosDBVault
     (
         string id,
@@ -58,10 +57,10 @@ namespace ShelterVault.Models
         public string type { get; set; } = type;
         public long version { get; set; } = version;
         public bool IsNew { get; set; } = false;
-
+#nullable enable
         public virtual bool Equals(CosmosDBSyncModel? other)
         {
-            return id == other?.id && type == other?.type && version == other?.version && source == other?.source;
+            return id == other?.id && type == other?.type && version == other?.version && source == other.source;
         }
 
         public override int GetHashCode()

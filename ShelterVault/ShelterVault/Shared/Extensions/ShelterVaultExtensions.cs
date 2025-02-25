@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Reflection.Metadata;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Windows.ApplicationModel.DataTransfer;
- 
+
 namespace ShelterVault.Shared.Extensions
 {
     public static class ShelterVaultExtensions
@@ -53,6 +55,13 @@ namespace ShelterVault.Shared.Extensions
             data.RequestedOperation = DataPackageOperation.Copy;
             data.SetText(value);
             Clipboard.SetContent(data);
+        }
+
+        public static IEnumerable<string> GetFilesByExtension(this string path, string extension)
+        {
+            return Directory
+                .EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(s => extension.Equals(Path.GetExtension(s).TrimStart('.'), StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

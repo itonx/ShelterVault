@@ -7,17 +7,11 @@ using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
- 
+
 namespace ShelterVault.ViewModels
 {
     internal partial class MainWindowViewModel : ObservableObject
@@ -43,7 +37,6 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private CloudSyncStatus _currentCloudSyncStatus;
 
-        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
         private readonly IShelterVaultThemeService _shelterVaultThemeService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ILanguageService _languageService;
@@ -67,29 +60,28 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void Sync()
         {
-            if(ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
+            if (ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
             {
                 WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(ShelterVaultPage.SETTINGS));
             }
         }
 
-        public MainWindowViewModel(IShelterVaultLocalStorage shelterVaultLocalStorage, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        public MainWindowViewModel(IShelterVault shelterVault, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
-            _shelterVaultLocalStorage = shelterVaultLocalStorage;
             _shelterVaultThemeService = shelterVaultThemeService;
             _shelterVaultStateService = shelterVaultStateService;
             _languageService = languageService;
             _cloudSyncManager = cloudSyncManager;
             _uiThreadService = uiThreadService;
             _weakReferenceInstanceManager = weakReferenceInstanceManager;
-            InitialSetup();
+            InitialSetup(shelterVault);
         }
 
-        private void InitialSetup()
+        private void InitialSetup(IShelterVault shelterVault)
         {
             RegisterMessages();
             CurrentTheme = _shelterVaultThemeService.GetTheme();
-            if (_shelterVaultLocalStorage.DBExists()) ShelterVaultCurrentAppState = ShelterVaultAppState.ConfirmMasterKey;
+            if (shelterVault.AreThereVaults()) ShelterVaultCurrentAppState = ShelterVaultAppState.ConfirmMasterKey;
             ShowLangOptions = true;
             ShowSwitchVault = false;
             SetLangText();
@@ -160,7 +152,7 @@ namespace ShelterVault.ViewModels
 
         private void RefreshSyncStatusInfo()
         {
-            if(ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
+            if (ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
             {
                 CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
                 ShowSync = cloudSyncInformation.HasCloudConfiguration;

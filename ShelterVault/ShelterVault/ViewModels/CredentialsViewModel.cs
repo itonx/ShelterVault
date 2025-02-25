@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
-using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
@@ -11,11 +10,8 @@ using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interfaces;
 using ShelterVault.Shared.Messages;
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {

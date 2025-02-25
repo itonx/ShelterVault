@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ShelterVault.Shared.Extensions;
 using System;
-using System.Text;
- 
+
 namespace ShelterVault.Models
 {
     public class Credentials : ObservableObject
@@ -20,7 +18,16 @@ namespace ShelterVault.Models
 
         public Credentials()
         {
-            
+            UUID = string.Empty;
+            Title = string.Empty;
+            Username = string.Empty;
+            Password = string.Empty;
+            PasswordConfirmation = string.Empty;
+            Iv = string.Empty;
+            Url = string.Empty;
+            Notes = string.Empty;
+            ShelterVaultUuid = string.Empty;
+            Version = 0;
         }
 
         public Credentials(string shelterVaultUuid)
@@ -34,7 +41,7 @@ namespace ShelterVault.Models
             this.UUID = shelterVaultCredentialsModel.UUID;
             this.Title = credentials.Title;
             this.Username = credentials.Username;
-            this.Password  = this.PasswordConfirmation = credentials.Password;
+            this.Password = this.PasswordConfirmation = credentials.Password;
             this.Iv = shelterVaultCredentialsModel.Iv;
             this.Url = credentials.Url;
             this.Notes = credentials.Notes;

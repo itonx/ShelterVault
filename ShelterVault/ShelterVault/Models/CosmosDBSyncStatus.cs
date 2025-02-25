@@ -1,25 +1,16 @@
 ﻿using ShelterVault.Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Models
 {
     public class CosmosDBSyncStatus
     {
-        public CloudSyncStatus CurrentSyncStatus { get; set; } = CloudSyncStatus.None;
-        public bool IsSyncEnabled { get; set; } = false;
+        public CloudSyncStatus CurrentSyncStatus { get; set; }
+        public bool IsSyncEnabled { get; set; }
 
         public CosmosDBSyncStatus()
         {
-            
-        }
-
-        public CosmosDBSyncStatus(CloudSyncStatus currentSyncStatus)
-        {
-            CurrentSyncStatus = currentSyncStatus;
+            CurrentSyncStatus = CloudSyncStatus.None;
+            IsSyncEnabled = false;
         }
 
         public CosmosDBSyncStatus(ShelterVaultSyncStatusModel shelterVaultSyncStatusModel)

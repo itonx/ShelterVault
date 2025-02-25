@@ -6,14 +6,11 @@ using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
-using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
- 
+
 namespace ShelterVault.ViewModels
 {
     internal partial class ConfirmMasterKeyViewModel : ObservableObject
@@ -21,26 +18,28 @@ namespace ShelterVault.ViewModels
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly IDialogService _dialogService;
         private readonly IProgressBarService _progressBarService;
-        private readonly IMasterKeyValidatorManager _masterKeyValidatorManager;
-        private readonly IShelterVaultLocalStorage _shelterVaultLocalStorage;
+        private readonly IShelterVault _shelterVault;
+        private readonly IShelterVaultLocalDb _shelterVaultLocalDb;
         private readonly IUIThreadService _uiThreadService;
         private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
+        private readonly IVaultManager _vaultManager;
 
         [ObservableProperty]
         private List<ShelterVaultModel> _vaults;
         [ObservableProperty]
         private ShelterVaultModel _selectedVault;
 
-        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogService dialogService, IProgressBarService progressBarService, IMasterKeyValidatorManager masterKeyValidatorManager, IShelterVaultLocalStorage shelterVaultLocalStorage, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVault shelterVault, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager, IShelterVaultLocalDb shelterVaultLocalDb, IVaultManager shelterVaultCreatorManager)
         {
             _shelterVaultStateService = shelterVaultStateService;
             _dialogService = dialogService;
             _progressBarService = progressBarService;
-            _masterKeyValidatorManager = masterKeyValidatorManager;
-            _shelterVaultLocalStorage = shelterVaultLocalStorage;
+            _shelterVault = shelterVault;
             _uiThreadService = uiThreadService;
+            _shelterVaultLocalDb = shelterVaultLocalDb;
             _weakReferenceInstanceManager = weakReferenceInstanceManager;
-            Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
+            _vaultManager = shelterVaultCreatorManager;
+            Vaults = shelterVault.GetAllActiveVaults().ToList();
             if (Vaults.Any()) SelectedVault = Vaults.FirstOrDefault();
             RegisterMessages();
         }
@@ -58,9 +57,9 @@ namespace ShelterVault.ViewModels
             try
             {
                 await _progressBarService.Show();
-                if (_masterKeyValidatorManager.IsValid(parameter?.ToString(), SelectedVault))
+                if (_vaultManager.IsValid(parameter?.ToString(), SelectedVault))
                 {
-                    _shelterVaultLocalStorage.SetDbName(SelectedVault.Name);
+                    _shelterVaultLocalDb.SetDbName(SelectedVault.Name);
                     _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
                     WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.NavigationView));
                 }
@@ -77,11 +76,12 @@ namespace ShelterVault.ViewModels
             _weakReferenceInstanceManager.AddInstance(this);
             WeakReferenceMessenger.Default.Register<ConfirmMasterKeyViewModel, RefreshVaultListRequestMessage>(this, (receiver, message) =>
             {
-                _uiThreadService.Execute(() => {
+                _uiThreadService.Execute(() =>
+                {
                     if (message.Value)
                     {
                         string selectedVaultTmp = SelectedVault.UUID;
-                        Vaults = _shelterVaultLocalStorage.GetAllActiveVaults().ToList();
+                        Vaults = _shelterVault.GetAllActiveVaults().ToList();
                         if (Vaults.Any())
                         {
                             SelectedVault = null;
