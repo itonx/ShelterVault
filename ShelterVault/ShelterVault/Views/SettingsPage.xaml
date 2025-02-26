@@ -39,54 +39,57 @@
                         <FontIcon Glyph="&#xE753;" />
                     </toolkit:SettingsExpander.HeaderIcon>
                     <toolkit:SettingsExpander.Items>
-                        <Grid Background="{Binding ElementName=SettingsExpander, Path=Background}">
-                            <Grid MinHeight="100" Margin="57,20">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <RadioButtons
-                                    Header="Cloud providers:"
-                                    ItemsSource="{Binding CloudProviders, Mode=OneWay}"
-                                    SelectedItem="{Binding SelectedCloudProvider, Mode=TwoWay}" />
-                                <StackPanel
-                                    Grid.Column="1"
-                                    Margin="100,20"
-                                    Spacing="10"
-                                    Visibility="{Binding SelectedCloudProvider, Converter={StaticResource CloudProviderTypeToVisibility}, ConverterParameter=1}">
-                                    <TextBlock HorizontalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">Azure configuration</TextBlock>
-                                    <InfoBar
-                                        Title="Sync info:"
-                                        IsClosable="False"
-                                        IsOpen="True"
-                                        Message="This configuration is for the current vault." />
-                                    <TextBox Header="Cosmos Endpoint *" Text="{Binding CosmosEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox Header="Comos Key *" Text="{Binding CosmosKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox Header="Database *" Text="{Binding CosmosDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox Header="Container *" Text="{Binding CosmosContainer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    <StackPanel Spacing="10" Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
-                                        <StackPanel Orientation="Horizontal" Spacing="10">
-                                            <TextBlock>Database throughput:</TextBlock>
-                                            <TextBlock Text="{Binding DatabaseThroughput, Mode=OneWay}" />
+                        <toolkit:SettingsCard>
+                            <toolkit:SettingsCard.Description>
+                                <Grid MinHeight="100" Margin="0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <RadioButtons
+                                        Margin="0,5"
+                                        Header="Cloud providers:"
+                                        ItemsSource="{Binding CloudProviders, Mode=OneWay}"
+                                        SelectedItem="{Binding SelectedCloudProvider, Mode=TwoWay}" />
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin="100,0"
+                                        Spacing="10"
+                                        Visibility="{Binding SelectedCloudProvider, Converter={StaticResource CloudProviderTypeToVisibility}, ConverterParameter=1}">
+                                        <TextBlock HorizontalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">Azure configuration</TextBlock>
+                                        <InfoBar
+                                            Title="Sync info:"
+                                            IsClosable="False"
+                                            IsOpen="True"
+                                            Message="This configuration is for the current vault." />
+                                        <TextBox Header="Cosmos Endpoint *" Text="{Binding CosmosEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox Header="Comos Key *" Text="{Binding CosmosKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox Header="Database *" Text="{Binding CosmosDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox Header="Container *" Text="{Binding CosmosContainer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <StackPanel Spacing="10" Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock>Database throughput:</TextBlock>
+                                                <TextBlock Text="{Binding DatabaseThroughput, Mode=OneWay}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock>Container partition key:</TextBlock>
+                                                <TextBlock Text="{Binding ContainerPartitionKey, Mode=OneWay}" />
+                                            </StackPanel>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Spacing="10">
-                                            <TextBlock>Container partition key:</TextBlock>
-                                            <TextBlock Text="{Binding ContainerPartitionKey, Mode=OneWay}" />
+                                            <Button Width="120" Command="{Binding TestConnectionCommand}">Test connection</Button>
+                                            <Button
+                                                Width="120"
+                                                Command="{Binding SyncVaultsCommand}"
+                                                Style="{ThemeResource AccentButtonStyle}"
+                                                Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
+                                                Synchronize
+                                            </Button>
                                         </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <Button Width="120" Command="{Binding TestConnectionCommand}">Test connection</Button>
-                                        <Button
-                                            Width="120"
-                                            Command="{Binding SyncVaultsCommand}"
-                                            Style="{ThemeResource AccentButtonStyle}"
-                                            Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
-                                            Synchronize
-                                        </Button>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
+                                </Grid>
+                            </toolkit:SettingsCard.Description>
+                        </toolkit:SettingsCard>
                     </toolkit:SettingsExpander.Items>
                 </toolkit:SettingsExpander>
             </StackPanel>
