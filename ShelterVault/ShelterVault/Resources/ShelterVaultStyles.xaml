@@ -46,6 +46,26 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
     <Style
+        x:Key="ShelterVault.AppTitleBar.Buttons"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource ShelterVaultButtonBackgroundTransparent}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+    </Style>
+    <Style x:Key="ShelterVault.AppTitleBar.Buttons.Icon" TargetType="FontIcon">
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+    <Style
+        x:Key="ShelterVault.AppTitleBar.ComboBox"
+        BasedOn="{StaticResource ShelterVaultComboBox}"
+        TargetType="ComboBox">
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{ThemeResource ContentControlFontSize}" />
+    </Style>
+    <Style
         x:Key="ShelterVault.MasterKey.ScrollViewer"
         BasedOn="{StaticResource DefaultScrollViewerStyle}"
         TargetType="ScrollViewer">

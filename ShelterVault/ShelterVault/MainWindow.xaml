@@ -18,9 +18,6 @@
             <behaviors:ShelterVaultThemeBehavior CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}" />
             <behaviors:MaximizeWindowAtStartupBehavior />
         </interactivity:Interaction.Behaviors>
-        <Grid.Resources>
-            <Thickness x:Key="ShelterVaultTitleMargin">50,0,0,0</Thickness>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -48,13 +45,7 @@
                     <interactivity:Interaction.Behaviors>
                         <behaviors:InteractiveAppTitleBarControlBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ComboBox
-                        Width="100"
-                        Height="30"
-                        VerticalAlignment="Center"
-                        FontSize="{ThemeResource ContentControlFontSize}"
-                        Style="{ThemeResource ShelterVaultComboBox}"
-                        Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                    <ComboBox Style="{ThemeResource ShelterVault.AppTitleBar.ComboBox}" Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxChangeLanguageBehavior />
                         </interactivity:Interaction.Behaviors>
@@ -64,51 +55,39 @@
                     <Button
                         x:Name="AppTitleBarSyncButton"
                         Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                        Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
-                        BorderThickness="0"
                         Command="{Binding SyncCommand}"
-                        CornerRadius="0"
+                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
                         Visibility="{Binding ShowSync, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
-                        <Grid>
+                        <Grid ColumnSpacing="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <FontIcon FontSize="14" Glyph="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToGlyphConverter}}" />
-                            <TextBlock
-                                Grid.Column="1"
-                                Margin="5,0,0,0"
-                                Text="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToTextConverter}}" />
+                            <FontIcon Glyph="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToGlyphConverter}}" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
+                            <TextBlock Grid.Column="1" Text="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToTextConverter}}" />
                         </Grid>
                     </Button>
                     <Button
                         x:Name="AppTitleBarSwitchVaultButton"
                         Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                        Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
-                        BorderThickness="0"
                         Command="{Binding SwitchVaultCommand}"
-                        CornerRadius="0"
+                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
                         Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
-                        <Grid>
+                        <Grid ColumnSpacing="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <FontIcon FontSize="14" Glyph="&#xE8AB;" />
-                            <TextBlock
-                                Grid.Column="1"
-                                Margin="5,0,0,0"
-                                Text="{Binding SwitchVaultText, Mode=OneWay}" />
+                            <FontIcon Glyph="&#xE8AB;" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
+                            <TextBlock Grid.Column="1" Text="{Binding SwitchVaultText, Mode=OneWay}" />
                         </Grid>
                     </Button>
                     <Button
                         x:Name="AppTitleBarThemeButton"
                         Width="{Binding ElementName=AppTitleBar, Path=Height}"
                         Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                        Background="{ThemeResource ShelterVaultButtonBackgroundTransparent}"
-                        BorderThickness="0"
                         Command="{Binding ChangeThemeCommand}"
-                        CornerRadius="0">
+                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}">
                         <FontIcon Glyph="{Binding CurrentTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
                     </Button>
                 </StackPanel>
