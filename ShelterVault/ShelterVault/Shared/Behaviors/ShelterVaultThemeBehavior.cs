@@ -1,15 +1,11 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Attributes;
 using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ShelterVault.Shared.Extensions;
+using System;
+using System.Linq;
 
 namespace ShelterVault.Shared.Behaviors
 {

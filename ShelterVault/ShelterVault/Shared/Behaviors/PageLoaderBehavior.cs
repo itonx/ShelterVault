@@ -6,10 +6,7 @@ using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
- 
+
 namespace ShelterVault.Shared.Behaviors
 {
 
@@ -133,10 +130,10 @@ namespace ShelterVault.Shared.Behaviors
             NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
             object lastSelectedItemByTag = this.SelectedItem;
 
-            if(pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted && selectedItem.Tag is CredentialsViewItem credentialTmp && !credentialTmp.SkipPageLoader)
+            if (pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted && selectedItem.Tag is CredentialsViewItem credentialTmp && !credentialTmp.SkipPageLoader)
             {
                 bool discardChanges = await pendingChangesChallenge.DiscardChangesAsync();
-                if(!discardChanges)
+                if (!discardChanges)
                 {
                     NavigationViewItem itemFound = RecursiveLookup(sender.MenuItems, lastSelectedItemByTag, sender.SettingsItem);
                     AssociatedObject.SetValue(PageLoaderBehavior.SkipSelectionProperty, true);
@@ -204,7 +201,7 @@ namespace ShelterVault.Shared.Behaviors
                 {
                     menuItem.IsExpanded = true;
                     menuItem.UpdateLayout();
-                    menuItem.IsExpanded = false; 
+                    menuItem.IsExpanded = false;
                     menuItem.UpdateLayout();
                 }
             }

@@ -1,13 +1,6 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Models;
 using ShelterVault.Shared.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Behaviors
 {
@@ -30,9 +23,9 @@ namespace ShelterVault.Shared.Behaviors
             Frame pageContainer = sender as Frame;
             Page pageRequested = pageContainer.Content as Page;
 
-            if(e.Parameter != null && pageRequested.DataContext is INavigation navigate)
+            if (e.Parameter != null && pageRequested.DataContext is INavigation navigate && e.Parameter is not string)
             {
-                if (e.Parameter is not string) navigate.OnNavigated(e.Parameter);
+                navigate.OnNavigated(e.Parameter);
             }
         }
     }

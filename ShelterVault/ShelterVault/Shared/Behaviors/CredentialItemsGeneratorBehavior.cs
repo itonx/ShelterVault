@@ -2,14 +2,9 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Models;
-using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Views;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Behaviors
 {
@@ -35,13 +30,13 @@ namespace ShelterVault.Shared.Behaviors
             item.MenuItems.Clear();
             foreach (CredentialsViewItem credentialsViewItem in (IList<CredentialsViewItem>)e.NewValue)
             {
-                NavigationViewItem navigationViewItem = new() { Content = credentialsViewItem.Title, Icon = new FontIcon() { Glyph= "\uE72E" }, Tag = credentialsViewItem };
+                NavigationViewItem navigationViewItem = new() { Content = credentialsViewItem.Title, Icon = new FontIcon() { Glyph = "\uE72E" }, Tag = credentialsViewItem };
                 navigationViewItem.SetValue(ToolTipService.ToolTipProperty, credentialsViewItem.Title);
                 navigationViewItem.SetValue(PageLoaderBehavior.PageTypeProperty, typeof(CredentialsPage));
                 item.MenuItems.Add(navigationViewItem);
             }
-            if(item.MenuItems.Count == 0) item.Visibility = Visibility.Collapsed;
-            else if(item.Visibility == Visibility.Collapsed) item.Visibility = Visibility.Visible;
+            if (item.MenuItems.Count == 0) item.Visibility = Visibility.Collapsed;
+            else if (item.Visibility == Visibility.Collapsed) item.Visibility = Visibility.Visible;
             item.IsChildSelected = false;
             item.UpdateLayout();
         }

@@ -1,18 +1,12 @@
 ﻿using Microsoft.UI.Input;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
- 
+
 namespace ShelterVault.Shared.Behaviors
 {
     public class InteractiveAppTitleBarControlBehavior : Behavior<FrameworkElement>
@@ -26,6 +20,7 @@ namespace ShelterVault.Shared.Behaviors
         protected override void OnDetaching()
         {
             base.OnDetaching();
+            AssociatedObject.Loaded -= AssociatedObject_Loaded;
             MainWindow mainWindow = WindowHelper.CurrentMainWindow;
             mainWindow.AppTitleBar.SizeChanged -= AppTitleBar_SizeChanged;
         }
@@ -66,7 +61,7 @@ namespace ShelterVault.Shared.Behaviors
 
         private RectInt32 GetRect(Rect bounds, double scale)
         {
-            return new (
+            return new(
                 _X: (int)Math.Round(bounds.X * scale),
                 _Y: (int)Math.Round(bounds.Y * scale),
                 _Width: (int)Math.Round(bounds.Width * scale),
