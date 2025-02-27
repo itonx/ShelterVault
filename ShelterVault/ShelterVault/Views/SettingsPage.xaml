@@ -9,6 +9,18 @@
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style
+            x:Key="ShelterVault.Settings.ScrollViewer"
+            BasedOn="{StaticResource DefaultScrollViewerStyle}"
+            TargetType="ScrollViewer">
+            <Setter Property="Padding" Value="36,0,36,0" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="UseSystemFocusVisuals" Value="False" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="VerticalScrollMode" Value="Auto" />
+        </Style>
+    </Page.Resources>
 
     <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
@@ -23,17 +35,12 @@
         <ScrollViewer
             x:Name="contentSV"
             Grid.Row="1"
-            Padding="36,0,36,0"
-            IsTabStop="False"
-            UseSystemFocusVisuals="False"
-            VerticalScrollBarVisibility="Auto"
-            VerticalScrollMode="Auto">
+            Style="{StaticResource ShelterVault.Settings.ScrollViewer}">
             <StackPanel Spacing="10">
-                <TextBlock Text="Cloud settings" />
+                <TextBlock x:Uid="CloudSettingsTitle" />
                 <toolkit:SettingsExpander
                     x:Name="SettingsExpander"
-                    Description="Enable cloud synchronization using your own cloud provider"
-                    Header="Cloud sync"
+                    x:Uid="CloudSettingsExpander"
                     IsExpanded="True">
                     <toolkit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE753;" />
@@ -56,35 +63,39 @@
                                         Margin="100,0"
                                         Spacing="10"
                                         Visibility="{Binding SelectedCloudProvider, Converter={StaticResource CloudProviderTypeToVisibility}, ConverterParameter=1}">
-                                        <TextBlock HorizontalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}">Azure configuration</TextBlock>
+                                        <TextBlock
+                                            x:Uid="AzureConfigurationTitle"
+                                            HorizontalAlignment="Center"
+                                            Style="{ThemeResource SubtitleTextBlockStyle}" />
                                         <InfoBar
-                                            Title="Sync info:"
+                                            x:Uid="AzureConfigurationInfoBar"
                                             IsClosable="False"
-                                            IsOpen="True"
-                                            Message="This configuration is for the current vault." />
-                                        <TextBox Header="Cosmos Endpoint *" Text="{Binding CosmosEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        <TextBox Header="Comos Key *" Text="{Binding CosmosKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        <TextBox Header="Database *" Text="{Binding CosmosDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        <TextBox Header="Container *" Text="{Binding CosmosContainer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            IsOpen="True" />
+                                        <TextBox x:Uid="AzureConfigurationEndpoint" Text="{Binding CosmosEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox x:Uid="AzureConfigurationKey" Text="{Binding CosmosKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox x:Uid="AzureConfigurationDatabase" Text="{Binding CosmosDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox x:Uid="AzureConfigurationContainer" Text="{Binding CosmosContainer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <StackPanel Spacing="10" Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
                                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                                <TextBlock>Database throughput:</TextBlock>
+                                                <TextBlock x:Uid="AzureConfigurationThroughput" />
                                                 <TextBlock Text="{Binding DatabaseThroughput, Mode=OneWay}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Spacing="10">
-                                                <TextBlock>Container partition key:</TextBlock>
+                                                <TextBlock x:Uid="AzureConfigurationPartitionKey" />
                                                 <TextBlock Text="{Binding ContainerPartitionKey, Mode=OneWay}" />
                                             </StackPanel>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Spacing="10">
-                                            <Button Width="120" Command="{Binding TestConnectionCommand}">Test connection</Button>
                                             <Button
+                                                x:Uid="AzureConfigurationTest"
+                                                Width="120"
+                                                Command="{Binding TestConnectionCommand}" />
+                                            <Button
+                                                x:Uid="AzureConfigurationSync"
                                                 Width="120"
                                                 Command="{Binding SyncVaultsCommand}"
                                                 Style="{ThemeResource AccentButtonStyle}"
-                                                Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
-                                                Synchronize
-                                            </Button>
+                                                Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>

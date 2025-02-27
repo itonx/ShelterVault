@@ -13,21 +13,16 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto">
-        <StackPanel
-            Width="500"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+    <ScrollViewer Style="{StaticResource ShelterVault.MasterKey.ScrollViewer}">
+        <StackPanel Style="{StaticResource ShelterVault.MasterKey.StackPanel}">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
-            <TextBlock x:Uid="TitleSelectVault" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
-            <Grid>
+            <Grid ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ComboBox
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
+                    x:Uid="TitleSelectVault"
                     DisplayMemberPath="Name"
                     ItemsSource="{Binding Vaults}"
                     SelectedIndex="0"
@@ -37,16 +32,15 @@
                     x:Name="NewVault"
                     x:Uid="NewVaultButton"
                     Grid.Column="1"
-                    Width="{ThemeResource ShelterVaultControlHeight}"
-                    Height="{ThemeResource ShelterVaultControlHeight}"
-                    Margin="5,0,0,0"
                     Command="{Binding NewVaultCommand}"
-                    Style="{ThemeResource AccentButtonStyle}">
+                    Style="{ThemeResource ShelterVault.MasterKey.Button.Add}">
                     <FontIcon FontSize="25" Glyph="&#xF8AA;" />
                 </Button>
             </Grid>
-            <TextBlock x:Uid="TitleMasterKey" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
-            <PasswordBox x:Name="password" Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
+            <PasswordBox
+                x:Name="password"
+                x:Uid="TitleMasterKey"
+                Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:FocusBehavior OnEvent="Loaded" />
                     <behaviors:KeyDownToCommandBehavior

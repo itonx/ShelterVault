@@ -120,25 +120,25 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>ShelterVault</value>
   </data>
-  <data name="TitleSelectVault.Text" xml:space="preserve">
+  <data name="TitleSelectVault.Header" xml:space="preserve">
     <value>Baúl:</value>
   </data>
-  <data name="TitleMasterKey.Text" xml:space="preserve">
+  <data name="TitleMasterKey.Header" xml:space="preserve">
     <value>Llave maestra:</value>
   </data>
   <data name="NewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Nuevo baúl</value>
   </data>
-  <data name="TitleCreateMasterKey.Text" xml:space="preserve">
+  <data name="TitleCreateMasterKey.Header" xml:space="preserve">
     <value>Crear llave maestra:</value>
   </data>
-  <data name="TitleConfirmMasterKey.Text" xml:space="preserve">
+  <data name="TitleConfirmMasterKey.Header" xml:space="preserve">
     <value>Confirmar llave maestra:</value>
   </data>
-  <data name="MasterKeyEncryptionInfo.Text" xml:space="preserve">
+  <data name="MasterKeyEncryptionInfo.Message" xml:space="preserve">
     <value>Tu llave maestra será usada para encriptar tu baúl.</value>
   </data>
-  <data name="TitleVaultName.Text" xml:space="preserve">
+  <data name="TitleVaultName.Header" xml:space="preserve">
     <value>Nombre del baúl:</value>
   </data>
   <data name="PasswordValidation8Chars.Text" xml:space="preserve">
@@ -177,29 +177,23 @@
   <data name="NavigationNewCredentialsItem.Content" xml:space="preserve">
     <value>Nuevas credenciales</value>
   </data>
-  <data name="CredentialsFormTitle.Text" xml:space="preserve">
+  <data name="CredentialsFormTitle.Header" xml:space="preserve">
     <value>Título:</value>
   </data>
-  <data name="CredentialsFormUsername.Text" xml:space="preserve">
+  <data name="CredentialsFormUsername.Header" xml:space="preserve">
     <value>Usuario:</value>
   </data>
-  <data name="CredentialsFormPassword.Text" xml:space="preserve">
+  <data name="CredentialsFormPassword.Header" xml:space="preserve">
     <value>Contraseña:</value>
   </data>
-  <data name="CredentialsFormConfirmPassword.Text" xml:space="preserve">
+  <data name="CredentialsFormConfirmPassword.Header" xml:space="preserve">
     <value>Confirmar contraseña:</value>
   </data>
-  <data name="CredentialsFormNotes.Text" xml:space="preserve">
+  <data name="CredentialsFormNotes.Header" xml:space="preserve">
     <value>Notas:</value>
   </data>
   <data name="CredentialsButtonCancel.Text" xml:space="preserve">
     <value>Cancelar</value>
-  </data>
-  <data name="CredentialsButtonShow.Text" xml:space="preserve">
-    <value>Mostrar</value>
-  </data>
-  <data name="CredentialsButtonHide.Text" xml:space="preserve">
-    <value>Ocultar</value>
   </data>
   <data name="CredentialsButtonCopy.Text" xml:space="preserve">
     <value>Copiar</value>
@@ -207,17 +201,23 @@
   <data name="CredentialsButtonSave.Text" xml:space="preserve">
     <value>Guardar</value>
   </data>
+  <data name="CredentialsButtonShow.Text" xml:space="preserve">
+    <value>Mostrar</value>
+  </data>
+  <data name="CredentialsButtonHide.Text" xml:space="preserve">
+    <value>Ocultar</value>
+  </data>
   <data name="CredentialsButtonDelete.Text" xml:space="preserve">
     <value>Eliminar</value>
   </data>
   <data name="AppBarSwitchVault.Text" xml:space="preserve">
     <value>Cambiar de baúl</value>
   </data>
-  <data name="DialogCloseDefault.Text" xml:space="preserve">
-    <value>Cerrar</value>
-  </data>
   <data name="DialogTitleDefault.Text" xml:space="preserve">
     <value>Atención</value>
+  </data>
+  <data name="DialogCloseDefault.Text" xml:space="preserve">
+    <value>Cerrar</value>
   </data>
   <data name="DialogWrongMasterKey.Text" xml:space="preserve">
     <value>La llave maestra es incorrecta.</value>
@@ -270,17 +270,17 @@
   <data name="DialogCosmosDBSyncError.Text" xml:space="preserve">
     <value>No se pudo completar la sincronización</value>
   </data>
-  <data name="SyncUpToDate.Text" xml:space="preserve">
-    <value>Actualizado</value>
-  </data>
-  <data name="SyncFailed.Text" xml:space="preserve">
-    <value>Error de sincronización</value>
+  <data name="SyncPendingConfiguration.Text" xml:space="preserve">
+    <value>Sincronización pendiente</value>
   </data>
   <data name="SyncInProgress.Text" xml:space="preserve">
     <value>Sincronizando</value>
   </data>
-  <data name="SyncPendingConfiguration.Text" xml:space="preserve">
-    <value>Sincronización pendiente</value>
+  <data name="SyncFailed.Text" xml:space="preserve">
+    <value>Error de sincronización</value>
+  </data>
+  <data name="SyncUpToDate.Text" xml:space="preserve">
+    <value>Actualizado</value>
   </data>
   <data name="DialogCredentialsRemovedFromCloud.Text" xml:space="preserve">
     <value>Estas credenciales fueron eliminadas en la nube. Serás redirigido a la pagina de inicio.</value>
@@ -296,5 +296,47 @@
   </data>
   <data name="SaveVault.Content" xml:space="preserve">
     <value>Guardar</value>
+  </data>
+  <data name="CredentialsUrl.Header" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="CloudSettingsTitle.Text" xml:space="preserve">
+    <value>Configuración en la nube</value>
+  </data>
+  <data name="CloudSettingsExpander.Header" xml:space="preserve">
+    <value>Sincronización en la nube</value>
+  </data>
+  <data name="CloudSettingsExpander.Description" xml:space="preserve">
+    <value>Habilita la sincronización en la nube usando tus recursos</value>
+  </data>
+  <data name="AzureConfigurationTitle.Text" xml:space="preserve">
+    <value>Configuración de Azure</value>
+  </data>
+  <data name="AzureConfigurationInfoBar.Message" xml:space="preserve">
+    <value>Esta configuración es para el baúl actual</value>
+  </data>
+  <data name="AzureConfigurationEndpoint.Header" xml:space="preserve">
+    <value>CosmosDB Endpoint *</value>
+  </data>
+  <data name="AzureConfigurationKey.Header" xml:space="preserve">
+    <value>CosmosDB Key *</value>
+  </data>
+  <data name="AzureConfigurationDatabase.Header" xml:space="preserve">
+    <value>Base de datos *</value>
+  </data>
+  <data name="AzureConfigurationContainer.Header" xml:space="preserve">
+    <value>Contenedor *</value>
+  </data>
+  <data name="AzureConfigurationTest.Content" xml:space="preserve">
+    <value>Probar conexión</value>
+  </data>
+  <data name="AzureConfigurationSync.Content" xml:space="preserve">
+    <value>Sincronizar</value>
+  </data>
+  <data name="AzureConfigurationThroughput.Text" xml:space="preserve">
+    <value>Base de datos RU/s:</value>
+  </data>
+  <data name="AzureConfigurationPartitionKey.Text" xml:space="preserve">
+    <value>Llave de partición del contenedor:</value>
   </data>
 </root>

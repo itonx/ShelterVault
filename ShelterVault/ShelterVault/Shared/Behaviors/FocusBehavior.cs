@@ -1,12 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace ShelterVault.Shared.Behaviors
 {
@@ -28,8 +22,9 @@ namespace ShelterVault.Shared.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
+            if (OnEvent == null) return;
             EventInfo eventInfo = AssociatedObject.GetType().GetEvent(OnEvent);
-            if(eventInfo != null) eventInfo.AddEventHandler(AssociatedObject, (RoutedEventHandler)Control_Loaded);
+            if (eventInfo != null) eventInfo.AddEventHandler(AssociatedObject, (RoutedEventHandler)Control_Loaded);
         }
 
         protected override void OnDetaching()

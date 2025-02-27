@@ -12,57 +12,48 @@
     xmlns:viewmodels="using:ShelterVault.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto">
-        <StackPanel
-            Width="500"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+    <ScrollViewer Style="{StaticResource ShelterVault.MasterKey.ScrollViewer}">
+        <StackPanel Style="{StaticResource ShelterVault.MasterKey.StackPanel}">
             <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
-            <TextBlock x:Uid="TitleVaultName" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
-            <TextBox Style="{ThemeResource ShelterVaulTextBoxStyle}" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <InfoBar
+                x:Uid="MasterKeyEncryptionInfo"
+                IsClosable="False"
+                IsOpen="True"
+                Severity="Informational" />
+            <TextBox
+                x:Uid="TitleVaultName"
+                Style="{ThemeResource ShelterVaul.MasterKey.TextBox}"
+                Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:FocusBehavior OnEvent="Loaded" />
                 </interactivity:Interaction.Behaviors>
             </TextBox>
-            <TextBlock x:Uid="TitleCreateMasterKey" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
             <PasswordBox
                 x:Name="password"
+                x:Uid="TitleCreateMasterKey"
                 Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
+                Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:ExecuteCommandOnPasswordChangedBehavior Command="{Binding PasswordRequirementsVM.PasswordChangedCommand, Mode=OneTime}" />
                     <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
-            <TextBlock x:Uid="TitleConfirmMasterKey" Style="{ThemeResource ShelterVaultTitlePasswordBoxStyle}" />
             <PasswordBox
                 x:Name="passwordConfirmation"
+                x:Uid="TitleConfirmMasterKey"
                 Password="{Binding PasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Style="{ThemeResource ShelterVaultPasswordBoxStyle}">
+                Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
             <local:PasswordConfirmationView DataContext="{Binding PasswordRequirementsVM}" />
-            <StackPanel Margin="0,15" Orientation="Horizontal">
-                <FontIcon
-                    FontSize="12"
-                    Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"
-                    Glyph="&#xF167;" />
-                <TextBlock
-                    x:Uid="MasterKeyEncryptionInfo"
-                    Margin="8,0,0,0"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-            <Grid Margin="0,15">
-                <TextBlock
-                    Grid.Column="1"
-                    FontSize="15"
-                    Foreground="{ThemeResource ShelterVaultForeground}"
-                    Style="{ThemeResource ShelterVaultTextBlockStyle}"
-                    Text="{Binding DefaultPath}" />
-            </Grid>
-            <Grid Margin="0,15" ColumnSpacing="10">
+            <TextBlock
+                Grid.Column="1"
+                FontSize="15"
+                Style="{ThemeResource ShelterVaultTextBlockStyle}"
+                Text="{Binding DefaultPath}" />
+            <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -70,18 +61,14 @@
                 <Button
                     x:Uid="CancelVault"
                     Grid.Column="0"
-                    Height="{ThemeResource ShelterVaultControlHeight}"
-                    HorizontalAlignment="Stretch"
                     Command="{Binding CancelCommand}"
-                    Style="{ThemeResource DefaultButtonStyle}"
+                    Style="{ThemeResource ShelterVault.MasterKey.Buttons.Cancel}"
                     Visibility="{Binding ShowCancel, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}" />
                 <Button
                     x:Uid="SaveVault"
                     Grid.Column="1"
-                    Height="{ThemeResource ShelterVaultControlHeight}"
-                    HorizontalAlignment="Stretch"
-                    Command="{Binding CreateMasterKey}"
-                    Style="{ThemeResource AccentButtonStyle}" />
+                    Command="{Binding CreateMasterKeyCommand}"
+                    Style="{ThemeResource ShelterVault.MasterKey.Buttons.Save}" />
             </Grid>
         </StackPanel>
     </ScrollViewer>
