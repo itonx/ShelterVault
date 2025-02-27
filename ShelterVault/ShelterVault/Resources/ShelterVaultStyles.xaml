@@ -18,24 +18,6 @@
         <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
     </Style>
     <Style
-        x:Key="ShelterVaulTextBoxStyle"
-        BasedOn="{StaticResource DefaultTextBoxStyle}"
-        TargetType="TextBox">
-        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
-        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
-        <Setter Property="Margin" Value="0,0,0,15" />
-    </Style>
-    <Style
-        x:Key="ShelterVaultPasswordBoxStyle"
-        BasedOn="{StaticResource DefaultPasswordBoxStyle}"
-        TargetType="PasswordBox">
-        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
-        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
-        <Setter Property="IsPasswordRevealButtonEnabled" Value="False" />
-        <Setter Property="Margin" Value="0,0,0,15" />
-        <Setter Property="MaxLength" Value="32" />
-    </Style>
-    <Style
         x:Key="ShelterVaultTextBlockStyle"
         BasedOn="{StaticResource TitleTextBlockStyle}"
         TargetType="TextBlock">
@@ -50,7 +32,6 @@
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="FontFamily" Value="Cascadia Mono" />
         <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="Margin" Value="0,0,0,10" />
     </Style>
     <Style
         x:Key="ShelterVaultContentDialog"
@@ -61,8 +42,94 @@
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="ComboBox">
         <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
-        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
         <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
-
+    <Style
+        x:Key="ShelterVault.MasterKey.ScrollViewer"
+        BasedOn="{StaticResource DefaultScrollViewerStyle}"
+        TargetType="ScrollViewer">
+        <Setter Property="Margin" Value="0,50,0,0" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+    </Style>
+    <Style x:Key="ShelterVault.MasterKey.StackPanel" TargetType="StackPanel">
+        <Setter Property="Width" Value="500" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Spacing" Value="15" />
+    </Style>
+    <Style
+        x:Key="ShelterVault.MasterKey.Button.Add"
+        BasedOn="{StaticResource AccentButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="Width" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="FontSize" Value="25" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+    </Style>
+    <Style
+        x:Key="ShelterVault.MasterKey.Buttons.Cancel"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="FontSize" Value="{StaticResource TitleTextBlockFontSize}" />
+    </Style>
+    <Style
+        x:Key="ShelterVault.MasterKey.Buttons.Save"
+        BasedOn="{StaticResource AccentButtonStyle}"
+        TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="FontSize" Value="{StaticResource TitleTextBlockFontSize}" />
+    </Style>
+    <Style
+        x:Key="ShelterVaul.MasterKey.TextBox"
+        BasedOn="{StaticResource DefaultTextBoxStyle}"
+        TargetType="TextBox">
+        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+    </Style>
+    <Style
+        x:Key="ShelterVault.MasterKey.PasswordBox"
+        BasedOn="{StaticResource DefaultPasswordBoxStyle}"
+        TargetType="PasswordBox">
+        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+        <Setter Property="IsPasswordRevealButtonEnabled" Value="False" />
+        <Setter Property="MaxLength" Value="32" />
+    </Style>
+    <Style
+        x:Key="ShelterVault.Credentials.Buttons"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Width" Value="100" />
+    </Style>
+    <Style x:Key="ShelterVault.Credentials.Buttons.StackPanel" TargetType="StackPanel">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="Spacing" Value="5" />
+    </Style>
+    <Style x:Key="ShelterVault.PasswordConfirmation.StackPanel" TargetType="StackPanel">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="Spacing" Value="10" />
+    </Style>
+    <Style x:Key="ShelterVault.PasswordConfirmation.Icon.Error" TargetType="FontIcon">
+        <Setter Property="Foreground" Value="Red" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Glyph" Value="&#xEDAE;" />
+    </Style>
+    <Style x:Key="ShelterVault.PasswordConfirmation.Icon.OK" TargetType="FontIcon">
+        <Setter Property="Foreground" Value="ForestGreen" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Glyph" Value="&#xE73E;" />
+    </Style>
+    <Style x:Key="ShelterVault.NavigationView.NavigationView" TargetType="NavigationView">
+        <Setter Property="AlwaysShowHeader" Value="True" />
+        <Setter Property="Header" Value=" " />
+        <Setter Property="IsBackButtonVisible" Value="Collapsed" />
+        <Setter Property="IsBackEnabled" Value="False" />
+        <Setter Property="IsSettingsVisible" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="PaneDisplayMode" Value="Left" />
+        <Setter Property="CompactPaneLength" Value="50" />
+        <Setter Property="OpenPaneLength" Value="280" />
+    </Style>
 </ResourceDictionary>

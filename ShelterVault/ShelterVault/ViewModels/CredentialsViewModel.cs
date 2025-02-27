@@ -79,6 +79,12 @@ namespace ShelterVault.ViewModels
         }
 
         [RelayCommand]
+        private void CopyID()
+        {
+            SelectedCredential.UUID.SendToClipboard();
+        }
+
+        [RelayCommand]
         private async Task CancelCredential()
         {
             if (!await DiscardChangesAsync(completeChallenge: true)) return;

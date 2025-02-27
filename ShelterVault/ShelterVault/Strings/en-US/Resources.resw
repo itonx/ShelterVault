@@ -120,25 +120,25 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>ShelterVault</value>
   </data>
-  <data name="TitleSelectVault.Text" xml:space="preserve">
+  <data name="TitleSelectVault.Header" xml:space="preserve">
     <value>Vault:</value>
   </data>
-  <data name="TitleMasterKey.Text" xml:space="preserve">
+  <data name="TitleMasterKey.Header" xml:space="preserve">
     <value>Master key:</value>
   </data>
   <data name="NewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>New vault</value>
   </data>
-  <data name="TitleCreateMasterKey.Text" xml:space="preserve">
+  <data name="TitleCreateMasterKey.Header" xml:space="preserve">
     <value>Create master key:</value>
   </data>
-  <data name="TitleConfirmMasterKey.Text" xml:space="preserve">
+  <data name="TitleConfirmMasterKey.Header" xml:space="preserve">
     <value>Confirm master key:</value>
   </data>
-  <data name="MasterKeyEncryptionInfo.Text" xml:space="preserve">
+  <data name="MasterKeyEncryptionInfo.Message" xml:space="preserve">
     <value>Your master key will be used to encrypt your vault.</value>
   </data>
-  <data name="TitleVaultName.Text" xml:space="preserve">
+  <data name="TitleVaultName.Header" xml:space="preserve">
     <value>Vault name:</value>
   </data>
   <data name="PasswordValidation8Chars.Text" xml:space="preserve">
@@ -177,19 +177,19 @@
   <data name="NavigationNewCredentialsItem.Content" xml:space="preserve">
     <value>New credentials</value>
   </data>
-  <data name="CredentialsFormTitle.Text" xml:space="preserve">
+  <data name="CredentialsFormTitle.Header" xml:space="preserve">
     <value>Title:</value>
   </data>
-  <data name="CredentialsFormUsername.Text" xml:space="preserve">
+  <data name="CredentialsFormUsername.Header" xml:space="preserve">
     <value>Username:</value>
   </data>
-  <data name="CredentialsFormPassword.Text" xml:space="preserve">
+  <data name="CredentialsFormPassword.Header" xml:space="preserve">
     <value>Password:</value>
   </data>
-  <data name="CredentialsFormConfirmPassword.Text" xml:space="preserve">
+  <data name="CredentialsFormConfirmPassword.Header" xml:space="preserve">
     <value>Confirm password:</value>
   </data>
-  <data name="CredentialsFormNotes.Text" xml:space="preserve">
+  <data name="CredentialsFormNotes.Header" xml:space="preserve">
     <value>Notes:</value>
   </data>
   <data name="CredentialsButtonCancel.Text" xml:space="preserve">
@@ -296,5 +296,47 @@
   </data>
   <data name="SaveVault.Content" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="CredentialsUrl.Header" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="CloudSettingsTitle.Text" xml:space="preserve">
+    <value>Cloud settings</value>
+  </data>
+  <data name="CloudSettingsExpander.Header" xml:space="preserve">
+    <value>Cloud sync</value>
+  </data>
+  <data name="CloudSettingsExpander.Description" xml:space="preserve">
+    <value>Enable cloud synchronization using your own resources</value>
+  </data>
+  <data name="AzureConfigurationTitle.Text" xml:space="preserve">
+    <value>Azure configuration</value>
+  </data>
+  <data name="AzureConfigurationInfoBar.Message" xml:space="preserve">
+    <value>This configuration is for the current vault</value>
+  </data>
+  <data name="AzureConfigurationEndpoint.Header" xml:space="preserve">
+    <value>CosmosDB Endpoint *</value>
+  </data>
+  <data name="AzureConfigurationKey.Header" xml:space="preserve">
+    <value>CosmosDB Key *</value>
+  </data>
+  <data name="AzureConfigurationDatabase.Header" xml:space="preserve">
+    <value>Database *</value>
+  </data>
+  <data name="AzureConfigurationContainer.Header" xml:space="preserve">
+    <value>Container *</value>
+  </data>
+  <data name="AzureConfigurationTest.Content" xml:space="preserve">
+    <value>Test connection</value>
+  </data>
+  <data name="AzureConfigurationSync.Content" xml:space="preserve">
+    <value>Synchronize</value>
+  </data>
+  <data name="AzureConfigurationThroughput.Text" xml:space="preserve">
+    <value>Database RU/s:</value>
+  </data>
+  <data name="AzureConfigurationPartitionKey.Text" xml:space="preserve">
+    <value>Container partition key:</value>
   </data>
 </root>
