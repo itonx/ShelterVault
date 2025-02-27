@@ -5,20 +5,16 @@ using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Helpers;
-using ShelterVault.Shared.Interop;
 using ShelterVault.Shared.Messages;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Storage;
 
 namespace ShelterVault.Shared.Behaviors
 {
-    internal class ComboBoxChangeLanguageBehavior : Behavior<ComboBox>
+    public class ComboBoxChangeLanguageBehavior : Behavior<ComboBox>
     {
         protected override void OnAttached()
         {
@@ -27,9 +23,15 @@ namespace ShelterVault.Shared.Behaviors
             AssociatedObject.SelectionChanged += AssociatedObject_SelectionChanged;
         }
 
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.Loaded -= AssociatedObject_Loaded;
+            AssociatedObject.SelectionChanged -= AssociatedObject_SelectionChanged;
+        }
+
         private void AssociatedObject_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            AssociatedObject.Loaded -= AssociatedObject_Loaded;
             SetDefaultLanguage();
             AssociatedObject.IsDropDownOpen = true;
             string settingsLang = GetLanguageFromSettings().GetAttribute<DescriptionAttribute>().Description;
@@ -66,8 +68,9 @@ namespace ShelterVault.Shared.Behaviors
             return (ShelterVaultLang)shelterVaultLangObj;
         }
 
-        private void SaveLanguageSettings(ShelterVaultLang shelterVaultLang)
+        private void SaveLanguageSettings(ShelterVaultLang? shelterVaultLang)
         {
+            if (shelterVaultLang == null) return;
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             localSettings.Values[ShelterVaultConstants.SETTINGS_LANG_KEY] = shelterVaultLang.ToString();
         }
@@ -75,14 +78,9 @@ namespace ShelterVault.Shared.Behaviors
         private void SaveLanguageSettings(string shelterVaultLang)
         {
             if (shelterVaultLang == null) return;
-            foreach (ShelterVaultLang shelterVaultLangValue in Enum.GetValues(typeof(ShelterVaultLang)))
-            {
-                if (shelterVaultLang.Equals(shelterVaultLangValue.GetAttribute<DescriptionAttribute>().Description))
-                {
-                    SaveLanguageSettings(shelterVaultLangValue);
-                    break;
-                }
-            }
+            ShelterVaultLang? langSetting = Enum.GetValues(typeof(ShelterVaultLang?)).OfType<ShelterVaultLang?>().FirstOrDefault(l => l.GetAttribute<DescriptionAttribute>().Description.Equals(shelterVaultLang));
+            if (langSetting == null) return;
+            SaveLanguageSettings(langSetting);
         }
 
         private void SetDefaultLanguage()
@@ -94,12 +92,12 @@ namespace ShelterVault.Shared.Behaviors
 
             string defaultLangOverride = Microsoft.Windows.Globalization.ApplicationLanguages.Languages.FirstOrDefault();
 
-            if(ExistsInAppManifest(defaultLangOverride))
+            if (ExistsInAppManifest(defaultLangOverride))
             {
                 SaveLanguageSettings(defaultLangOverride);
                 return;
             }
-            
+
             SaveLanguageSettings(ShelterVaultLang.English);
         }
 

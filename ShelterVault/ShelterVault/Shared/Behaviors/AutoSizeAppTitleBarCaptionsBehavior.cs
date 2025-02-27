@@ -4,10 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Shared.Behaviors
 {
@@ -18,6 +15,13 @@ namespace ShelterVault.Shared.Behaviors
             base.OnAttached();
             AssociatedObject.Loaded += AssociatedObject_Loaded;
             AssociatedObject.SizeChanged += AssociatedObject_SizeChanged;
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.Loaded -= AssociatedObject_Loaded;
+            AssociatedObject.SizeChanged -= AssociatedObject_SizeChanged;
         }
 
         private void AssociatedObject_SizeChanged(object sender, SizeChangedEventArgs e)

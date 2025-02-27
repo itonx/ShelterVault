@@ -1,11 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.System;
 
@@ -56,6 +50,12 @@ namespace ShelterVault.Shared.Behaviors
         {
             base.OnAttached();
             AssociatedObject.KeyDown += AssociatedObject_KeyDown;
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.KeyDown -= AssociatedObject_KeyDown;
         }
 
         private void AssociatedObject_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)

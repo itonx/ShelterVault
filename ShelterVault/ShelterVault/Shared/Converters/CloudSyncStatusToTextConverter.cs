@@ -1,18 +1,13 @@
 ﻿using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml;
-using ShelterVault.Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ShelterVault.Services;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Extensions;
+using System;
 using System.ComponentModel;
 
 namespace ShelterVault.Shared.Converters
 {
-    internal class CloudSyncStatusToTextConverter : IValueConverter
+    public class CloudSyncStatusToTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
