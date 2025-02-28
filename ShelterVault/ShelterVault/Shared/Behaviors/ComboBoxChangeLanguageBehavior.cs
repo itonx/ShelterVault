@@ -7,6 +7,7 @@ using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Helpers;
 using ShelterVault.Shared.Messages;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Windows.ApplicationModel.Resources.Core;
@@ -68,9 +69,8 @@ namespace ShelterVault.Shared.Behaviors
             return (ShelterVaultLang)shelterVaultLangObj;
         }
 
-        private void SaveLanguageSettings(ShelterVaultLang? shelterVaultLang)
+        private void SaveLanguageSettings(ShelterVaultLang shelterVaultLang)
         {
-            if (shelterVaultLang == null) return;
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             localSettings.Values[ShelterVaultConstants.SETTINGS_LANG_KEY] = shelterVaultLang.ToString();
         }
@@ -78,8 +78,8 @@ namespace ShelterVault.Shared.Behaviors
         private void SaveLanguageSettings(string shelterVaultLang)
         {
             if (shelterVaultLang == null) return;
-            ShelterVaultLang? langSetting = Enum.GetValues(typeof(ShelterVaultLang?)).OfType<ShelterVaultLang?>().FirstOrDefault(l => l.GetAttribute<DescriptionAttribute>().Description.Equals(shelterVaultLang));
-            if (langSetting == null) return;
+            IEnumerable<ShelterVaultLang> languagesAvailable = Enum.GetValues(typeof(ShelterVaultLang)).OfType<ShelterVaultLang>();
+            ShelterVaultLang langSetting = languagesAvailable.FirstOrDefault(l => l.GetAttribute<DescriptionAttribute>().Description.Equals(shelterVaultLang));
             SaveLanguageSettings(langSetting);
         }
 

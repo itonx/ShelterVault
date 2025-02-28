@@ -170,7 +170,7 @@ namespace ShelterVault.Shared.Behaviors
             foreach (var item in menuItems)
             {
                 NavigationViewItem navItem = item as NavigationViewItem;
-                bool found = AreTagEqual(navItem, tag);
+                bool found = AreTagsEqual(navItem, tag);
                 if (found) return navItem;
                 if (navItem.MenuItems.Count > 0) return RecursiveLookup(navItem.MenuItems, tag, settingsItem);
             }
@@ -178,7 +178,7 @@ namespace ShelterVault.Shared.Behaviors
             return null;
         }
 
-        private static bool AreTagEqual(NavigationViewItem item, object tag)
+        private static bool AreTagsEqual(NavigationViewItem item, object tag)
         {
             if (item.Tag is string && tag is string && item.Tag.Equals(tag.ToString()))
             {
