@@ -130,7 +130,7 @@ namespace ShelterVault.Shared.Behaviors
             NavigationViewItem selectedItem = (NavigationViewItem)args.SelectedItem;
             object lastSelectedItemByTag = this.SelectedItem;
 
-            if (pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted && selectedItem.Tag is CredentialsViewItem credentialTmp && !credentialTmp.SkipPageLoader)
+            if (pageContainer.Content is Page page && page.DataContext is IPendingChangesChallenge pendingChangesChallenge && !pendingChangesChallenge.ChallengeCompleted && ((selectedItem.Tag is CredentialsViewItem credentialTmp && !credentialTmp.SkipPageLoader) || (selectedItem.Tag is string)))
             {
                 bool discardChanges = await pendingChangesChallenge.DiscardChangesAsync();
                 if (!discardChanges)
