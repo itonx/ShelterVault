@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Foreground="{ThemeResource ShelterVaultForeground}"
     mc:Ignorable="d">
     <Page.Resources>
         <Style
@@ -42,8 +43,14 @@
                     x:Name="SettingsExpander"
                     x:Uid="CloudSettingsExpander"
                     IsExpanded="True">
+                    <toolkit:SettingsExpander.Header>
+                        <TextBlock
+                            x:Uid="CloudSettingsExpanderTitle"
+                            Foreground="{ThemeResource ShelterVaultForeground}"
+                            Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                    </toolkit:SettingsExpander.Header>
                     <toolkit:SettingsExpander.HeaderIcon>
-                        <FontIcon Glyph="&#xE753;" />
+                        <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xE753;" />
                     </toolkit:SettingsExpander.HeaderIcon>
                     <toolkit:SettingsExpander.Items>
                         <toolkit:SettingsCard>
@@ -54,8 +61,8 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <RadioButtons
+                                        x:Uid="CloudConfigProviders"
                                         Margin="0,5"
-                                        Header="Cloud providers:"
                                         ItemsSource="{Binding CloudProviders, Mode=OneWay}"
                                         SelectedItem="{Binding SelectedCloudProvider, Mode=TwoWay}" />
                                     <StackPanel
@@ -66,9 +73,11 @@
                                         <TextBlock
                                             x:Uid="AzureConfigurationTitle"
                                             HorizontalAlignment="Center"
+                                            Foreground="{ThemeResource ShelterVaultForeground}"
                                             Style="{ThemeResource SubtitleTextBlockStyle}" />
                                         <InfoBar
                                             x:Uid="AzureConfigurationInfoBar"
+                                            Foreground="{ThemeResource TextFillColorPrimary}"
                                             IsClosable="False"
                                             IsOpen="True" />
                                         <TextBox x:Uid="AzureConfigurationEndpoint" Text="{Binding CosmosEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

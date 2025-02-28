@@ -60,6 +60,7 @@
         x:Key="ShelterVault.AppTitleBar.ComboBox"
         BasedOn="{StaticResource ShelterVaultComboBox}"
         TargetType="ComboBox">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Width" Value="100" />
         <Setter Property="Height" Value="30" />
         <Setter Property="VerticalAlignment" Value="Center" />

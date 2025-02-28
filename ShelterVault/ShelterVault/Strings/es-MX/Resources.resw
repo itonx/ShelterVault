@@ -303,7 +303,7 @@
   <data name="CloudSettingsTitle.Text" xml:space="preserve">
     <value>Configuración en la nube</value>
   </data>
-  <data name="CloudSettingsExpander.Header" xml:space="preserve">
+  <data name="CloudSettingsExpanderTitle.Text" xml:space="preserve">
     <value>Sincronización en la nube</value>
   </data>
   <data name="CloudSettingsExpander.Description" xml:space="preserve">
@@ -338,5 +338,8 @@
   </data>
   <data name="AzureConfigurationPartitionKey.Text" xml:space="preserve">
     <value>Llave de partición del contenedor:</value>
+  </data>
+  <data name="CloudConfigProviders.Header" xml:space="preserve">
+    <value>Proveedor de nube:</value>
   </data>
 </root>

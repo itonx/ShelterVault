@@ -5,6 +5,11 @@
         <ResourceDictionary x:Key="Dark">
             <!--  Override ShelterVault styles  -->
             <Color x:Key="ShelterVaultMainForeground">#00FF05</Color>
+            <Color x:Key="TextFillColorPrimary">#00FF05</Color>
+            <Color x:Key="TextFillColorSecondaryBrush">#00FF05</Color>
+            <Color x:Key="ExpanderChevronForeground">#00FF05</Color>
+            <Color x:Key="ExpanderChevronPointerOverForeground">#00FF05</Color>
+            <Color x:Key="InfoBarInformationalSeverityIconBackground">#00FF05</Color>
             <SolidColorBrush x:Key="ShelterVaultCredentialsButtonCancelIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ShelterVaultCredentialsButtonCopyIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ShelterVaultCredentialsButtonShowIconForeground" Color="{StaticResource ShelterVaultMainForeground}" />
@@ -46,6 +51,7 @@
             <SolidColorBrush x:Key="TextBoxForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="TextControlForegroundFocused" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="TextControlButtonForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="TextControlHeaderForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="TextControlButtonForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
@@ -98,20 +104,44 @@
             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="{StaticResource ShelterVaultMainForeground}" />
 
-            <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxForegroundFocusedPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundFocused" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxPlaceholderForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxPlaceholderForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+
+            <SolidColorBrush x:Key="ComboBoxHeaderForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundFocused" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundFocusedPressed" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPressed" Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPointerOver" Color="{StaticResource ShelterVaultMainForeground}" />
-
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedUnfocused" Color="{StaticResource ShelterVaultMainForeground}" />
             <StaticResource x:Key="ComboBoxItemPillFillBrush" ResourceKey="ShelterVaultMainForeground" />
+
+            <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="NavigationViewItemForegroundPointerOver" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="NavigationViewItemForegroundSelected" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="NavigationViewItemForegroundSelectedPointerOver" ResourceKey="ShelterVaultMainForeground" />
             <StaticResource x:Key="NavigationViewSelectionIndicatorForeground" ResourceKey="ShelterVaultMainForeground" />
+
+            <StaticResource x:Key="RadioButtonForeground" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonForegroundPointerOver" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonOuterEllipseCheckedFill" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonOuterEllipseCheckedFillPointerOver" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonOuterEllipseCheckedStroke" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonOuterEllipseCheckedStrokePointerOver" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonsHeaderForeground" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonOuterEllipseStroke" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="RadioButtonOuterEllipseStrokePointerOver" ResourceKey="ShelterVaultMainForeground" />
 
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
