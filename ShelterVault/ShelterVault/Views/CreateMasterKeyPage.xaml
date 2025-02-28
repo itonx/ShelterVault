@@ -12,11 +12,13 @@
     xmlns:viewmodels="using:ShelterVault.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <ScrollViewer Style="{StaticResource ShelterVault.MasterKey.ScrollViewer}">
+    <ScrollViewer Margin="0,20" Style="{StaticResource ShelterVault.MasterKey.ScrollViewer}">
         <StackPanel Style="{StaticResource ShelterVault.MasterKey.StackPanel}">
-            <TextBlock Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+            <TextBlock FontSize="15" Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
             <InfoBar
                 x:Uid="MasterKeyEncryptionInfo"
+                HorizontalAlignment="Center"
+                Foreground="{ThemeResource ShelterVaultForeground}"
                 IsClosable="False"
                 IsOpen="True"
                 Severity="Informational" />
