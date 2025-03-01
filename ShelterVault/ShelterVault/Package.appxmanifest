@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="446da4ae-09fa-440c-acba-0aef4d88a1fc"
-    Publisher="CN=Ayrton"
+    Name="itonx.ShelterVault"
+    Publisher="CN=91492E87-C14D-4CB0-8B89-08C89D66F75E"
     Version="1.0.1.0" />
 
-  <mp:PhoneIdentity PhoneProductId="446da4ae-09fa-440c-acba-0aef4d88a1fc" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="b938f999-69e5-441a-b75b-3d55e0eb0fea" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>ShelterVault (Package)</DisplayName>
-    <PublisherDisplayName>Ayrton E.</PublisherDisplayName>
+    <DisplayName>ShelterVault</DisplayName>
+    <PublisherDisplayName>itonx</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
