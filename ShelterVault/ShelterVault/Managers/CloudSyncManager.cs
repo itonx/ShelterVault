@@ -12,7 +12,7 @@ namespace ShelterVault.Managers
 {
     public interface ICloudSyncManager
     {
-        Task<bool> UpsertItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
+        Task<bool> UpsertItemAsync<T>(T shelterVaultModel, bool validateItem = false) where T : IShelterVaultLocalModel;
         Task DeleteItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
         Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
         Task SyncVaults();
@@ -26,14 +26,16 @@ namespace ShelterVault.Managers
         private readonly IShelterVault _shelterVault;
         private readonly IShelterVaultSyncStatus _shelterVaultSyncStatus;
         private readonly ILogger<CloudSyncManager> _logger;
+        public readonly IShelterVaultStateService _shelterVaultStateService;
 
-        public CloudSyncManager(IShelterVaultCosmosDBService shelterVaultCosmosDBService, ICloudProviderManager cloudProviderManager, IShelterVault shelterVault, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<CloudSyncManager> logger)
+        public CloudSyncManager(IShelterVaultCosmosDBService shelterVaultCosmosDBService, ICloudProviderManager cloudProviderManager, IShelterVault shelterVault, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<CloudSyncManager> logger, IShelterVaultStateService shelterVaultStateService)
         {
             _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
             _cloudProviderManager = cloudProviderManager;
             _shelterVault = shelterVault;
             _shelterVaultSyncStatus = shelterVaultSyncStatus;
             _logger = logger;
+            _shelterVaultStateService = shelterVaultStateService;
         }
 
         public async Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
@@ -61,7 +63,7 @@ namespace ShelterVault.Managers
             }
         }
 
-        public async Task<bool> UpsertItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
+        public async Task<bool> UpsertItemAsync<T>(T shelterVaultModel, bool validateItem = false) where T : IShelterVaultLocalModel
         {
             try
             {
@@ -70,6 +72,7 @@ namespace ShelterVault.Managers
                 {
                     case CloudProviderType.Azure:
                         ICosmosDBModel cosmosDBVault = shelterVaultModel.ToCosmosDBModel();
+                        if (validateItem && !await _shelterVaultCosmosDBService.CanAffectItemAsync(cosmosDBVault.id)) return true;
                         await _shelterVaultCosmosDBService.UpsertItemAsync(cosmosDBVault);
                         break;
                     default:
@@ -127,7 +130,8 @@ namespace ShelterVault.Managers
         {
             CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
             ShelterVaultSyncStatusModel model = _shelterVaultSyncStatus.GetSyncStatus(providerType);
-            return new(model);
+            bool isDialogOpen = _shelterVaultStateService.GetDialogStatus();
+            return new(model, isDialogOpen);
         }
     }
 }

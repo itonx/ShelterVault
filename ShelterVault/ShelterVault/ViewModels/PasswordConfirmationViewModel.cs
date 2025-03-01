@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
@@ -10,7 +11,7 @@ namespace ShelterVault.ViewModels
 {
     internal partial class PasswordConfirmationViewModel : ObservableObject
     {
-        private readonly IDialogService _dialogService;
+        private readonly IDialogManager _dialogManager;
         private readonly ILanguageService _languageService;
 
         [ObservableProperty]
@@ -28,9 +29,9 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _headerText = "Master key password must:";
 
-        public PasswordConfirmationViewModel(IDialogService dialogService, ILanguageService languageService)
+        public PasswordConfirmationViewModel(IDialogManager dialogManager, ILanguageService languageService)
         {
-            _dialogService = dialogService;
+            _dialogManager = dialogManager;
             _languageService = languageService;
             HeaderText = _languageService.GetLangValue(LangResourceKeys.MASTER_KEY_MUST);
         }
@@ -45,7 +46,7 @@ namespace ShelterVault.ViewModels
         {
             if (string.IsNullOrWhiteSpace(credentials.Title))
             {
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_EMPTY_TITLE);
+                await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_EMPTY_TITLE);
                 return false;
             }
 
@@ -56,12 +57,12 @@ namespace ShelterVault.ViewModels
         {
             if (!IsValidPassword(password))
             {
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PASSWORD_MINIMUM_REQUIREMENTS_ERROR);
+                await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PASSWORD_MINIMUM_REQUIREMENTS_ERROR);
                 return false;
             }
             else if (password != passwordConfirmation)
             {
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PASSWORD_DO_NOT_MATCH);
+                await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PASSWORD_DO_NOT_MATCH);
                 return false;
             }
 

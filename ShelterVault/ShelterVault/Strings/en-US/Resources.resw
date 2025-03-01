@@ -283,7 +283,7 @@
     <value>Up to date</value>
   </data>
   <data name="DialogCredentialsRemovedFromCloud.Text" xml:space="preserve">
-    <value>This credentials were removed from cloud. You will be redirected to the home page.</value>
+    <value>This credentials were removed from the cloud. You will be redirected to the home page.</value>
   </data>
   <data name="DialogCredentialsUpdatedInCloud.Text" xml:space="preserve">
     <value>This credentials were updated in the cloud. Your local changes for this credentials will be replaced by the new values.</value>

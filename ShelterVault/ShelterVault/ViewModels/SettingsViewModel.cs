@@ -18,7 +18,7 @@ namespace ShelterVault.ViewModels
 {
     internal partial class SettingsViewModel : ObservableObject
     {
-        private readonly IDialogService _dialogService;
+        private readonly IDialogManager _dialogManager;
         private readonly IProgressBarService _progressBarService;
         private readonly ICloudProviderManager _cloudProviderManager;
         private readonly IShelterVaultSyncStatus _shelterVaultSyncStatus;
@@ -44,9 +44,9 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private string _containerPartitionKey;
 
-        public SettingsViewModel(IDialogService dialogService, IProgressBarService progressBarService, ICloudProviderManager cloudProviderManager, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<SettingsViewModel> logger, ICloudSyncManager cloudSyncManager)
+        public SettingsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, ICloudProviderManager cloudProviderManager, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<SettingsViewModel> logger, ICloudSyncManager cloudSyncManager)
         {
-            _dialogService = dialogService;
+            _dialogManager = dialogManager;
             _progressBarService = progressBarService;
             _cloudProviderManager = cloudProviderManager;
             _shelterVaultSyncStatus = shelterVaultSyncStatus;
@@ -112,7 +112,7 @@ namespace ShelterVault.ViewModels
                         catch
                         {
                             _shelterVaultSyncStatus.UpsertSyncStatus(CloudProviderType.Azure, 0, false, CloudSyncStatus.None);
-                            await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
+                            await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SETTINGS_TEST_ERROR);
                         }
                         finally
                         {
@@ -134,12 +134,12 @@ namespace ShelterVault.ViewModels
             {
                 await _progressBarService.Show();
                 await _cloudSyncManager.SyncVaults();
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_DONE);
+                await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_DONE);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error syncing vaults");
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_ERROR);
+                await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_COSMOS_DB_SYNC_ERROR);
             }
             finally
             {
