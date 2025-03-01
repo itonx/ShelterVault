@@ -22,7 +22,7 @@ namespace ShelterVault.DataLayer
     public interface ICommonDbOperation
     {
         bool ExecuteQueries(IEnumerable<KeyValuePair<string, object>> queries);
-        IEnumerable<T> QueryAcrossDatabases<T>(IEnumerable<string> dbPaths, string query);
+        IEnumerable<T> QueryAcrossDatabases<T>(IEnumerable<string> fileNames, string query);
         T QueryFirst<T>(string query, object param = null);
         T QueryFirstOrDefault<T>(string query, object param = null);
         IEnumerable<T> Query<T>(string query, object param = null);
@@ -42,8 +42,11 @@ namespace ShelterVault.DataLayer
         public string UserPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         public string DbExtension => ".db";
         public string DbName { get; private set; }
+        public string TmpDbName { get; private set; }
         public string DbPath => Path.Combine(DefaultShelterVaultPath, string.Concat(DbName, DbExtension));
         public string DbConnectionString => $"Data Source={DbPath};Pooling=True;";
+        public string TmpDbPath => Path.Combine(DefaultShelterVaultPath, string.Concat(TmpDbName, DbExtension));
+        public string TmpDbConnectionString => $"Data Source={TmpDbPath};Pooling=True;";
 
         public ShelterVaultLocalDb(ILogger<ShelterVaultLocalDb> logger)
         {
@@ -74,16 +77,15 @@ namespace ShelterVault.DataLayer
             return true;
         }
 
-        public IEnumerable<T> QueryAcrossDatabases<T>(IEnumerable<string> dbPaths, string query)
+        public IEnumerable<T> QueryAcrossDatabases<T>(IEnumerable<string> fileNames, string query)
         {
             IList<T> results = new List<T>();
 
             try
             {
-                foreach (var path in dbPaths)
+                foreach (var path in fileNames)
                 {
-                    SetDbName(path);
-                    using SqliteConnection connection = GetOpenSqliteConnection();
+                    using SqliteConnection connection = GetOpenSqliteConnection(path);
                     T result = connection.QueryFirstOrDefault<T>(query);
                     if (result != null) results.Add(result);
                 }
@@ -172,11 +174,23 @@ namespace ShelterVault.DataLayer
             }
         }
 
-        private SqliteConnection GetOpenSqliteConnection()
+        private SqliteConnection GetOpenSqliteConnection(string tmpDbName = null)
         {
-            if (string.IsNullOrWhiteSpace(DbName)) throw new MissingMemberException("Database name is not set.");
+            if (string.IsNullOrWhiteSpace(tmpDbName) && string.IsNullOrWhiteSpace(DbName)) throw new MissingMemberException("Database name is not set.");
             if (!Path.Exists(DefaultShelterVaultPath)) Directory.CreateDirectory(DefaultShelterVaultPath);
-            SqliteConnection connection = new SqliteConnection(DbConnectionString);
+
+            SqliteConnection connection = null;
+
+            if (string.IsNullOrWhiteSpace(tmpDbName))
+            {
+                connection = new SqliteConnection(DbConnectionString);
+            }
+            else
+            {
+                TmpDbName = tmpDbName;
+                connection = new SqliteConnection(TmpDbConnectionString);
+            }
+
             connection.Open();
             return connection;
         }

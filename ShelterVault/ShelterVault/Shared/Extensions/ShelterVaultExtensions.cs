@@ -57,7 +57,7 @@ namespace ShelterVault.Shared.Extensions
             Clipboard.SetContent(data);
         }
 
-        public static IEnumerable<string> GetFilesByExtension(this string path, string extension)
+        public static IEnumerable<string> GetFileNamesByExtension(this string path, string extension)
         {
             if (!Path.Exists(path)) return Enumerable.Empty<string>();
             return Directory
