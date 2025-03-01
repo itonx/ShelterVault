@@ -16,7 +16,7 @@ namespace ShelterVault.ViewModels
     internal partial class ConfirmMasterKeyViewModel : ObservableObject
     {
         private readonly IShelterVaultStateService _shelterVaultStateService;
-        private readonly IDialogService _dialogService;
+        private readonly IDialogManager _dialogManager;
         private readonly IProgressBarService _progressBarService;
         private readonly IShelterVault _shelterVault;
         private readonly IShelterVaultLocalDb _shelterVaultLocalDb;
@@ -29,10 +29,10 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private ShelterVaultModel _selectedVault;
 
-        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogService dialogService, IProgressBarService progressBarService, IShelterVault shelterVault, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager, IShelterVaultLocalDb shelterVaultLocalDb, IVaultManager shelterVaultCreatorManager)
+        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogManager dialogManager, IProgressBarService progressBarService, IShelterVault shelterVault, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager, IShelterVaultLocalDb shelterVaultLocalDb, IVaultManager shelterVaultCreatorManager)
         {
             _shelterVaultStateService = shelterVaultStateService;
-            _dialogService = dialogService;
+            _dialogManager = dialogManager;
             _progressBarService = progressBarService;
             _shelterVault = shelterVault;
             _uiThreadService = uiThreadService;
@@ -63,7 +63,7 @@ namespace ShelterVault.ViewModels
                     _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
                     WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.NavigationView));
                 }
-                else await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_WRONG_MASTER_KEY);
+                else await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_WRONG_MASTER_KEY);
             }
             finally
             {
@@ -74,18 +74,18 @@ namespace ShelterVault.ViewModels
         private void RegisterMessages()
         {
             _weakReferenceInstanceManager.AddInstance(this);
-            WeakReferenceMessenger.Default.Register<ConfirmMasterKeyViewModel, RefreshVaultListRequestMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<ConfirmMasterKeyViewModel, RefreshVaultListRequestMessage>(this, (viewModel, payload) =>
             {
                 _uiThreadService.Execute(() =>
                 {
-                    if (message.Value)
+                    if (payload.Value)
                     {
-                        string selectedVaultTmp = SelectedVault.UUID;
-                        Vaults = _shelterVault.GetAllActiveVaults().ToList();
-                        if (Vaults.Any())
+                        string selectedVaultTmp = viewModel.SelectedVault.UUID;
+                        viewModel.Vaults = viewModel._shelterVault.GetAllActiveVaults().ToList();
+                        if (viewModel.Vaults.Any())
                         {
-                            SelectedVault = null;
-                            SelectedVault = Vaults.Find(x => x.UUID.Equals(selectedVaultTmp));
+                            viewModel.SelectedVault = null;
+                            viewModel.SelectedVault = viewModel.Vaults.Find(x => x.UUID.Equals(selectedVaultTmp));
                         }
                     }
                 });

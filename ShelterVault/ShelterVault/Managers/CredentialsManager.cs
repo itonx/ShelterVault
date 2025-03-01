@@ -71,7 +71,7 @@ namespace ShelterVault.Managers
                     if (!updated) return null;
 
                     string decryptedValues = _encryptionService.DecryptAes(shelterVaultCredentials, derivedKey, salt);
-                    await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
+                    await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials, validateItem: true);
                     return new(decryptedValues, shelterVaultCredentials);
                 }
 
@@ -115,7 +115,7 @@ namespace ShelterVault.Managers
                 {
                     tmpCredentials.MarkAsDeleted();
                     _shelterVaultCredentials.UpdateCredentials(tmpCredentials);
-                    return await _cloudSyncManager.UpsertItemAsync(tmpCredentials);
+                    return await _cloudSyncManager.UpsertItemAsync(tmpCredentials, validateItem: true);
                 }
 
                 return false;

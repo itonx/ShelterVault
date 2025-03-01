@@ -12,19 +12,22 @@ namespace ShelterVault.Services
         void SetVault(ShelterVaultModel shelterVaultModel, string masterKey);
         void ResetState();
         ShelterVaultModel ShelterVault { get; }
+        void SetDialogStatus(bool isDialogOpen);
+        bool GetDialogStatus();
     }
 
     public class ShelterVaultStateService : IShelterVaultStateService
     {
         private readonly IEncryptionService _encryptionService;
+        private byte[] _inMemoryDerivedKeyProtected;
+        private byte[] _inMemorySaltProtected;
+        private bool _isDialogOpen;
 
         public ShelterVaultStateService(IEncryptionService encryptionService)
         {
             _encryptionService = encryptionService;
         }
 
-        private byte[] _inMemoryDerivedKeyProtected;
-        private byte[] _inMemorySaltProtected;
 
         public ShelterVaultModel ShelterVault { get; private set; }
 
@@ -67,6 +70,16 @@ namespace ShelterVault.Services
         {
             _inMemoryDerivedKeyProtected = ProtectedData.Protect(derivedKey, null, DataProtectionScope.CurrentUser);
             _inMemorySaltProtected = ProtectedData.Protect(salt, null, DataProtectionScope.CurrentUser);
+        }
+
+        public void SetDialogStatus(bool isDialogOpen)
+        {
+            _isDialogOpen = isDialogOpen;
+        }
+
+        public bool GetDialogStatus()
+        {
+            return _isDialogOpen;
         }
     }
 }

@@ -59,6 +59,7 @@ namespace ShelterVault.Shared.Extensions
 
         public static IEnumerable<string> GetFilesByExtension(this string path, string extension)
         {
+            if (!Path.Exists(path)) return Enumerable.Empty<string>();
             return Directory
                 .EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
                 .Where(s => extension.TrimStart('.').Equals(Path.GetExtension(s).TrimStart('.'), StringComparison.CurrentCultureIgnoreCase))

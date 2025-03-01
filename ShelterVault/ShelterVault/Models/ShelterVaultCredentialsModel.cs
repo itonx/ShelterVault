@@ -66,7 +66,6 @@ namespace ShelterVault.Models
         {
             EncryptedValues = string.Empty;
             Iv = string.Empty;
-            ShelterVaultUuid = string.Empty;
             Version = -1;
         }
     }

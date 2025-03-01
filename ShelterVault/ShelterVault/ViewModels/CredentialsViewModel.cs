@@ -17,7 +17,7 @@ namespace ShelterVault.ViewModels
 {
     internal partial class CredentialsViewModel : ObservableObject, INavigation, IPendingChangesChallenge
     {
-        private readonly IDialogService _dialogService;
+        private readonly IDialogManager _dialogManager;
         private readonly IProgressBarService _progressBarService;
         private readonly ICredentialsManager _credentialsManager;
         private readonly IShelterVaultStateService _shelterVaultStateService;
@@ -40,9 +40,9 @@ namespace ShelterVault.ViewModels
 
         public bool ChallengeCompleted { get; private set; } = false;
 
-        public CredentialsViewModel(IDialogService dialogService, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        public CredentialsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
-            _dialogService = dialogService;
+            _dialogManager = dialogManager;
             _progressBarService = progressBarService;
             _credentialsManager = credentialsManager;
             _languageService = languageService;
@@ -67,7 +67,7 @@ namespace ShelterVault.ViewModels
         {
             if (!_selectedCredentialBackup.Equals(SelectedCredential))
             {
-                bool discard = await _dialogService.ShowContinueConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PENDING_CHANGES, expectedResult: ContentDialogResult.Secondary);
+                bool discard = await _dialogManager.ShowContinueConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PENDING_CHANGES, expectedResult: ContentDialogResult.Secondary);
                 if (completeChallenge && discard) ChallengeCompleted = true;
                 return discard;
             }
@@ -93,7 +93,7 @@ namespace ShelterVault.ViewModels
 
         private void NewCredentials()
         {
-            if (_shelterVaultStateService == null) throw new NullReferenceException("State hasn't been initialized.");
+            if (_shelterVaultStateService == null) throw new FieldAccessException("State hasn't been initialized.");
 
             ShowPassword = false;
             RequestFocusOnFirstField = true;
@@ -169,9 +169,9 @@ namespace ShelterVault.ViewModels
                 {
                     WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
                     WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
-                    await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_DELETED);
+                    await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_DELETED);
                 }
-                else await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_NOT_DELETED);
+                else await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_NOT_DELETED);
             }
             finally
             {
@@ -187,9 +187,9 @@ namespace ShelterVault.ViewModels
                 SelectedCredential = credentials;
                 _selectedCredentialBackup = credentials.Clone();
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_UPDATED);
+                await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_UPDATED);
             }
-            else await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_NOT_UPDATED);
+            else await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_NOT_UPDATED);
 
             RequestFocusOnFirstField = true;
         }
@@ -203,9 +203,9 @@ namespace ShelterVault.ViewModels
                 _selectedCredentialBackup = SelectedCredential.Clone();
                 State = CredentialsViewModelState.Updating;
                 WeakReferenceMessenger.Default.Send(new RefreshCredentialListRequestMessage(true));
-                await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_SAVED);
+                await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_SAVED);
             }
-            else await _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_NOT_SAVED);
+            else await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_NOT_SAVED);
 
             RequestFocusOnFirstField = true;
         }
@@ -213,23 +213,24 @@ namespace ShelterVault.ViewModels
         public void RegisterMessages()
         {
             _weakReferenceInstanceManager.AddInstance(this);
-            WeakReferenceMessenger.Default.Register<CredentialsViewModel, CheckSelectedCredentialsAfterSyncMessage>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<CredentialsViewModel, CheckSelectedCredentialsAfterSyncMessage>(this, async (viewModel, payload) =>
             {
-                if (State == CredentialsViewModelState.Updating)
+                if (viewModel.State == CredentialsViewModelState.Updating)
                 {
-                    Credentials updatedCredentials = _credentialsManager.GetCredentials(SelectedCredential.UUID);
+                    Credentials updatedCredentials = viewModel._credentialsManager.GetCredentials(SelectedCredential.UUID);
                     if (updatedCredentials == null)
                     {
-                        _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_REMOVED_FROM_CLOUD);
+                        viewModel.ChallengeCompleted = true;
+                        await viewModel._dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_REMOVED_FROM_CLOUD);
                         WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME));
                     }
                     else
                     {
-                        if (SelectedCredential.Version != updatedCredentials.Version)
+                        if (viewModel.SelectedCredential.Version != updatedCredentials.Version)
                         {
-                            _dialogService.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_UPDATED_IN_CLOUD);
-                            SelectedCredential = updatedCredentials;
-                            _selectedCredentialBackup = SelectedCredential.Clone();
+                            await viewModel._dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_UPDATED_IN_CLOUD);
+                            viewModel.SelectedCredential = updatedCredentials;
+                            viewModel._selectedCredentialBackup = viewModel.SelectedCredential.Clone();
                         }
                     }
                 }

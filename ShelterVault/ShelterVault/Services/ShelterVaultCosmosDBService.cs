@@ -22,6 +22,7 @@ namespace ShelterVault.Services
         Task SyncAllAsync(string uuidVault);
         Task<CosmosDBTinyModel> GetItemByIdAsync(string id);
         CosmosDBSyncStatus GetCurrentSyncStatus();
+        Task<bool> CanAffectItemAsync(string uuid);
     }
 
     public class ShelterVaultCosmosDBService : IShelterVaultCosmosDBService
@@ -54,7 +55,6 @@ namespace ShelterVault.Services
         public async Task DeleteItemAsync<T>(T shelterVault) where T : ICosmosDBModel
         {
             if (!IsSyncEnabled()) return;
-
             using CosmosClient cosmosClient = GetClient(out CosmosDBSettings cosmosDBSettings);
             Container cosmosContainer = GetContainer(cosmosClient, cosmosDBSettings);
             await cosmosContainer.DeleteItemAsync<object>(id: shelterVault.id, partitionKey: new PartitionKey(shelterVault.type));
@@ -223,6 +223,12 @@ namespace ShelterVault.Services
         {
             shelterVaultSyncStatusModel = _shelterVaultSyncStatus.GetSyncStatus(CloudProviderType.Azure);
             return shelterVaultSyncStatusModel.IsSyncEnabled;
+        }
+
+        public async Task<bool> CanAffectItemAsync(string uuid)
+        {
+            CosmosDBTinyModel item = await GetItemByIdAsync(uuid);
+            return item != null && item.version > 0;
         }
     }
 }

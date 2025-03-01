@@ -6,6 +6,8 @@ namespace ShelterVault.Models
     {
         public CloudSyncStatus CurrentSyncStatus { get; set; }
         public bool HasCloudConfiguration { get; set; }
+        public bool IsDialogOpen { get; set; }
+        public bool CanSynchronize => !IsDialogOpen && HasCloudConfiguration;
 
         public CloudSyncInformation()
         {
@@ -13,10 +15,11 @@ namespace ShelterVault.Models
             HasCloudConfiguration = false;
         }
 
-        public CloudSyncInformation(ShelterVaultSyncStatusModel shelterVaultSyncStatusModel)
+        public CloudSyncInformation(ShelterVaultSyncStatusModel shelterVaultSyncStatusModel, bool isDialogOpen)
         {
             CurrentSyncStatus = shelterVaultSyncStatusModel.SyncStatus;
             HasCloudConfiguration = shelterVaultSyncStatusModel.IsSyncEnabled;
+            IsDialogOpen = isDialogOpen;
         }
     }
 }

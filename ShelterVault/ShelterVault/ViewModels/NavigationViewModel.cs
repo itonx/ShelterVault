@@ -41,26 +41,26 @@ namespace ShelterVault.ViewModels
         private void RegisterMessages()
         {
             _weakReferenceInstanceManager.AddInstance(this);
-            WeakReferenceMessenger.Default.Register<NavigationViewModel, ShowPageRequestMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, ShowPageRequestMessage>(this, (viewModel, payload) =>
             {
-                if (message.Value == Shared.Enums.ShelterVaultPage.HOME || message.Value == Shared.Enums.ShelterVaultPage.SETTINGS)
-                    receiver.SelectedMenuItem = message.Value.ToString();
+                if (payload.Value == Shared.Enums.ShelterVaultPage.HOME || payload.Value == Shared.Enums.ShelterVaultPage.SETTINGS)
+                    viewModel.SelectedMenuItem = payload.Value.ToString();
             });
-            WeakReferenceMessenger.Default.Register<NavigationViewModel, RefreshCredentialListRequestMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, RefreshCredentialListRequestMessage>(this, (viewModel, payload) =>
             {
                 _uiThreadService.Execute(() =>
                 {
-                    if (message.Value)
+                    if (payload.Value)
                     {
-                        receiver.Credentials = receiver._credentialsManager.GetAllActiveCredentials(receiver._shelterVaultStateService.ShelterVault.UUID).ToList();
-                        if (receiver.SelectedMenuItem is CredentialsViewItem item)
+                        viewModel.Credentials = viewModel._credentialsManager.GetAllActiveCredentials(viewModel._shelterVaultStateService.ShelterVault.UUID).ToList();
+                        if (viewModel.SelectedMenuItem is CredentialsViewItem item)
                         {
-                            CredentialsViewItem newSelectedItem = receiver.Credentials.FirstOrDefault(x => x.UUID.Equals(item.UUID));
+                            CredentialsViewItem newSelectedItem = viewModel.Credentials.FirstOrDefault(x => x.UUID.Equals(item.UUID));
                             if (newSelectedItem != null)
                             {
                                 newSelectedItem.SkipPageLoader = true;
-                                receiver.SelectedMenuItem = null;
-                                receiver.SelectedMenuItem = newSelectedItem;
+                                viewModel.SelectedMenuItem = null;
+                                viewModel.SelectedMenuItem = newSelectedItem;
                                 newSelectedItem.SkipPageLoader = false;
                             }
                             WeakReferenceMessenger.Default.Send(new CheckSelectedCredentialsAfterSyncMessage(true));
@@ -68,21 +68,21 @@ namespace ShelterVault.ViewModels
                     }
                 });
             });
-            WeakReferenceMessenger.Default.Register<NavigationViewModel, SelectCredentialRequestMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, SelectCredentialRequestMessage>(this, (viewModel, payload) =>
             {
-                if (message.Value != null)
+                if (payload.Value != null)
                 {
-                    CredentialsViewItem selectTarget = Credentials.FirstOrDefault(c => c.UUID.Equals(message.Value.UUID));
-                    receiver.SelectedMenuItem = selectTarget;
+                    CredentialsViewItem selectTarget = viewModel.Credentials.FirstOrDefault(c => c.UUID.Equals(payload.Value.UUID));
+                    viewModel.SelectedMenuItem = selectTarget;
                 }
             });
-            WeakReferenceMessenger.Default.Register<NavigationViewModel, RefreshVaultListRequestMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, RefreshVaultListRequestMessage>(this, (viewModel, payload) =>
             {
                 _uiThreadService.Execute(() =>
                 {
-                    ShelterVaultModel shelterVaultModel = _shelterVault.GetVaultByUUID(_shelterVaultStateService.ShelterVault.UUID);
-                    _shelterVaultStateService.SetVault(shelterVaultModel);
-                    VaultName = shelterVaultModel.Name;
+                    ShelterVaultModel shelterVaultModel = viewModel._shelterVault.GetVaultByUUID(_shelterVaultStateService.ShelterVault.UUID);
+                    viewModel._shelterVaultStateService.SetVault(shelterVaultModel);
+                    viewModel.VaultName = shelterVaultModel.Name;
                 });
             });
         }

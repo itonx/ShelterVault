@@ -175,6 +175,7 @@ namespace ShelterVault.DataLayer
         private SqliteConnection GetOpenSqliteConnection()
         {
             if (string.IsNullOrWhiteSpace(DbName)) throw new MissingMemberException("Database name is not set.");
+            if (!Path.Exists(DefaultShelterVaultPath)) Directory.CreateDirectory(DefaultShelterVaultPath);
             SqliteConnection connection = new SqliteConnection(DbConnectionString);
             connection.Open();
             return connection;

@@ -92,11 +92,11 @@ namespace ShelterVault.ViewModels
         private void RegisterMessages()
         {
             _weakReferenceInstanceManager.AddInstance(this);
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, CurrentAppStateRequestMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, CurrentAppStateRequestMessage>(this, (receiver, payload) =>
             {
-                receiver.ShelterVaultCurrentAppState = message.Value;
+                receiver.ShelterVaultCurrentAppState = payload.Value;
                 RefreshSyncStatusInfo();
-                if (message.Value == ShelterVaultAppState.NavigationView)
+                if (payload.Value == ShelterVaultAppState.NavigationView)
                 {
                     ShowLangOptions = false;
                     ShowSwitchVault = true;
@@ -107,36 +107,36 @@ namespace ShelterVault.ViewModels
                     ShowSwitchVault = false;
                 }
             });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, UpdateLanguageValuesMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, UpdateLanguageValuesMessage>(this, (viewModel, payload) =>
             {
-                SetLangText();
+                viewModel.SetLangText();
             });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ProgressBarRequestMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ProgressBarRequestMessage>(this, (viewModel, payload) =>
             {
-                IsProgressBarVisible = message.Value;
+                viewModel.IsProgressBarVisible = payload.Value;
             });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, RefreshCurrentSyncStatusMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, RefreshCurrentSyncStatusMessage>(this, (viewModel, payload) =>
             {
-                _uiThreadService.Execute(() =>
+                viewModel._uiThreadService.Execute(() =>
                 {
-                    CurrentCloudSyncStatus = message.Value;
+                    viewModel.CurrentCloudSyncStatus = payload.Value;
                 });
             });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, CloudProviderChangedMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, CloudProviderChangedMessage>(this, (viewModel, payload) =>
             {
-                _uiThreadService.Execute(() =>
+                viewModel._uiThreadService.Execute(() =>
                 {
-                    CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
-                    ShowSync = cloudSyncInformation.HasCloudConfiguration;
-                    CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
+                    CloudSyncInformation cloudSyncInformation = viewModel._cloudSyncManager.GetCurrentCloudSyncInformation();
+                    viewModel.ShowSync = cloudSyncInformation.HasCloudConfiguration;
+                    viewModel.CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
                 });
             });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ShowSyncStatusMessage>(this, (receiver, message) =>
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ShowSyncStatusMessage>(this, (viewModel, payload) =>
             {
-                _uiThreadService.Execute(() =>
+                viewModel._uiThreadService.Execute(() =>
                 {
-                    if (message.Value)
-                        RefreshSyncStatusInfo();
+                    if (payload.Value)
+                        viewModel.RefreshSyncStatusInfo();
                 });
             });
         }
@@ -179,7 +179,7 @@ namespace ShelterVault.ViewModels
                         CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
                         try
                         {
-                            if (cloudSyncInformation.HasCloudConfiguration)
+                            if (cloudSyncInformation.CanSynchronize)
                                 await _cloudSyncManager.SyncVaults();
                         }
                         catch (Exception ex)
@@ -188,7 +188,7 @@ namespace ShelterVault.ViewModels
                         }
                         finally
                         {
-                            if (cloudSyncInformation.HasCloudConfiguration)
+                            if (cloudSyncInformation.CanSynchronize)
                             {
                                 _uiThreadService.Execute(() =>
                                 {
