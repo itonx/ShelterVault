@@ -10,7 +10,7 @@ namespace ShelterVault.DataLayer
                 CREATE TABLE IF NOT EXISTS shelter_vault (
                     uuid TEXT PRIMARY KEY,
                     name TEXT NOT NULL,
-                    masterKeyHash TEXT NOT NULL,
+                    encryptedTestValue TEXT NOT NULL,
                     iv TEXT NOT NULL,
                     salt TEXT NOT NULL,
                     version INTEGER NOT NULL,

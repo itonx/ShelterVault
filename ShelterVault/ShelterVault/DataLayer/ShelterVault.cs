@@ -7,14 +7,13 @@ namespace ShelterVault.DataLayer
 {
     public interface IShelterVault
     {
-        bool CreateShelterVault(string uuid, string name, string masterKeyHash, string iv, string salt, long version);
-        bool UpdateShelterVault(string uuid, string name, string masterKeyHash, string iv, string salt, long version);
+        bool CreateShelterVault(string uuid, string name, string encryptedTestValue, string iv, string salt, long version);
+        bool UpdateShelterVault(string uuid, string name, long version);
         bool UpdateVaultCloudProvider(int cloudProvider);
         bool DeleteVault(string uuid);
         IEnumerable<ShelterVaultModel> GetAllActiveVaults();
         ShelterVaultModel GetVaultByUUID(string uuid);
         ShelterVaultModel GetCurrentVault();
-        bool IsMasterKeyValid(string masterKeyHash);
         bool AreThereVaults();
     }
 
@@ -31,9 +30,9 @@ namespace ShelterVault.DataLayer
 
         public bool AreThereVaults() => GetAllActiveVaults().Any();
 
-        public bool CreateShelterVault(string uuid, string name, string masterKeyHash, string iv, string salt, long version)
+        public bool CreateShelterVault(string uuid, string name, string encryptedTestValue, string iv, string salt, long version)
         {
-            KeyValuePair<string, object> insertVault = new("INSERT INTO shelter_vault VALUES ($uuid, $name, $masterKeyHash, $iv, $salt, $version, $cloudProvider)", new { uuid, name, masterKeyHash, iv, salt, version, cloudProvider = 0 });
+            KeyValuePair<string, object> insertVault = new("INSERT INTO shelter_vault VALUES ($uuid, $name, $encryptedTestValue, $iv, $salt, $version, $cloudProvider)", new { uuid, name, encryptedTestValue, iv, salt, version, cloudProvider = 0 });
             var queries = new List<KeyValuePair<string, object>>(ShelterVaultQueries.CREATE_SHELTER_VAULT_DB) { insertVault };
 
             return _shelterVaultLocalDb.ExecuteQueries(queries);
@@ -49,28 +48,16 @@ namespace ShelterVault.DataLayer
             return updatedVaults > 0;
         }
 
-        public bool UpdateShelterVault(string uuid, string name, string masterKeyHash, string iv, string salt, long version)
+        public bool UpdateShelterVault(string uuid, string name, long version)
         {
 
-            string updateMasterKeyQuery = @"
-                UPDATE shelter_vault SET uuid=$uuid, name=$name, masterKeyHash=$masterKeyHash, iv=$iv, salt=$salt, version=$version
+            string updateVaultQuery = @"
+                UPDATE shelter_vault SET name=$name, version=$version
                 WHERE uuid=$uuid
             ";
-            object param = new { uuid, name, masterKeyHash, iv, salt, version };
-            int updatedCredentials = _shelterVaultLocalDb.Execute(updateMasterKeyQuery, param);
+            object param = new { uuid, name, version };
+            int updatedCredentials = _shelterVaultLocalDb.Execute(updateVaultQuery, param);
             return updatedCredentials > 0;
-        }
-
-        public bool IsMasterKeyValid(string masterKeyHash)
-        {
-            if (string.IsNullOrWhiteSpace(masterKeyHash)) return false;
-            string query = @"
-                SELECT count(*)
-                FROM shelter_vault
-                WHERE masterKeyHash = $masterKeyHash
-            ";
-            object result = _shelterVaultLocalDb.ExecuteScalar(query, new { masterKeyHash });
-            return result != null && int.Parse(result.ToString()) == 1;
         }
 
         public bool DeleteVault(string uuid)

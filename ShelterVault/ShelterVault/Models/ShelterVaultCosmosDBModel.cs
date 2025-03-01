@@ -20,7 +20,7 @@ namespace ShelterVault.Models
     (
         string id,
         string name,
-        string masterKeyHash,
+        string encryptedTestValue,
         string iv,
         string salt,
         long version

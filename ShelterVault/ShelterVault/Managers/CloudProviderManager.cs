@@ -33,9 +33,8 @@ namespace ShelterVault.Managers
         {
             ShelterVaultCloudConfigModel shelterVaultCloudConfigModel = _shelterVaultCloudConfig.GetCloudConfiguration(cloudProviderType.ToString());
             if (shelterVaultCloudConfigModel == null) return default(T);
-            byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
-            byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
-            string decryptedJsonModel = _encryptionService.DecryptAes(shelterVaultCloudConfigModel, masterKey, salt);
+            (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
+            string decryptedJsonModel = _encryptionService.DecryptAes(shelterVaultCloudConfigModel, derivedKey, salt);
             return System.Text.Json.JsonSerializer.Deserialize<T>(decryptedJsonModel);
         }
 
@@ -44,10 +43,8 @@ namespace ShelterVault.Managers
             try
             {
                 string jsonModel = System.Text.Json.JsonSerializer.Serialize(cloudConfigurationModel);
-                byte[] masterKey = _shelterVaultStateService.GetMasterKeyUnprotected();
-                byte[] salt = _shelterVaultStateService.GetMasterKeySaltUnprotected();
-
-                (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(jsonModel, masterKey, salt);
+                (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
+                (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(jsonModel, derivedKey, salt);
 
                 ShelterVaultCloudConfigModel config = new(cloudProviderType.ToString(), encryptedValues);
                 bool result = _shelterVaultCloudConfig.UpsertCloudConfiguration(config.Name, config.EncryptedValues, config.Iv);
