@@ -3,7 +3,6 @@ using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Extensions;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ShelterVault.Managers
 {
@@ -40,10 +39,10 @@ namespace ShelterVault.Managers
 
         public bool IsValid(string masterKey, ShelterVaultModel shelterVaultModel)
         {
-            byte[] masterKeyBytes = masterKey.GetBytes();
-            string expectedMasterKeyHash = _encryptionService.DecryptAes(shelterVaultModel, masterKeyBytes);
+            byte[] derivedKey = _encryptionService.DeriveKeyFromPassword(masterKey, shelterVaultModel.Salt.FromBase64ToBytes());
+            string expectedValue = _encryptionService.DecryptAes(shelterVaultModel, derivedKey);
 
-            return expectedMasterKeyHash != null && expectedMasterKeyHash.Equals(masterKey.ToSHA256Hex());
+            return expectedValue != null && expectedValue.Equals(shelterVaultModel.UUID);
         }
     }
 }

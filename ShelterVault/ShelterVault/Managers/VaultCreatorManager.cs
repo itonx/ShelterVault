@@ -31,13 +31,12 @@ namespace ShelterVault.Managers
         {
             try
             {
-                byte[] masterKeyBytes = masterKey.GetBytes();
-                string masterKeyHash = masterKey.ToSHA256Hex();
                 byte[] saltBytes = salt.GetBytes();
+                byte[] derivedKey = _encryptionService.DeriveKeyFromPassword(masterKey, saltBytes);
 
-                (byte[] encryptedMasterKeyHash, byte[] iv) = _encryptionService.EncryptAes(masterKeyHash, masterKeyBytes, saltBytes);
+                (byte[] encryptedTestValue, byte[] iv) = _encryptionService.EncryptAes(uuid, derivedKey, saltBytes);
                 _shelterVaultLocalDb.SetDbName(name);
-                bool vaultCreated = _shelterVault.CreateShelterVault(uuid, name, encryptedMasterKeyHash.ToBase64(), iv.ToBase64(), saltBytes.ToBase64(), 1);
+                bool vaultCreated = _shelterVault.CreateShelterVault(uuid, name, encryptedTestValue.ToBase64(), iv.ToBase64(), saltBytes.ToBase64(), 1);
                 if (vaultCreated)
                 {
                     ShelterVaultModel vault = _shelterVault.GetVaultByUUID(uuid);

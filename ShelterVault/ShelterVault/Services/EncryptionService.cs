@@ -3,7 +3,6 @@ using ShelterVault.Shared.Extensions;
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace ShelterVault.Services
 {
@@ -32,7 +31,7 @@ namespace ShelterVault.Services
 
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = DeriveKeyFromPassword(key.GetString(), salt);
+                aesAlg.Key = key;
                 lastIV = aesAlg.IV;
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
@@ -59,7 +58,7 @@ namespace ShelterVault.Services
 
         public string DecryptAes(ShelterVaultModel shelterVaultModel, byte[] key)
         {
-            return DecryptAes(shelterVaultModel.MasterKeyHash.FromBase64ToBytes(), key, shelterVaultModel.Iv.FromBase64ToBytes(), shelterVaultModel.Salt.FromBase64ToBytes());
+            return DecryptAes(shelterVaultModel.EncryptedTestValue.FromBase64ToBytes(), key, shelterVaultModel.Iv.FromBase64ToBytes(), shelterVaultModel.Salt.FromBase64ToBytes());
         }
 
         public string DecryptAes(CredentialsViewItem credentialsViewItem, byte[] key, byte[] salt)
@@ -85,7 +84,7 @@ namespace ShelterVault.Services
 
                 using (Aes aesAlg = Aes.Create())
                 {
-                    aesAlg.Key = DeriveKeyFromPassword(key.GetString(), salt);
+                    aesAlg.Key = key;
                     aesAlg.IV = iv;
                     ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 

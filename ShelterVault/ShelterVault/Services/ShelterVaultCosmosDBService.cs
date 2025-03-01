@@ -141,8 +141,8 @@ namespace ShelterVault.Services
             {
                 CosmosDBVault cosmosDBVault = (CosmosDBVault)model;
                 CosmosDBSyncModel cosmosDBModel = cosmosDBSyncModels.FirstOrDefault(x => x.id.Equals(cosmosDBVault.id));
-                if (cosmosDBModel != null && cosmosDBModel.IsNew) _shelterVault.CreateShelterVault(cosmosDBVault.id, cosmosDBVault.name, cosmosDBVault.masterKeyHash, cosmosDBVault.iv, cosmosDBVault.salt, cosmosDBVault.version);
-                else _shelterVault.UpdateShelterVault(cosmosDBVault.id, cosmosDBVault.name, cosmosDBVault.masterKeyHash, cosmosDBVault.iv, cosmosDBVault.salt, cosmosDBVault.version);
+                if (cosmosDBModel != null && cosmosDBModel.IsNew) _shelterVault.CreateShelterVault(cosmosDBVault.id, cosmosDBVault.name, cosmosDBVault.encryptedTestValue, cosmosDBVault.iv, cosmosDBVault.salt, cosmosDBVault.version);
+                else _shelterVault.UpdateShelterVault(cosmosDBVault.id, cosmosDBVault.name, cosmosDBVault.version);
             }
         }
 
@@ -172,7 +172,7 @@ namespace ShelterVault.Services
             if (!cosmosDBModels.Any()) return Enumerable.Empty<ICosmosDBModel>();
 
             string baseQuery = string.Concat(partitionKey.Equals(ShelterVaultConstants.PARTITION_SHELTER_VAULT)
-                ? "SELECT vault.name, vault.masterKeyHash, vault.iv, vault.salt, vault.id, vault.type, vault.version FROM vault"
+                ? "SELECT vault.name, vault.encryptedTestValue, vault.iv, vault.salt, vault.id, vault.type, vault.version FROM vault"
                 : "SELECT vault.encryptedValues, vault.iv, vault.shelterVaultUuid, vault.id, vault.type, vault.version FROM vault"
                 , " WHERE ARRAY_CONTAINS(@ids, vault.id) AND vault.type = @type");
 

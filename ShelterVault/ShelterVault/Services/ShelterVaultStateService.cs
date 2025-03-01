@@ -2,14 +2,12 @@
 using ShelterVault.Shared.Extensions;
 using System;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace ShelterVault.Services
 {
     public interface IShelterVaultStateService
     {
-        byte[] GetMasterKeyUnprotected();
-        byte[] GetMasterKeySaltUnprotected();
+        (byte[], byte[]) GetLocalEncryptionValues();
         void SetVault(ShelterVaultModel shelterVaultModel);
         void SetVault(ShelterVaultModel shelterVaultModel, string masterKey);
         void ResetState();
@@ -18,25 +16,39 @@ namespace ShelterVault.Services
 
     public class ShelterVaultStateService : IShelterVaultStateService
     {
-        private byte[] _inMemoryMasterKeyProtected;
-        private byte[] _inMemoryMasterKeySaltProtected;
+        private readonly IEncryptionService _encryptionService;
+
+        public ShelterVaultStateService(IEncryptionService encryptionService)
+        {
+            _encryptionService = encryptionService;
+        }
+
+        private byte[] _inMemoryDerivedKeyProtected;
+        private byte[] _inMemorySaltProtected;
 
         public ShelterVaultModel ShelterVault { get; private set; }
 
-        public byte[] GetMasterKeyUnprotected()
+        private byte[] GetDerivedKeyUnprotected()
         {
-            return ProtectedData.Unprotect(_inMemoryMasterKeyProtected, null, DataProtectionScope.CurrentUser);
+            return ProtectedData.Unprotect(_inMemoryDerivedKeyProtected, null, DataProtectionScope.CurrentUser);
         }
 
-        public byte[] GetMasterKeySaltUnprotected()
+        private byte[] GetSaltUnprotected()
         {
-            return ProtectedData.Unprotect(_inMemoryMasterKeySaltProtected, null, DataProtectionScope.CurrentUser);
+            return ProtectedData.Unprotect(_inMemorySaltProtected, null, DataProtectionScope.CurrentUser);
+        }
+
+        public (byte[], byte[]) GetLocalEncryptionValues()
+        {
+            return (GetDerivedKeyUnprotected(), GetSaltUnprotected());
         }
 
         public void SetVault(ShelterVaultModel shelterVaultModel, string masterKey)
         {
             SetVault(shelterVaultModel);
-            ProtectMasterKey(masterKey.GetBytes(), shelterVaultModel.Salt.FromBase64ToBytes());
+            byte[] salt = shelterVaultModel.Salt.FromBase64ToBytes();
+            byte[] derivedKey = _encryptionService.DeriveKeyFromPassword(masterKey, salt);
+            ProtectEncryptionValues(derivedKey, salt);
         }
 
         public void SetVault(ShelterVaultModel shelterVaultModel)
@@ -46,15 +58,15 @@ namespace ShelterVault.Services
 
         public void ResetState()
         {
-            _inMemoryMasterKeyProtected = Array.Empty<byte>();
-            _inMemoryMasterKeySaltProtected = Array.Empty<byte>();
+            _inMemoryDerivedKeyProtected = Array.Empty<byte>();
+            _inMemorySaltProtected = Array.Empty<byte>();
             ShelterVault = new();
         }
 
-        private void ProtectMasterKey(byte[] masterKey, byte[] masterKeySalt)
+        private void ProtectEncryptionValues(byte[] derivedKey, byte[] salt)
         {
-            _inMemoryMasterKeyProtected = ProtectedData.Protect(masterKey, null, DataProtectionScope.CurrentUser);
-            _inMemoryMasterKeySaltProtected = ProtectedData.Protect(masterKeySalt, null, DataProtectionScope.CurrentUser);
+            _inMemoryDerivedKeyProtected = ProtectedData.Protect(derivedKey, null, DataProtectionScope.CurrentUser);
+            _inMemorySaltProtected = ProtectedData.Protect(salt, null, DataProtectionScope.CurrentUser);
         }
     }
 }
