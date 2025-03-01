@@ -73,10 +73,10 @@ namespace ShelterVault.DataLayer
 
         public IEnumerable<ShelterVaultModel> GetAllActiveVaults()
         {
-            IEnumerable<string> vaultPaths = _shelterVaultLocalDb.DefaultShelterVaultPath.GetFilesByExtension(_shelterVaultLocalDb.DbExtension);
-            if (!vaultPaths.Any()) return Enumerable.Empty<ShelterVaultModel>();
+            IEnumerable<string> fileNames = _shelterVaultLocalDb.DefaultShelterVaultPath.GetFileNamesByExtension(_shelterVaultLocalDb.DbExtension);
+            if (!fileNames.Any()) return Enumerable.Empty<ShelterVaultModel>();
             string query = "SELECT * FROM shelter_vault WHERE version > 0";
-            IEnumerable<ShelterVaultModel> vaults = _shelterVaultLocalDb.QueryAcrossDatabases<ShelterVaultModel>(vaultPaths, query);
+            IEnumerable<ShelterVaultModel> vaults = _shelterVaultLocalDb.QueryAcrossDatabases<ShelterVaultModel>(fileNames, query);
             return vaults;
         }
 
