@@ -21,7 +21,7 @@ namespace ShelterVault.Services
             Enum.TryParse(typeof(ShelterVaultTheme), theme, true, out object shelterVaultThemeObj);
             ShelterVaultTheme? shelterVaultTheme = (ShelterVaultTheme?)shelterVaultThemeObj;
 
-            if (shelterVaultTheme == null && PInvoke.UseDarkMode) return ShelterVaultTheme.DARK;
+            if (shelterVaultTheme == null) return PInvoke.UseDarkMode ? ShelterVaultTheme.DARK : ShelterVaultTheme.LIGHT;
 
             return (ShelterVaultTheme)shelterVaultTheme;
         }
