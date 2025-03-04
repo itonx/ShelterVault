@@ -39,10 +39,7 @@
             Style="{StaticResource ShelterVault.Settings.ScrollViewer}">
             <StackPanel Spacing="10">
                 <TextBlock x:Uid="CloudSettingsTitle" />
-                <toolkit:SettingsExpander
-                    x:Name="SettingsExpander"
-                    x:Uid="CloudSettingsExpander"
-                    IsExpanded="True">
+                <toolkit:SettingsExpander x:Uid="CloudSettingsExpander">
                     <toolkit:SettingsExpander.Header>
                         <TextBlock
                             x:Uid="CloudSettingsExpanderTitle"
@@ -108,6 +105,36 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>
+                            </toolkit:SettingsCard.Description>
+                        </toolkit:SettingsCard>
+                    </toolkit:SettingsExpander.Items>
+                </toolkit:SettingsExpander>
+                <TextBlock x:Uid="AboutSettingsTitle" />
+                <toolkit:SettingsExpander Description="{Binding AppVersion}">
+                    <toolkit:SettingsExpander.Header>
+                        <TextBlock
+                            x:Uid="VersionCardTitle"
+                            Foreground="{ThemeResource ShelterVaultForeground}"
+                            Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                    </toolkit:SettingsExpander.Header>
+                    <toolkit:SettingsExpander.HeaderIcon>
+                        <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xED35;" />
+                    </toolkit:SettingsExpander.HeaderIcon>
+                    <toolkit:SettingsExpander.Items>
+                        <toolkit:SettingsCard>
+                            <toolkit:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE943;" />
+                            </toolkit:SettingsCard.HeaderIcon>
+                            <toolkit:SettingsCard.Description>
+                                <HyperlinkButton x:Uid="StarOnGitHub" NavigateUri="https://github.com/itonx/ShelterVault" />
+                            </toolkit:SettingsCard.Description>
+                        </toolkit:SettingsCard>
+                        <toolkit:SettingsCard>
+                            <toolkit:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xEA18;" />
+                            </toolkit:SettingsCard.HeaderIcon>
+                            <toolkit:SettingsCard.Description>
+                                <HyperlinkButton x:Uid="PrivacyPolicy" NavigateUri="https://github.com/itonx/ShelterVault/blob/assets/PrivacyPolicy.md" />
                             </toolkit:SettingsCard.Description>
                         </toolkit:SettingsCard>
                     </toolkit:SettingsExpander.Items>
