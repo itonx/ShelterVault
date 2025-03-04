@@ -13,6 +13,7 @@ using ShelterVault.Shared.Messages;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 
 namespace ShelterVault.ViewModels
 {
@@ -43,6 +44,8 @@ namespace ShelterVault.ViewModels
         private string _databaseThroughput;
         [ObservableProperty]
         private string _containerPartitionKey;
+        [ObservableProperty]
+        private string _appVersion;
 
         public SettingsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, ICloudProviderManager cloudProviderManager, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<SettingsViewModel> logger, ICloudSyncManager cloudSyncManager)
         {
@@ -52,9 +55,19 @@ namespace ShelterVault.ViewModels
             _shelterVaultSyncStatus = shelterVaultSyncStatus;
             _cloudSyncManager = cloudSyncManager;
             _logger = logger;
+            AppVersion = GetAppVersion();
             CloudProviders = new List<CloudProviderType>((CloudProviderType[])Enum.GetValues(typeof(CloudProviderType)));
             SelectedCloudProvider = _cloudProviderManager.GetCurrentCloudProvider();
             ReadCosmosDBSettings();
+        }
+
+        private string GetAppVersion()
+        {
+            return string.Format("v{0}.{1}.{2}.{3}",
+                    Package.Current.Id.Version.Major,
+                    Package.Current.Id.Version.Minor,
+                    Package.Current.Id.Version.Build,
+                    Package.Current.Id.Version.Revision);
         }
 
         partial void OnSelectedCloudProviderChanged(CloudProviderType value)

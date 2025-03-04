@@ -342,4 +342,16 @@
   <data name="CloudConfigProviders.Header" xml:space="preserve">
     <value>Proveedor de nube:</value>
   </data>
+  <data name="VersionCardTitle.Text" xml:space="preserve">
+    <value>ShelterVault</value>
+  </data>
+  <data name="AboutSettingsTitle.Text" xml:space="preserve">
+    <value>Acerca de</value>
+  </data>
+  <data name="StarOnGitHub.Content" xml:space="preserve">
+    <value>Star en GitHub</value>
+  </data>
+  <data name="PrivacyPolicy.Content" xml:space="preserve">
+    <value>Ver Política de Privacidad</value>
+  </data>
 </root>
