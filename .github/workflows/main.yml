@@ -5,86 +5,72 @@ name: WinUI 3 MSIX app
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [main]
+    tags:
+      - v*.*.*.*
 
 jobs:
-
   build:
-
     strategy:
       matrix:
         configuration: [Release]
         platform: [x64, x86]
 
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on:
+      windows-latest # For a list of available runner types, refer to
+      # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      Solution_Name: ShelterVault.sln                         # Replace with your solution name, i.e. App1.sln.
+      Solution_Name: ShelterVault.sln # Replace with your solution name, i.e. App1.sln.
       Project_Directory: .\ShelterVault\ShelterVault
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 8.0.x
+      # Install the .NET Core workload
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
+      # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v1.0.2
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+      # Restore the application to populate the obj folder with RuntimeIdentifiers
+      - name: Restore the application
+        run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+        env:
+          Configuration: ${{ matrix.configuration }}
 
-    # Decode the base 64 encoded pfx and save the Signing_Certificate
-    - name: Decode the pfx
-      run: |
-        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
-        $certificatePath = Join-Path -Path $env:Project_Directory -ChildPath ShelterVault_TemporaryKey.pfx
-        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+      # Decode the base 64 encoded pfx and save the Signing_Certificate
+      - name: Decode the pfx
+        run: |
+          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
+          $certificatePath = Join-Path -Path $env:Project_Directory -ChildPath ShelterVault_TemporaryKey.pfx
+          [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
-    # Create the app package by building and packaging the project
-    - name: Create the app package
-      run: |
-        msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=ShelterVault_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
-      env:
-        Appx_Bundle: Never
-        Appx_Package_Build_Mode: SideloadOnly
-        Appx_Package_Dir: Packages\${{ matrix.platform }}\
-        Configuration: ${{ matrix.configuration }}
-        Platform: ${{ matrix.platform }}
+      # Create the app package by building and packaging the project
+      - name: Create the app package
+        run: |
+          msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=ShelterVault_TemporaryKey.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
+        env:
+          Appx_Bundle: Never
+          Appx_Package_Build_Mode: SideloadOnly
+          Appx_Package_Dir: Packages\${{ matrix.platform }}\
+          Configuration: ${{ matrix.configuration }}
+          Platform: ${{ matrix.platform }}
 
-    # Workaround for Add-AppDevPackage.ps1
-    - name: Workaround for Add-AppDevPackage.ps1
-      run: |
-        $artifactBaseDir = Join-Path -Path $env:Project_Directory Packages ${{ matrix.platform }}
-        echo "Artifact base dir: $artifactBaseDir"
-        $artifactPlatformDir = Get-ChildItem -Path $artifactBaseDir -Directory | Where-Object { $_.Name -like "*${{ matrix.platform }}*" } | Select-Object -ExpandProperty Name
-        echo "Artifact platform dir: $artifactPlatformDir"
-        $installShelterVaultScriptPath = Join-Path $artifactBaseDir $artifactPlatformDir Install_ShelterVault.ps1
-        echo "Install_ShelterVault.ps1 path: $installShelterVaultScriptPath"
-        echo "#Run this script as: pwsh.exe --ExecutionPolicy Bypass -File .\Install_ShelterVault.ps1`n`$expectedText = '[string[]]`$DependencyPackages = @()'`n`$filePath = '.\Add-AppDevPackage.ps1'`nif (Select-String -Pattern `$expectedText -Path `$filePath -SimpleMatch) {`n    Write-Output 'Add-AppDevPackage.ps1 is patched'`n} else {`n    Write-Output 'Fixing Add-AppDevPackage.ps1...'`n    (Get-Content `$filePath).Replace('`$DependencyPackages = @()', `$expectedText) | Set-Content `$filePath`n}`nWrite-Output 'Installing ShelterVault...'`n.\Install.ps1" > $installShelterVaultScriptPath
-      env:
-        Platform: ${{ matrix.platform }}
+      # Remove the pfx
+      - name: Remove the pfx
+        run: Remove-Item -path $env:Project_Directory\ShelterVault_TemporaryKey.pfx
 
-    # Remove the pfx
-    - name: Remove the pfx
-      run: Remove-Item -path $env:Project_Directory\ShelterVault_TemporaryKey.pfx
-
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload MSIX package
-      uses: actions/upload-artifact@v4
-      with:
-        name: ShelterVault MSIX Package ${{ matrix.platform }}
-        path: ${{ env.Project_Directory }}\Packages\${{ matrix.platform }}\
+      # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
+      - name: Upload MSIX package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShelterVault MSIX Package ${{ matrix.platform }}
+          path: ${{ env.Project_Directory }}\Packages\${{ matrix.platform }}\
