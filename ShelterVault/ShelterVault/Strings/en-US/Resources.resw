@@ -348,10 +348,10 @@
   <data name="AboutSettingsTitle.Text" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="StarOnGitHub.Content" xml:space="preserve">
+  <data name="StarOnGitHub.Text" xml:space="preserve">
     <value>Star on GitHub</value>
   </data>
-  <data name="PrivacyPolicy.Content" xml:space="preserve">
+  <data name="PrivacyPolicy.Text" xml:space="preserve">
     <value>See Privacy Policy</value>
   </data>
 </root>

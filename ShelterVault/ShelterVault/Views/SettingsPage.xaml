@@ -123,18 +123,23 @@
                     <toolkit:SettingsExpander.Items>
                         <toolkit:SettingsCard>
                             <toolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE943;" />
+                                <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xE943;" />
                             </toolkit:SettingsCard.HeaderIcon>
                             <toolkit:SettingsCard.Description>
-                                <HyperlinkButton x:Uid="StarOnGitHub" NavigateUri="https://github.com/itonx/ShelterVault" />
+                                <HyperlinkButton NavigateUri="https://github.com/itonx/ShelterVault">
+                                    <TextBlock x:Uid="StarOnGitHub" TextDecorations="Underline" Foreground="{ThemeResource ShelterVaultForeground}"/>
+                                </HyperlinkButton>
                             </toolkit:SettingsCard.Description>
                         </toolkit:SettingsCard>
                         <toolkit:SettingsCard>
                             <toolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xEA18;" />
+                                <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xEA18;" />
                             </toolkit:SettingsCard.HeaderIcon>
                             <toolkit:SettingsCard.Description>
-                                <HyperlinkButton x:Uid="PrivacyPolicy" NavigateUri="https://github.com/itonx/ShelterVault/blob/assets/PrivacyPolicy.md" />
+                                <HyperlinkButton
+                                    NavigateUri="https://github.com/itonx/ShelterVault/blob/assets/PrivacyPolicy.md">
+                                    <TextBlock x:Uid="PrivacyPolicy" TextDecorations="Underline" Foreground="{ThemeResource ShelterVaultForeground}"/>
+                                </HyperlinkButton>
                             </toolkit:SettingsCard.Description>
                         </toolkit:SettingsCard>
                     </toolkit:SettingsExpander.Items>
