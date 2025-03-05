@@ -5,9 +5,10 @@ name: WinUI 3 MSIX app
 
 on:
   push:
-    branches: [main]
     tags:
-      - v*.*.*.*
+      - 'v*.*.*.*'
+    branches: 
+      - main
 
 jobs:
   build:
