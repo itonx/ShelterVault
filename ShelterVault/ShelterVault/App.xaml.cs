@@ -67,7 +67,7 @@ namespace ShelterVault
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.ClearProviders();
-                loggingBuilder.AddConsole();
+                //loggingBuilder.AddConsole();
                 loggingBuilder.AddDebug();
             });
 
