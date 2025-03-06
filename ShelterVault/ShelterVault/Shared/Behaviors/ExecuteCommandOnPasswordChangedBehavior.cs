@@ -1,8 +1,7 @@
-﻿using Microsoft.UI.Xaml;
+using System.Windows.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Shared.Extensions;
-using System.Windows.Input;
 
 namespace ShelterVault.Shared.Behaviors
 {
@@ -36,12 +35,12 @@ namespace ShelterVault.Shared.Behaviors
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            this.ExecuteAttachedCommand(CommandProperty);
+            this.Command?.Execute(this.AssociatedObject?.Password ?? null);
         }
 
         private void PasswordBox_Loaded(object sender, RoutedEventArgs e)
         {
-            this.ExecuteAttachedCommand(CommandProperty);
+            this.Command?.Execute(this.AssociatedObject?.Password ?? null);
         }
     }
 }

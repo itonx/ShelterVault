@@ -1,12 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using ShelterVault.Core.Shared.Interfaces;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Services;
+using ShelterVault.Shared.Services;
 using ShelterVault.ViewModels;
-using System;
+using ShelterVault.Views;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -104,6 +106,14 @@ namespace ShelterVault
             services.AddTransient<CreateMasterKeyViewModel>();
             services.AddTransient<ConfirmMasterKeyViewModel>();
             services.AddTransient<SettingsViewModel>();
+
+            // Viewmodels
+            services.AddTransient<ICreateMasterKeyPage, CreateMasterKeyPage>();
+            services.AddTransient<IConfirmMasterKeyPage, ConfirmMasterKeyPage>();
+            services.AddTransient<ICredentialsPage, CredentialsPage>();
+            services.AddTransient<IHomePage, HomePage>();
+            services.AddTransient<INavigationViewPage, NavigationViewPage>();
+            services.AddTransient<ISettingsPage, SettingsPage>();
 
             return services.BuildServiceProvider();
         }

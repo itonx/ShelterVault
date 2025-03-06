@@ -1,11 +1,9 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Attributes;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Extensions;
-using System;
-using System.Linq;
 
 namespace ShelterVault.Shared.Behaviors
 {
@@ -31,7 +29,7 @@ namespace ShelterVault.Shared.Behaviors
             ThemeStyleAttribute currentShelterVaultThemeConfig = currentShelterVaultTheme.GetAttribute<ThemeStyleAttribute>();
             ResourceDictionary lastDictionary = Application.Current.Resources.MergedDictionaries.LastOrDefault();
 
-            ElementTheme expectedTheme = currentShelterVaultThemeConfig.SupportedThemeStyle;
+            ElementTheme expectedTheme = (ElementTheme)currentShelterVaultThemeConfig.SupportedThemeStyle;
             ElementTheme switchTo = expectedTheme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
 
             if (lastDictionary != null && lastDictionary.Source != null && lastDictionary.Source.OriginalString.Contains("ms-appx:///Resources/") && !lastDictionary.Source.OriginalString.Contains("OverrideDefaultTheme.xaml"))

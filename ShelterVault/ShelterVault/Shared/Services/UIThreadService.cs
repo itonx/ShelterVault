@@ -1,12 +1,7 @@
-﻿using System;
+using ShelterVault.Core.Shared.Interfaces;
 
-namespace ShelterVault.Services
+namespace ShelterVault.Shared.Services
 {
-    public interface IUIThreadService
-    {
-        void Execute(Action rutine);
-    }
-
     public class UIThreadService : IUIThreadService
     {
         public void Execute(Action rutine)

@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using System;
+using ShelterVault.Core.Shared.Enums;
 
 namespace ShelterVault.Shared.Attributes
 {

@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>ShelterVault</value>
+  </data>
+  <data name="TitleSelectVault.Header" xml:space="preserve">
+    <value>Vault:</value>
+  </data>
+  <data name="TitleMasterKey.Header" xml:space="preserve">
+    <value>Master key:</value>
+  </data>
+  <data name="NewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>New vault</value>
+  </data>
+  <data name="TitleCreateMasterKey.Header" xml:space="preserve">
+    <value>Create master key:</value>
+  </data>
+  <data name="TitleConfirmMasterKey.Header" xml:space="preserve">
+    <value>Confirm master key:</value>
+  </data>
+  <data name="MasterKeyEncryptionInfo.Message" xml:space="preserve">
+    <value>Your master key will be used to encrypt your vault.</value>
+  </data>
+  <data name="TitleVaultName.Header" xml:space="preserve">
+    <value>Vault name:</value>
+  </data>
+  <data name="PasswordValidation8Chars.Text" xml:space="preserve">
+    <value>Be at least 8 characters</value>
+  </data>
+  <data name="PasswordValidation1Lower.Text" xml:space="preserve">
+    <value>Have at least one lowercase letter (a-z)</value>
+  </data>
+  <data name="PasswordValidation1Upper.Text" xml:space="preserve">
+    <value>Have at least one uppercase letter (A-Z)</value>
+  </data>
+  <data name="PasswordValidation1Number.Text" xml:space="preserve">
+    <value>Have at least one number (0-9)</value>
+  </data>
+  <data name="PasswordValidation1Special.Text" xml:space="preserve">
+    <value>Have at least one special character</value>
+  </data>
+  <data name="PasswordValidationMaxChars.Text" xml:space="preserve">
+    <value>Not be grather than 32 characters</value>
+  </data>
+  <data name="PasswordValidationMasterKeyMust.Text" xml:space="preserve">
+    <value>Master key password must:</value>
+  </data>
+  <data name="PasswordValidationPasswordMust.Text" xml:space="preserve">
+    <value>Password must:</value>
+  </data>
+  <data name="SelectEnglishLang.Content" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="SelectSpanishLang.Content" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="NavigationHomeItem.Content" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="NavigationNewCredentialsItem.Content" xml:space="preserve">
+    <value>New credentials</value>
+  </data>
+  <data name="CredentialsFormTitle.Header" xml:space="preserve">
+    <value>Title:</value>
+  </data>
+  <data name="CredentialsFormUsername.Header" xml:space="preserve">
+    <value>Username:</value>
+  </data>
+  <data name="CredentialsFormPassword.Header" xml:space="preserve">
+    <value>Password:</value>
+  </data>
+  <data name="CredentialsFormConfirmPassword.Header" xml:space="preserve">
+    <value>Confirm password:</value>
+  </data>
+  <data name="CredentialsFormNotes.Header" xml:space="preserve">
+    <value>Notes:</value>
+  </data>
+  <data name="CredentialsButtonCancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CredentialsButtonCopy.Text" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="CredentialsButtonSave.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CredentialsButtonShow.Text" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="CredentialsButtonHide.Text" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="CredentialsButtonDelete.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="AppBarSwitchVault.Text" xml:space="preserve">
+    <value>Switch Vault</value>
+  </data>
+  <data name="DialogTitleDefault.Text" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="DialogCloseDefault.Text" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="DialogWrongMasterKey.Text" xml:space="preserve">
+    <value>Wrong master key.</value>
+  </data>
+  <data name="DialogCredentialsDeleted.Text" xml:space="preserve">
+    <value>Your credentials were deleted.</value>
+  </data>
+  <data name="DialogCredentialsNotDeleted.Text" xml:space="preserve">
+    <value>Your credentials couldn't be deleted.</value>
+  </data>
+  <data name="DialogCredentialsUpdated.Text" xml:space="preserve">
+    <value>Your credentials were updated.</value>
+  </data>
+  <data name="DialogCredentialsNotUpdated.Text" xml:space="preserve">
+    <value>Your credentials couldn't be updated.</value>
+  </data>
+  <data name="DialogCredentialsSaved.Text" xml:space="preserve">
+    <value>Your credentials were saved.</value>
+  </data>
+  <data name="DialogCredentialsNotSaved.Text" xml:space="preserve">
+    <value>Your credentials couldn't be saved.</value>
+  </data>
+  <data name="DialogCredentialsEmptyTitle.Text" xml:space="preserve">
+    <value>Title can't be empty.</value>
+  </data>
+  <data name="DialogCredentialsPasswordMinimumRequirementsError.Text" xml:space="preserve">
+    <value>Password doesn't meet the minimum requirements.</value>
+  </data>
+  <data name="DialogCredentialsPasswordsDoNotMatch.Text" xml:space="preserve">
+    <value>Passwords don't match.</value>
+  </data>
+  <data name="DialogCloseNo.Text" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DialogCloseYes.Text" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="DialogCredentialsPendingChanges.Text" xml:space="preserve">
+    <value>You have pending changes, do you want to continue without saving changes?</value>
+  </data>
+  <data name="DialogCosmosDBSettingsTestOk.Text" xml:space="preserve">
+    <value>Cosmos DB parameters look good!</value>
+  </data>
+  <data name="DialogCosmosDBSettingsTestError.Text" xml:space="preserve">
+    <value>Cosmos DB parameters are not correct, check again.</value>
+  </data>
+  <data name="DialogCosmosDBSyncDone.Text" xml:space="preserve">
+    <value>Synchronization's done!</value>
+  </data>
+  <data name="DialogCosmosDBSyncError.Text" xml:space="preserve">
+    <value>Synchronization failed!</value>
+  </data>
+  <data name="SyncPendingConfiguration.Text" xml:space="preserve">
+    <value>Sync not started</value>
+  </data>
+  <data name="SyncInProgress.Text" xml:space="preserve">
+    <value>Synchronizing</value>
+  </data>
+  <data name="SyncFailed.Text" xml:space="preserve">
+    <value>Sync failed</value>
+  </data>
+  <data name="SyncUpToDate.Text" xml:space="preserve">
+    <value>Up to date</value>
+  </data>
+  <data name="DialogCredentialsRemovedFromCloud.Text" xml:space="preserve">
+    <value>This credentials were removed from the cloud. You will be redirected to the home page.</value>
+  </data>
+  <data name="DialogCredentialsUpdatedInCloud.Text" xml:space="preserve">
+    <value>This credentials were updated in the cloud. Your local changes for this credentials will be replaced by the new values.</value>
+  </data>
+  <data name="SelectVaultLocation.Content" xml:space="preserve">
+    <value>Choose location</value>
+  </data>
+  <data name="CancelVault.Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SaveVault.Content" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CredentialsUrl.Header" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="CloudSettingsTitle.Text" xml:space="preserve">
+    <value>Cloud settings</value>
+  </data>
+  <data name="CloudSettingsExpanderTitle.Text" xml:space="preserve">
+    <value>Cloud sync</value>
+  </data>
+  <data name="CloudSettingsExpander.Description" xml:space="preserve">
+    <value>Enable cloud synchronization using your own resources</value>
+  </data>
+  <data name="AzureConfigurationTitle.Text" xml:space="preserve">
+    <value>Azure configuration</value>
+  </data>
+  <data name="AzureConfigurationInfoBar.Message" xml:space="preserve">
+    <value>This configuration is for the current vault</value>
+  </data>
+  <data name="AzureConfigurationEndpoint.Header" xml:space="preserve">
+    <value>CosmosDB Endpoint *</value>
+  </data>
+  <data name="AzureConfigurationKey.Header" xml:space="preserve">
+    <value>CosmosDB Key *</value>
+  </data>
+  <data name="AzureConfigurationDatabase.Header" xml:space="preserve">
+    <value>Database *</value>
+  </data>
+  <data name="AzureConfigurationContainer.Header" xml:space="preserve">
+    <value>Container *</value>
+  </data>
+  <data name="AzureConfigurationTest.Content" xml:space="preserve">
+    <value>Test connection</value>
+  </data>
+  <data name="AzureConfigurationSync.Content" xml:space="preserve">
+    <value>Synchronize</value>
+  </data>
+  <data name="AzureConfigurationThroughput.Text" xml:space="preserve">
+    <value>Database RU/s:</value>
+  </data>
+  <data name="AzureConfigurationPartitionKey.Text" xml:space="preserve">
+    <value>Container partition key:</value>
+  </data>
+  <data name="CloudConfigProviders.Header" xml:space="preserve">
+    <value>Cloud providers:</value>
+  </data>
+  <data name="VersionCardTitle.Text" xml:space="preserve">
+    <value>ShelterVault</value>
+  </data>
+  <data name="AboutSettingsTitle.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="StarOnGitHub.Text" xml:space="preserve">
+    <value>Star on GitHub</value>
+  </data>
+  <data name="PrivacyPolicy.Text" xml:space="preserve">
+    <value>See Privacy Policy</value>
+  </data>
+</root>

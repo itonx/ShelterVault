@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Attributes;
@@ -20,7 +20,9 @@ namespace ShelterVault.Shared.Behaviors
         {
             Frame appContainer = d.GetDependencyObjectFromBehavior<Frame>();
             ShelterVaultAppState shelterVaultAppState = (ShelterVaultAppState)e.NewValue;
-            appContainer.Navigate(shelterVaultAppState.GetAttribute<PageTypeAttribute>().PageType);
+            string typeStr = shelterVaultAppState.GetAttribute<PageTypeAttribute>().PageType.ToString();
+            string pageTypeStr = string.Concat("ShelterVault.Views.", typeStr.Split(".").Last().Substring(1));
+            appContainer.Navigate(Type.GetType(pageTypeStr));
         }
 
         public ShelterVaultAppState CurrentAppState

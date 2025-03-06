@@ -1,6 +1,6 @@
-﻿namespace ShelterVault.Shared.Constants
+namespace ShelterVault.Shared.Constants
 {
-    internal static class LangResourceKeys
+    public static class LangResourceKeys
     {
         public const string LANG_TREE = "Resources";
         public const string MASTER_KEY_MUST = "PasswordValidationMasterKeyMust/Text";

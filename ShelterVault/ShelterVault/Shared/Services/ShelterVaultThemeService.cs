@@ -1,7 +1,6 @@
-﻿using ShelterVault.Shared.Constants;
+using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Interop;
-using System;
 using Windows.Storage;
 
 namespace ShelterVault.Services

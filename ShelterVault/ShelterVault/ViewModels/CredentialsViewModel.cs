@@ -1,7 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using ShelterVault.Core.Shared.Interfaces;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
@@ -9,9 +10,6 @@ using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Interfaces;
 using ShelterVault.Shared.Messages;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
@@ -67,7 +65,7 @@ namespace ShelterVault.ViewModels
         {
             if (!_selectedCredentialBackup.Equals(SelectedCredential))
             {
-                bool discard = await _dialogManager.ShowContinueConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PENDING_CHANGES, expectedResult: ContentDialogResult.Secondary);
+                bool discard = await _dialogManager.ShowContinueConfirmationDialogAsync(LangResourceKeys.DIALOG_CREDENTIALS_PENDING_CHANGES, expectedResult: (int)ContentDialogResult.Secondary);
                 if (completeChallenge && discard) ChallengeCompleted = true;
                 return discard;
             }

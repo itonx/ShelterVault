@@ -1,14 +1,13 @@
-﻿using Microsoft.UI.Xaml.Controls;
+using ShelterVault.Core.Shared.Interfaces;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Managers
 {
     public interface IDialogManager
     {
         Task ShowConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = LangResourceKeys.DIALOG_TITLE_DEFAULT, string primaryButtonTextResourceKey = LangResourceKeys.DIALOG_CLOSE_DEFAULT);
-        Task<bool> ShowContinueConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = LangResourceKeys.DIALOG_TITLE_DEFAULT, string primaryButtonTextResourceKey = LangResourceKeys.DIALOG_CLOSE_NO, string secondaryButtonResourceKey = LangResourceKeys.DIALOG_CLOSE_YES, ContentDialogResult expectedResult = ContentDialogResult.Primary);
+        Task<bool> ShowContinueConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = LangResourceKeys.DIALOG_TITLE_DEFAULT, string primaryButtonTextResourceKey = LangResourceKeys.DIALOG_CLOSE_NO, string secondaryButtonResourceKey = LangResourceKeys.DIALOG_CLOSE_YES, int expectedResult = 1);
     }
 
     public class DialogManager : IDialogManager
@@ -29,7 +28,7 @@ namespace ShelterVault.Managers
             _shelterVaultStateService.SetDialogStatus(false);
         }
 
-        public async Task<bool> ShowContinueConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = "DialogTitleDefault/Text", string primaryButtonTextResourceKey = "DialogCloseNo/Text", string secondaryButtonResourceKey = "DialogCloseYes/Text", ContentDialogResult expectedResult = ContentDialogResult.Primary)
+        public async Task<bool> ShowContinueConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = "DialogTitleDefault/Text", string primaryButtonTextResourceKey = "DialogCloseNo/Text", string secondaryButtonResourceKey = "DialogCloseYes/Text", int expectedResult = 1)
         {
             _shelterVaultStateService.SetDialogStatus(true);
             bool result = await _dialogService.ShowContinueConfirmationDialogAsync(messageResourceKey, titleResourceKey, primaryButtonTextResourceKey, secondaryButtonResourceKey, expectedResult);
