@@ -1,16 +1,20 @@
-﻿using Microsoft.UI.Input;
+﻿using Desktiny.UI.Tools;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Shared.Helpers;
 using System;
 using Windows.Foundation;
 using Windows.Graphics;
 
-namespace ShelterVault.Shared.Behaviors
+namespace Desktiny.UI.Behaviors
 {
-    public class InteractiveAppTitleBarControlBehavior : Behavior<FrameworkElement>
+    public class InteractiveTitleBarControlBehavior : Behavior<FrameworkElement>
     {
+        private Grid _appTitleBar;
+        private Window _mainWindow;
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -21,16 +25,18 @@ namespace ShelterVault.Shared.Behaviors
         {
             base.OnDetaching();
             AssociatedObject.Loaded -= AssociatedObject_Loaded;
-            MainWindow mainWindow = WindowHelper.CurrentMainWindow;
-            mainWindow.AppTitleBar.SizeChanged -= AppTitleBar_SizeChanged;
+            _appTitleBar.SizeChanged -= AppTitleBar_SizeChanged;
         }
 
         private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
         {
-            AssociatedObject.Loaded -= AssociatedObject_Loaded;
-            MainWindow mainWindow = WindowHelper.CurrentMainWindow;
+            XamlRoot root = AssociatedObject.XamlRoot;
+            WinContainer winContainer = root.Content as WinContainer;
+            _appTitleBar = winContainer.GetAppTitleBar();
+            _mainWindow = winContainer.MainWindow;
+
             setupElement(AssociatedObject);
-            mainWindow.AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
+            _appTitleBar.SizeChanged += AppTitleBar_SizeChanged;
         }
 
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -40,22 +46,21 @@ namespace ShelterVault.Shared.Behaviors
 
         private void setupElement(FrameworkElement interactiveControl)
         {
-            MainWindow window = WindowHelper.CurrentMainWindow;
-            if (window == null || interactiveControl == null) return;
+            if (_mainWindow == null || interactiveControl == null) return;
 
-            double scale = window.AppTitleBar.XamlRoot.RasterizationScale;
+            double scale = _appTitleBar.XamlRoot.RasterizationScale;
 
             GeneralTransform transformInteractiveControl = interactiveControl.TransformToVisual(null);
             Rect boundsInteractiveControl = transformInteractiveControl.TransformBounds(new Rect(0, 0, interactiveControl.ActualWidth, interactiveControl.ActualHeight));
 
             RectInt32 transparentRect = GetRect(boundsInteractiveControl, scale);
             RectInt32[] rectArr = { transparentRect };
-            setupClickRegion(rectArr, window);
+            setupClickRegion(rectArr);
         }
 
-        private void setupClickRegion(RectInt32[] rects, Window window)
+        private void setupClickRegion(RectInt32[] rects)
         {
-            InputNonClientPointerSource nonClientInputSrc = InputNonClientPointerSource.GetForWindowId(window.AppWindow.Id);
+            InputNonClientPointerSource nonClientInputSrc = InputNonClientPointerSource.GetForWindowId(_mainWindow.AppWindow.Id);
             nonClientInputSrc.SetRegionRects(NonClientRegionKind.Passthrough, rects);
         }
 

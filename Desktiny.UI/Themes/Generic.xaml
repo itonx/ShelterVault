@@ -1,0 +1,58 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Desktiny.UI.Behaviors"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Desktiny.UI">
+
+    <Style TargetType="local:WinContainer">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:WinContainer">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter>
+                            <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                                <interactivity:Interaction.Behaviors>
+                                    <!--<behaviors:ShelterVaultThemeBehavior CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}" />-->
+                                </interactivity:Interaction.Behaviors>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid x:Name="AppTitleBar" Canvas.ZIndex="1">
+                                    <interactivity:Interaction.Behaviors>
+                                        <!--<behaviors:ShelterVaultThemeAppTitleBehavior />
+                                        <behaviors:AddMarginOnNavigationViewLoadedBehavior ShelterVaultCurrentAppState="{Binding ShelterVaultCurrentAppState, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />-->
+                                    </interactivity:Interaction.Behaviors>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Grid.Column="1" Content="{TemplateBinding TitleBar}" />
+                                </Grid>
+                                <Grid Grid.RowSpan="2">
+                                    <ContentPresenter Content="{TemplateBinding Content}" />
+                                    <Grid Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                                        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.8" />
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <ProgressRing
+                                                FontSize="40"
+                                                Foreground="{ThemeResource ShelterVaultForeground}"
+                                                IsActive="True"
+                                                Opacity="1" />
+                                            <TextBlock Style="{ThemeResource ShelterVaultTextBlockStyle}" Text="Loading..." />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </ContentPresenter>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
