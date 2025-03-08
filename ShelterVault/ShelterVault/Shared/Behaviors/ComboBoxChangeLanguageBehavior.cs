@@ -57,7 +57,7 @@ namespace ShelterVault.Shared.Behaviors
         private void RefreshUI()
         {
             if (WindowHelper.CurrentMainWindow?.Content == null) return;
-            WindowHelper.CurrentMainWindow.Navigator.Navigate(WindowHelper.CurrentMainWindow.Navigator.Content.GetType());
+            //TODO: Refresh the view to apply new lang WindowHelper.CurrentMainWindow.Navigator.Navigate(WindowHelper.CurrentMainWindow.Navigator.Content.GetType());
         }
 
         private ShelterVaultLang GetLanguageFromSettings()

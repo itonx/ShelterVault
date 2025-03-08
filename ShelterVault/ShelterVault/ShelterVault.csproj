@@ -162,6 +162,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Desktiny.UI\Desktiny.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Resources\ShelterVaultStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

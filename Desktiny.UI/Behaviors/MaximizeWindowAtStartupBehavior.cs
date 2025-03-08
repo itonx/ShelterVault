@@ -1,12 +1,11 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Shared.Helpers;
 using ShelterVault.Shared.Interop;
 using System;
 
-namespace ShelterVault.Shared.Behaviors
+namespace Desktiny.UI.Behaviors
 {
-    public class MaximizeWindowAtStartupBehavior : Behavior<FrameworkElement>
+    public class MaximizeWindowAtStartupBehavior : Behavior<WinContainer>
     {
         protected override void OnAttached()
         {
@@ -20,9 +19,7 @@ namespace ShelterVault.Shared.Behaviors
 
         private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
         {
-            AssociatedObject.Loaded -= AssociatedObject_Loaded;
-            MainWindow mainWindow = WindowHelper.CurrentMainWindow;
-            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
+            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(AssociatedObject.MainWindow);
             PInvoke.MaximizeWindow(hWnd);
         }
     }

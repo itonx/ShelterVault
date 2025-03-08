@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShelterVault", "ShelterVaul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelterVault.Test", "ShelterVault.Test\ShelterVault.Test.csproj", "{D8295029-7B3B-46F4-B3CA-82E84ECC05D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desktiny.UI", "Desktiny.UI\Desktiny.UI.csproj", "{5E98228B-4107-496F-B9AC-A2F87F65B076}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,26 @@ Global
 		{D8295029-7B3B-46F4-B3CA-82E84ECC05D4}.Release|ARM64.ActiveCfg = Release|x64
 		{D8295029-7B3B-46F4-B3CA-82E84ECC05D4}.Release|x64.ActiveCfg = Release|x64
 		{D8295029-7B3B-46F4-B3CA-82E84ECC05D4}.Release|x86.ActiveCfg = Release|x86
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|x64.Build.0 = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Debug|x86.Build.0 = Debug|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|ARM.Build.0 = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|ARM64.Build.0 = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|x64.ActiveCfg = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|x64.Build.0 = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|x86.ActiveCfg = Release|Any CPU
+		{5E98228B-4107-496F-B9AC-A2F87F65B076}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
