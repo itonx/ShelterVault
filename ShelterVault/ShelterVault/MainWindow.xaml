@@ -18,6 +18,7 @@
     <ui:WinContainer
         x:Name="WindowContainer"
         AppWindow="{x:Bind GetAppWindow}"
+        FullHeight="True"
         MainWindow="{x:Bind GetMainWindow}"
         MaximizeAtStartup="true">
         <ui:WinContainer.TitleBar>

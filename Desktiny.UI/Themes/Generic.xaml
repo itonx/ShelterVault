@@ -34,7 +34,7 @@
                                     </Grid.ColumnDefinitions>
                                     <ContentPresenter Grid.Column="1" Content="{TemplateBinding TitleBar}" />
                                 </Grid>
-                                <Grid Grid.RowSpan="2">
+                                <Grid x:Name="ClientContainer">
                                     <ContentPresenter Content="{TemplateBinding Content}" />
                                     <Grid Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
                                         <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.8" />

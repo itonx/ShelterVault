@@ -8,5 +8,10 @@ namespace Desktiny.UI.Tools
         {
             return WinUI3Helper.FindChildElementByName(winContainer, "AppTitleBar") as Grid;
         }
+
+        public static Grid GetClientContainer(this WinContainer winContainer)
+        {
+            return WinUI3Helper.FindChildElementByName(winContainer, "ClientContainer") as Grid;
+        }
     }
 }
