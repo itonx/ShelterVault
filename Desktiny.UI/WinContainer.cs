@@ -1,11 +1,13 @@
 using Desktiny.UI.Behaviors;
 using Desktiny.UI.Models;
 using Desktiny.UI.Tools;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using System.Linq;
+using Windows.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -115,6 +117,18 @@ namespace Desktiny.UI
 
         private bool? _removeLastThemeResource = null;
 
+        public static readonly DependencyProperty TitleBarMarginProperty = DependencyProperty.Register(
+            "TitleBarMargin",
+            typeof(Thickness),
+            typeof(WinContainer),
+            new PropertyMetadata(new Thickness(0, 0, 0, 0)));
+
+        public Thickness TitleBarMargin
+        {
+            get { return (Thickness)GetValue(TitleBarMarginProperty); }
+            set { SetValue(TitleBarMarginProperty, value); }
+        }
+
         public WinContainer()
         {
             this.DefaultStyleKey = typeof(WinContainer);
@@ -168,6 +182,16 @@ namespace Desktiny.UI
 
             container.RequestedTheme = switchTo;
             container.RequestedTheme = appThemeModel.AppTheme;
+            ApplyThemeToCaptionButtons(appThemeModel.AppTheme);
+        }
+
+        private void ApplyThemeToCaptionButtons(ElementTheme currentTheme)
+        {
+            AppWindow appWindow = this.AppWindow;
+            if (appWindow == null) return;
+            appWindow.TitleBar.ButtonHoverBackgroundColor = currentTheme == ElementTheme.Light ? Color.FromArgb(50, 0, 0, 0) : Color.FromArgb(50, 255, 255, 255);
+            appWindow.TitleBar.ButtonHoverForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
+            appWindow.TitleBar.ButtonForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
         }
     }
 }

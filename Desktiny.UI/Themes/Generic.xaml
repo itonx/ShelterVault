@@ -15,17 +15,16 @@
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <ContentPresenter>
                             <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                                <interactivity:Interaction.Behaviors>
-                                    <!--<behaviors:ShelterVaultThemeBehavior CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}" />-->
-                                </interactivity:Interaction.Behaviors>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Grid x:Name="AppTitleBar" Canvas.ZIndex="1">
+                                <Grid
+                                    x:Name="AppTitleBar"
+                                    Margin="{TemplateBinding TitleBarMargin}"
+                                    Canvas.ZIndex="1">
                                     <interactivity:Interaction.Behaviors>
-                                        <!--<behaviors:ShelterVaultThemeAppTitleBehavior />
-                                        <behaviors:AddMarginOnNavigationViewLoadedBehavior ShelterVaultCurrentAppState="{Binding ShelterVaultCurrentAppState, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />-->
+                                        <!--<behaviors:AddMarginOnNavigationViewLoadedBehavior ShelterVaultCurrentAppState="{Binding ShelterVaultCurrentAppState, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />-->
                                     </interactivity:Interaction.Behaviors>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />

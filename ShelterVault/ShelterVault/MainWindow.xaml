@@ -21,9 +21,10 @@
         AppWindow="{x:Bind GetAppWindow}"
         FullHeight="True"
         MainWindow="{x:Bind GetMainWindow}"
-        MaximizeAtStartup="true">
+        MaximizeAtStartup="true"
+        TitleBarMargin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleBarMargin}}">
         <ui:WinContainer.TitleBar>
-            <Grid x:Name="AppTitleBar" ColumnSpacing="5">
+            <Grid ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -97,7 +98,7 @@
             </Grid>
         </ui:WinContainer.TitleBar>
         <ui:WinContainer.Content>
-            <Frame x:Name="Navigator" Background="WhiteSmoke">
+            <Frame x:Name="Navigator">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:ShelterVaultAppStateBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
                 </interactivity:Interaction.Behaviors>
