@@ -75,7 +75,6 @@
     <None Remove="Images\Wide310x150Logo.scale-200.png" />
     <None Remove="Images\Wide310x150Logo.scale-400.png" />
     <None Remove="Resources\NeuromancerTheme.xaml" />
-    <None Remove="Resources\OverrideDefaultTheme.xaml" />
     <None Remove="Resources\ShelterVaultStyles.xaml" />
     <None Remove="Views\ConfirmMasterKeyPage.xaml" />
     <None Remove="Views\CreateMasterKeyPage.xaml" />
@@ -172,7 +171,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Resources\OverrideDefaultTheme.xaml">
+    <Page Update="Resources\OverrideWinUITheme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

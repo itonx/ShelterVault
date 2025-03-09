@@ -17,6 +17,7 @@
     mc:Ignorable="d">
     <ui:WinContainer
         x:Name="WindowContainer"
+        AppTheme="{Binding CurrentAppTheme}"
         AppWindow="{x:Bind GetAppWindow}"
         FullHeight="True"
         MainWindow="{x:Bind GetMainWindow}"
@@ -90,7 +91,7 @@
                         VerticalAlignment="Stretch"
                         Command="{Binding ChangeThemeCommand}"
                         Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}">
-                        <FontIcon Glyph="{Binding CurrentTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
+                        <FontIcon Glyph="{Binding CurrentAppTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
                     </Button>
                 </StackPanel>
             </Grid>

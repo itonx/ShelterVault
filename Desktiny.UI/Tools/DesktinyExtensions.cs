@@ -13,5 +13,10 @@ namespace Desktiny.UI.Tools
         {
             return WinUI3Helper.FindChildElementByName(winContainer, "ClientContainer") as Grid;
         }
+
+        public static Grid GetWindowContainer(this WinContainer winContainer)
+        {
+            return WinUI3Helper.FindChildElementByName(winContainer, "WindowContainer") as Grid;
+        }
     }
 }

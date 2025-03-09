@@ -1,9 +1,11 @@
 using Desktiny.UI.Behaviors;
+using Desktiny.UI.Models;
 using Desktiny.UI.Tools;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
+using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -93,6 +95,26 @@ namespace Desktiny.UI
             set { SetValue(FullHeightProperty, value); }
         }
 
+        public static readonly DependencyProperty AppThemeProperty = DependencyProperty.Register(
+            nameof(AppTheme),
+            typeof(AppThemeModel),
+            typeof(WinContainer),
+            new PropertyMetadata(null, OnAppThemeChanged));
+
+        private static void OnAppThemeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            WinContainer winContainer = d as WinContainer;
+            winContainer.SetApptheme((AppThemeModel)e.NewValue);
+        }
+
+        public AppThemeModel AppTheme
+        {
+            get { return (AppThemeModel)GetValue(AppThemeProperty); }
+            set { SetValue(AppThemeProperty, value); }
+        }
+
+        private bool? _removeLastThemeResource = null;
+
         public WinContainer()
         {
             this.DefaultStyleKey = typeof(WinContainer);
@@ -102,11 +124,13 @@ namespace Desktiny.UI
         private void WinContainer_Loaded(object sender, RoutedEventArgs e)
         {
             SetFullHeight(this.FullHeight);
+            SetApptheme(this.AppTheme);
         }
 
         private void SetFullHeight(bool fullHeight)
         {
             Grid clientContainer = this.GetClientContainer();
+            if (clientContainer == null) return;
             if (fullHeight)
             {
                 clientContainer.SetValue(Grid.RowProperty, 0);
@@ -117,6 +141,33 @@ namespace Desktiny.UI
                 clientContainer.SetValue(Grid.RowProperty, 1);
                 clientContainer.SetValue(Grid.RowSpanProperty, 1);
             }
+        }
+
+        private void SetApptheme(AppThemeModel appThemeModel)
+        {
+            if (appThemeModel == null) return;
+            Grid container = this.GetWindowContainer();
+            if (container == null) return;
+            ResourceDictionary lastDictionary = Application.Current.Resources.MergedDictionaries.LastOrDefault(d => d.Source.AbsoluteUri.Contains("Theme.xaml"));
+            ElementTheme switchTo = appThemeModel.AppTheme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
+
+            if (_removeLastThemeResource != null && (bool)_removeLastThemeResource && lastDictionary != null && lastDictionary.Source != null)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(lastDictionary);
+            }
+
+            _removeLastThemeResource = appThemeModel.ThemeResource != null;
+            if (appThemeModel.ThemeResource != null)
+            {
+                ResourceDictionary resourceTheme = new ResourceDictionary()
+                {
+                    Source = appThemeModel.ThemeResource
+                };
+                Application.Current.Resources.MergedDictionaries.Add(resourceTheme);
+            }
+
+            container.RequestedTheme = switchTo;
+            container.RequestedTheme = appThemeModel.AppTheme;
         }
     }
 }

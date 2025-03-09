@@ -6,14 +6,14 @@ namespace ShelterVault.Shared.Attributes
     [AttributeUsage(AttributeTargets.Field)]
     public class ThemeStyleAttribute : Attribute
     {
-        public ElementTheme SupportedThemeStyle { get; }
-        public string ThemeName { get; }
+        public ElementTheme AppTheme { get; }
+        public string ThemeUri { get; }
         public string Icon { get; }
 
-        public ThemeStyleAttribute(ElementTheme pageType, string themeName, string icon)
+        public ThemeStyleAttribute(ElementTheme appTheme, string themeUri, string icon)
         {
-            SupportedThemeStyle = pageType;
-            ThemeName = themeName;
+            AppTheme = appTheme;
+            ThemeUri = themeUri;
             Icon = icon;
         }
     }

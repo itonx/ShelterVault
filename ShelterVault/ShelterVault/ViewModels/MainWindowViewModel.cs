@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Desktiny.UI.Models;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
@@ -21,7 +22,7 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         private ShelterVaultAppState _shelterVaultCurrentAppState = ShelterVaultAppState.CreateMasterKey;
         [ObservableProperty]
-        private ShelterVaultTheme _currentTheme;
+        private AppThemeModel _currentAppTheme;
         [ObservableProperty]
         private bool _showSwitchVault;
         [ObservableProperty]
@@ -65,7 +66,7 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void ChangeTheme()
         {
-            CurrentTheme = _shelterVaultThemeService.GetNextTheme(CurrentTheme);
+            CurrentAppTheme = _shelterVaultThemeService.GetNextTheme(CurrentAppTheme);
         }
 
         [RelayCommand]
@@ -81,7 +82,7 @@ namespace ShelterVault.ViewModels
         private void InitialSetup(IShelterVault shelterVault)
         {
             RegisterMessages();
-            CurrentTheme = _shelterVaultThemeService.GetTheme();
+            CurrentAppTheme = _shelterVaultThemeService.GetTheme();
             if (shelterVault.AreThereVaults()) ShelterVaultCurrentAppState = ShelterVaultAppState.ConfirmMasterKey;
             ShowLangOptions = true;
             ShowSwitchVault = false;

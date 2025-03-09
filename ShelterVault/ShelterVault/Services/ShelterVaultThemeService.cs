@@ -1,40 +1,50 @@
-﻿using ShelterVault.Shared.Constants;
+﻿using Desktiny.UI.Models;
+using Microsoft.UI.Xaml;
+using ShelterVault.Shared.Attributes;
+using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Interop;
+using ShelterVault.Shared.Extensions;
 using System;
+using System.Linq;
 using Windows.Storage;
 
 namespace ShelterVault.Services
 {
     public interface IShelterVaultThemeService
     {
-        ShelterVaultTheme GetTheme();
-        ShelterVaultTheme GetNextTheme(ShelterVaultTheme currentShelterVaultTheme);
+        AppThemeModel GetTheme();
+        AppThemeModel GetNextTheme(AppThemeModel currentAppTheme);
     }
 
     public class ShelterVaultThemeService : IShelterVaultThemeService
     {
-        public ShelterVaultTheme GetTheme()
+        public AppThemeModel GetTheme()
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             string theme = localSettings.Values[ShelterVaultConstants.SETTINGS_THEME_KEY] as string;
             Enum.TryParse(typeof(ShelterVaultTheme), theme, true, out object shelterVaultThemeObj);
             ShelterVaultTheme? shelterVaultTheme = (ShelterVaultTheme?)shelterVaultThemeObj;
 
-            if (shelterVaultTheme == null) return PInvoke.UseDarkMode ? ShelterVaultTheme.DARK : ShelterVaultTheme.LIGHT;
+            if (shelterVaultTheme == null) return new(ElementTheme.Default);
 
-            return (ShelterVaultTheme)shelterVaultTheme;
+            ThemeStyleAttribute nextShelterVaultThemeAttribute = shelterVaultTheme.GetAttribute<ThemeStyleAttribute>();
+            AppThemeModel appThemeModel = new(nextShelterVaultThemeAttribute.AppTheme, nextShelterVaultThemeAttribute.ThemeUri);
+            return appThemeModel;
         }
 
-        public ShelterVaultTheme GetNextTheme(ShelterVaultTheme currentShelterVaultTheme)
+        public AppThemeModel GetNextTheme(AppThemeModel currentAppTheme)
         {
             ShelterVaultTheme[] shelterVaultThemeValues = (ShelterVaultTheme[])Enum.GetValues(typeof(ShelterVaultTheme));
-            int currentIndex = Array.IndexOf(shelterVaultThemeValues, currentShelterVaultTheme);
-            ShelterVaultTheme nextShelterVaultTheme = shelterVaultThemeValues[0];
+            ShelterVaultTheme currentShelterVaultTheme = currentAppTheme.GetShelterVaultThemeEquivalent();
+            ShelterVaultTheme nextShelterVaultTheme = currentShelterVaultTheme;
 
-            if (currentIndex + 1 < shelterVaultThemeValues.Length)
+            for (int i = 0; i < shelterVaultThemeValues.Length; i++)
             {
-                nextShelterVaultTheme = shelterVaultThemeValues[currentIndex + 1];
+                if (currentShelterVaultTheme == shelterVaultThemeValues[i])
+                {
+                    nextShelterVaultTheme = i == shelterVaultThemeValues.Count() - 1 ? shelterVaultThemeValues[0] : shelterVaultThemeValues[i + 1];
+                    break;
+                }
             }
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;

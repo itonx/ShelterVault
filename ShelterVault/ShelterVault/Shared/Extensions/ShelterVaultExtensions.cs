@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Desktiny.UI.Models;
+using ShelterVault.Shared.Attributes;
+using ShelterVault.Shared.Enums;
+using ShelterVault.Shared.Interop;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -64,6 +68,22 @@ namespace ShelterVault.Shared.Extensions
                 .EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
                 .Where(s => extension.TrimStart('.').Equals(Path.GetExtension(s).TrimStart('.'), StringComparison.CurrentCultureIgnoreCase))
                 .Select(p => Path.GetFileNameWithoutExtension(p));
+        }
+
+        public static ShelterVaultTheme GetShelterVaultThemeEquivalent(this AppThemeModel currentAppTheme)
+        {
+            ShelterVaultTheme[] shelterVaultThemeValues = (ShelterVaultTheme[])Enum.GetValues(typeof(ShelterVaultTheme));
+
+            for (int i = 0; i < shelterVaultThemeValues.Length; i++)
+            {
+                ThemeStyleAttribute themeStyleAttribute = shelterVaultThemeValues[i].GetAttribute<ThemeStyleAttribute>();
+                if (themeStyleAttribute.AppTheme == currentAppTheme.AppTheme && themeStyleAttribute.ThemeUri == currentAppTheme.ThemeResource?.AbsoluteUri)
+                {
+                    return shelterVaultThemeValues[i];
+                }
+            }
+
+            return PInvoke.UseDarkMode ? ShelterVaultTheme.DARK : ShelterVaultTheme.LIGHT;
         }
     }
 }
