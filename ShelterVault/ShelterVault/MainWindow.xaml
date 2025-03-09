@@ -20,6 +20,7 @@
         AppTheme="{Binding CurrentAppTheme}"
         AppWindow="{x:Bind GetAppWindow}"
         FullHeight="True"
+        IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
         MainWindow="{x:Bind GetMainWindow}"
         MaximizeAtStartup="true"
         TitleBarMargin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleBarMargin}}">
@@ -104,5 +105,15 @@
                 </interactivity:Interaction.Behaviors>
             </Frame>
         </ui:WinContainer.Content>
+        <ui:WinContainer.NocturneContent>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressRing
+                    FontSize="40"
+                    Foreground="{ThemeResource ShelterVaultForeground}"
+                    IsActive="True"
+                    Opacity="1" />
+                <TextBlock Style="{ThemeResource ShelterVaultTextBlockStyle}" Text="Loading..." />
+            </StackPanel>
+        </ui:WinContainer.NocturneContent>
     </ui:WinContainer>
 </Window>

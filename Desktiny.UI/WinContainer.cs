@@ -129,6 +129,30 @@ namespace Desktiny.UI
             set { SetValue(TitleBarMarginProperty, value); }
         }
 
+        public static readonly DependencyProperty IsNocturneVisibleProperty = DependencyProperty.Register(
+            "IsNocturneVisible",
+            typeof(bool),
+            typeof(WinContainer),
+            new PropertyMetadata(false));
+
+        public bool IsNocturneVisible
+        {
+            get { return (bool)GetValue(IsNocturneVisibleProperty); }
+            set { SetValue(IsNocturneVisibleProperty, value); }
+        }
+
+        public static readonly DependencyProperty NocturneContentProperty = DependencyProperty.Register(
+            "NocturneContent",
+            typeof(object),
+            typeof(WinContainer),
+            new PropertyMetadata(null));
+
+        public object NocturneContent
+        {
+            get { return GetValue(NocturneContentProperty); }
+            set { SetValue(NocturneContentProperty, value); }
+        }
+
         public WinContainer()
         {
             this.DefaultStyleKey = typeof(WinContainer);
