@@ -1,8 +1,7 @@
-﻿using ShelterVault.Shared.Constants;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Windows.ApplicationModel.Resources.Core;
 
-namespace ShelterVault.Services
+namespace Desktiny.UI.Services
 {
     public interface ILanguageService
     {
@@ -26,7 +25,7 @@ namespace ShelterVault.Services
 
         public string GetLangValue(string resourceKey)
         {
-            return ResourceManager.Current.MainResourceMap.GetSubtree(LangResourceKeys.LANG_TREE).GetValue(resourceKey).ValueAsString ?? string.Empty;
+            return ResourceManager.Current.MainResourceMap.GetSubtree(Constants.Global.LANG_TREE).GetValue(resourceKey).ValueAsString ?? string.Empty;
         }
     }
 
@@ -34,7 +33,7 @@ namespace ShelterVault.Services
     {
         public static string GetLangValue(string resourceKey)
         {
-            return ResourceManager.Current.MainResourceMap.GetSubtree(LangResourceKeys.LANG_TREE).GetValue(resourceKey).ValueAsString ?? string.Empty;
+            return ResourceManager.Current.MainResourceMap.GetSubtree(Constants.Global.LANG_TREE).GetValue(resourceKey).ValueAsString ?? string.Empty;
         }
     }
 }

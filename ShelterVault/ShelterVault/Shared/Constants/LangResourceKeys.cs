@@ -2,7 +2,6 @@
 {
     internal static class LangResourceKeys
     {
-        public const string LANG_TREE = "Resources";
         public const string MASTER_KEY_MUST = "PasswordValidationMasterKeyMust/Text";
         public const string PASSWORD_MUST = "PasswordValidationPasswordMust/Text";
         public const string ENGLISH_OPTION = "SelectEnglishLang/Content";
