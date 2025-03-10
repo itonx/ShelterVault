@@ -1,6 +1,6 @@
-﻿using Microsoft.UI.Windowing;
+﻿using Desktiny.UI.Tools;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using ShelterVault.Shared.Helpers;
 
 namespace Desktiny.UI.Services
 {

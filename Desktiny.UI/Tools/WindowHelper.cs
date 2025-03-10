@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml;
 using System;
 using WinRT.Interop;
 
-namespace ShelterVault.Shared.Helpers
+namespace Desktiny.UI.Tools
 {
     public static class WindowHelper
     {

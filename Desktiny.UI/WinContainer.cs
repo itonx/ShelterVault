@@ -6,7 +6,6 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Shared.Helpers;
 using System.Linq;
 using Windows.UI;
 

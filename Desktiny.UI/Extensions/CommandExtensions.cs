@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using System.Windows.Input;
 
-namespace ShelterVault.Shared.Extensions
+namespace Desktiny.UI.Extensions
 {
     public static class CommandExtensions
     {
