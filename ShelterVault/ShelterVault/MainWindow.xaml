@@ -18,10 +18,8 @@
     <ui:WinContainer
         x:Name="WindowContainer"
         AppTheme="{Binding CurrentAppTheme}"
-        AppWindow="{x:Bind GetAppWindow}"
         FullHeight="True"
         IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
-        MainWindow="{x:Bind GetMainWindow}"
         MaximizeAtStartup="true"
         TitleBarMargin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleBarMargin}}">
         <ui:WinContainer.TitleBar>

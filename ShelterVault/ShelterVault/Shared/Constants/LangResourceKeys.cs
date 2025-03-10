@@ -8,10 +8,6 @@
         public const string SPANISH_OPTION = "SelectSpanishLang/Content";
         public const string SWITCH_VAULT = "AppBarSwitchVault/Text";
 
-        public const string DIALOG_TITLE_DEFAULT = "DialogTitleDefault/Text";
-        public const string DIALOG_CLOSE_DEFAULT = "DialogCloseDefault/Text";
-        public const string DIALOG_CLOSE_NO = "DialogCloseNo/Text";
-        public const string DIALOG_CLOSE_YES = "DialogCloseYes/Text";
         public const string DIALOG_WRONG_MASTER_KEY = "DialogWrongMasterKey/Text";
         public const string DIALOG_CREDENTIALS_DELETED = "DialogCredentialsDeleted/Text";
         public const string DIALOG_CREDENTIALS_NOT_DELETED = "DialogCredentialsNotDeleted/Text";

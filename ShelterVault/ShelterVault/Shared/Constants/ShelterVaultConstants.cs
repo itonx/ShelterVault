@@ -5,7 +5,6 @@ namespace ShelterVault.Shared.Constants
     {
         public const string SETTINGS_THEME_KEY = "ShelterVault.Theme";
         public const string SETTINGS_THEME_NAME_KEY = "ShelterVault.ThemeName";
-        public const string DIALOG_STYLE_KEY = "ShelterVaultContentDialog";
         public const string SETTINGS_LANG_KEY = "ShelterVault.Lang";
         public const string PARTITION_SHELTER_VAULT = "shelter_vault";
         public const string PARTITION_SHELTER_VAULT_CREDENTIALS = "shelter_vault_credentials";

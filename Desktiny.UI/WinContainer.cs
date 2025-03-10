@@ -6,6 +6,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
+using ShelterVault.Shared.Helpers;
 using System.Linq;
 using Windows.UI;
 
@@ -161,8 +162,9 @@ namespace Desktiny.UI
 
         private void WinContainer_Loaded(object sender, RoutedEventArgs e)
         {
-            SetFullHeight(this.FullHeight);
-            SetApptheme(this.AppTheme);
+            SetWindows();
+            SetFullHeight(FullHeight);
+            SetApptheme(AppTheme);
         }
 
         private void SetFullHeight(bool fullHeight)
@@ -216,6 +218,12 @@ namespace Desktiny.UI
             appWindow.TitleBar.ButtonHoverBackgroundColor = currentTheme == ElementTheme.Light ? Color.FromArgb(50, 0, 0, 0) : Color.FromArgb(50, 255, 255, 255);
             appWindow.TitleBar.ButtonHoverForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
             appWindow.TitleBar.ButtonForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
+        }
+
+        private void SetWindows()
+        {
+            MainWindow = WindowHelper.CurrentMainWindow;
+            AppWindow = WindowHelper.CurrentAppWindow;
         }
     }
 }

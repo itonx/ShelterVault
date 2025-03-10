@@ -34,10 +34,6 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
     <Style
-        x:Key="ShelterVaultContentDialog"
-        BasedOn="{StaticResource DefaultContentDialogStyle}"
-        TargetType="ContentDialog" />
-    <Style
         x:Key="ShelterVaultComboBox"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="ComboBox">

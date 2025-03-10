@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Desktiny.UI.Tools;
+using System;
 
-namespace ShelterVault.Services
+namespace Desktiny.UI.Services
 {
     public interface IUIThreadService
     {

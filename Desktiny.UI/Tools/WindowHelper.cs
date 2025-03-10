@@ -1,4 +1,5 @@
 ﻿
+using Desktiny.UI.Services;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -10,14 +11,14 @@ namespace ShelterVault.Shared.Helpers
     public static class WindowHelper
     {
         private static AppWindow _currentAppWindow;
-        private static MainWindow _mainWindow;
+        private static Window _mainWindow;
         public static AppWindow CurrentAppWindow => GetAppWindow();
-        public static MainWindow CurrentMainWindow => GetMainWindow();
+        public static Window CurrentMainWindow => GetMainWindow();
 
         private static AppWindow GetAppWindow()
         {
             if (_currentAppWindow != null) return _currentAppWindow;
-            MainWindow mainWindow = CurrentMainWindow;
+            Window mainWindow = CurrentMainWindow;
             if (mainWindow == null) return null;
             IntPtr hWnd = WindowNative.GetWindowHandle(mainWindow);
             WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
@@ -25,10 +26,10 @@ namespace ShelterVault.Shared.Helpers
             return _currentAppWindow;
         }
 
-        private static MainWindow GetMainWindow()
+        private static Window GetMainWindow()
         {
             if (_mainWindow != null) return _mainWindow;
-            _mainWindow = (Application.Current as App)?.m_window as MainWindow;
+            _mainWindow = (Application.Current as IAppWindow)?.MainWindow;
             return _mainWindow;
         }
     }

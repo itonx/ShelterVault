@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Desktiny.UI.Tools;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Constants;
@@ -57,7 +58,8 @@ namespace ShelterVault.Shared.Behaviors
         private void RefreshUI()
         {
             if (WindowHelper.CurrentMainWindow?.Content == null) return;
-            //TODO: Refresh the view to apply new lang WindowHelper.CurrentMainWindow.Navigator.Navigate(WindowHelper.CurrentMainWindow.Navigator.Content.GetType());
+            Frame navigator = WinUI3Helper.FindChildElementByName(WindowHelper.CurrentMainWindow.Content, "Navigator") as Frame;
+            navigator.Navigate(navigator.Content.GetType());
         }
 
         private ShelterVaultLang GetLanguageFromSettings()

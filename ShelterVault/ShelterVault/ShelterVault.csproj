@@ -83,7 +83,6 @@
     <None Remove="Views\NavigationViewPage.xaml" />
     <None Remove="Views\PasswordConfirmationView.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
-    <None Remove="Views\ShelterVaultMessageView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
@@ -196,12 +195,6 @@
 
   <ItemGroup>
     <Page Update="Views\PasswordConfirmationView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\ShelterVaultMessageView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

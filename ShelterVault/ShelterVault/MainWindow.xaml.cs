@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using ShelterVault.Shared.Helpers;
 using ShelterVault.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -19,8 +17,5 @@ namespace ShelterVault
             this.InitializeComponent();
             this.WindowContainer.DataContext = App.Current.Services.GetService<MainWindowViewModel>();
         }
-
-        private Window GetMainWindow => this;
-        private AppWindow GetAppWindow => WindowHelper.CurrentAppWindow;
     }
 }

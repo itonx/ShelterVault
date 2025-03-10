@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ShelterVault.Services
+namespace ShelterVault.Managers
 {
     public interface IWeakReferenceInstanceManager
     {
