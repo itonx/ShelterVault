@@ -31,11 +31,6 @@
                 <Setter Property="FontStretch" Value="Normal" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
-            <Style BasedOn="{StaticResource DefaultContentDialogStyle}" TargetType="ContentDialog">
-                <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
-                <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-                <Setter Property="BorderBrush" Value="{ThemeResource ShelterVaultForeground}" />
-            </Style>
             <Style
                 x:Key="ShelterVaultComboBox"
                 BasedOn="{StaticResource ShelterVaultComboBox}"
