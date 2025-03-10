@@ -3,7 +3,7 @@ using Microsoft.Xaml.Interactivity;
 using System.Windows.Input;
 using Windows.System;
 
-namespace ShelterVault.Shared.Behaviors
+namespace Desktiny.UI.Behaviors
 {
     public class KeyDownToCommandBehavior : Behavior<FrameworkElement>
     {

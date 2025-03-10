@@ -3,7 +3,6 @@ using Desktiny.UI.Extensions;
 using Desktiny.UI.Tools;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Helpers;
 using ShelterVault.Shared.Messages;
@@ -65,7 +64,7 @@ namespace ShelterVault.Shared.Behaviors
         private ShelterVaultLang GetLanguageFromSettings()
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            string lang = localSettings.Values[ShelterVaultConstants.SETTINGS_LANG_KEY] as string;
+            string lang = localSettings.Values[Desktiny.UI.Constants.Global.SETTINGS_LANG_KEY] as string;
 
             Enum.TryParse(typeof(ShelterVaultLang), lang, true, out object shelterVaultLangObj);
             return (ShelterVaultLang)shelterVaultLangObj;
@@ -74,7 +73,7 @@ namespace ShelterVault.Shared.Behaviors
         private void SaveLanguageSettings(ShelterVaultLang shelterVaultLang)
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            localSettings.Values[ShelterVaultConstants.SETTINGS_LANG_KEY] = shelterVaultLang.ToString();
+            localSettings.Values[Desktiny.UI.Constants.Global.SETTINGS_LANG_KEY] = shelterVaultLang.ToString();
         }
 
         private void SaveLanguageSettings(string shelterVaultLang)
@@ -88,7 +87,7 @@ namespace ShelterVault.Shared.Behaviors
         private void SetDefaultLanguage()
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            string lang = localSettings.Values[ShelterVaultConstants.SETTINGS_LANG_KEY] as string;
+            string lang = localSettings.Values[Desktiny.UI.Constants.Global.SETTINGS_LANG_KEY] as string;
             Enum.TryParse(typeof(ShelterVaultLang), lang, true, out object shelterVaultLangObj);
             if (shelterVaultLangObj != null && ExistsInAppManifest((ShelterVaultLang)shelterVaultLangObj)) return;
 

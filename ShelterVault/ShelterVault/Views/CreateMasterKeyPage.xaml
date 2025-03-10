@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:ShelterVault.Shared.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:desktinyBehaviors="using:Desktiny.UI.Behaviors"
     xmlns:helpers="using:ShelterVault.Shared.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:ShelterVault.Views"
@@ -27,7 +28,7 @@
                 Style="{ThemeResource ShelterVaul.MasterKey.TextBox}"
                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:FocusBehavior OnEvent="Loaded" />
+                    <desktinyBehaviors:FocusBehavior OnEvent="Loaded" />
                 </interactivity:Interaction.Behaviors>
             </TextBox>
             <PasswordBox
@@ -36,8 +37,8 @@
                 Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:ExecuteCommandOnPasswordChangedBehavior Command="{Binding PasswordRequirementsVM.PasswordChangedCommand, Mode=OneTime}" />
-                    <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
+                    <desktinyBehaviors:ExecuteCommandOnPasswordChangedBehavior Command="{Binding PasswordRequirementsVM.PasswordChangedCommand, Mode=OneTime}" />
+                    <desktinyBehaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
             <PasswordBox
@@ -46,7 +47,7 @@
                 Password="{Binding PasswordConfirmation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
+                    <desktinyBehaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                 </interactivity:Interaction.Behaviors>
             </PasswordBox>
             <local:PasswordConfirmationView DataContext="{Binding PasswordRequirementsVM}" />
@@ -65,7 +66,7 @@
                     Grid.Column="0"
                     Command="{Binding CancelCommand}"
                     Style="{ThemeResource ShelterVault.MasterKey.Buttons.Cancel}"
-                    Visibility="{Binding ShowCancel, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}" />
+                    Visibility="{Binding ShowCancel, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}" />
                 <Button
                     x:Uid="SaveVault"
                     Grid.Column="1"

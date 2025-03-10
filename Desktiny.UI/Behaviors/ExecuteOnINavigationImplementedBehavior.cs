@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 
-namespace ShelterVault.Shared.Behaviors
+namespace Desktiny.UI.Behaviors
 {
     public class ExecuteOnINavigationImplementedBehavior : Behavior<Frame>
     {

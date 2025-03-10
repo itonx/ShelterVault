@@ -2,7 +2,7 @@
 using Microsoft.Xaml.Interactivity;
 using System.Reflection;
 
-namespace ShelterVault.Shared.Behaviors
+namespace Desktiny.UI.Behaviors
 {
     public class FocusBehavior : Behavior<FrameworkElement>
     {

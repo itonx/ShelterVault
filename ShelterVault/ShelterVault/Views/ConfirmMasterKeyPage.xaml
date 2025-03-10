@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:ShelterVault.Shared.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:desktinyBehaviors="using:Desktiny.UI.Behaviors"
     xmlns:helpers="using:ShelterVault.Shared.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:ShelterVault.Views"
@@ -42,8 +43,8 @@
                 x:Uid="TitleMasterKey"
                 Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:FocusBehavior OnEvent="Loaded" />
-                    <behaviors:KeyDownToCommandBehavior
+                    <desktinyBehaviors:FocusBehavior OnEvent="Loaded" />
+                    <desktinyBehaviors:KeyDownToCommandBehavior
                         Command="{Binding ConfirmMasterKeyCommand}"
                         CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         VirtualKeyTrigger="Enter" />
