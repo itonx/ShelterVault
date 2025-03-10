@@ -83,6 +83,8 @@
     <None Remove="Views\NavigationViewPage.xaml" />
     <None Remove="Views\PasswordConfirmationView.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
+    <None Remove="Views\ShelterVaultTitleBar.xaml" />
+    <None Remove="Views\Spinner.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
@@ -161,6 +163,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Desktiny.UI\Desktiny.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ShelterVaultTitleBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Spinner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

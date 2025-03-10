@@ -23,78 +23,7 @@
         MaximizeAtStartup="true"
         TitleBarMargin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleBarMargin}}">
         <ui:WinContainer.TitleBar>
-            <Grid ColumnSpacing="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid Margin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleMargin}}" ColumnSpacing="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Image Width="17" Source="/Images/SmallTile.png" />
-                    <TextBlock
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Foreground="{ThemeResource ShelterVaultForeground}">
-                        ShelterVault
-                    </TextBlock>
-                </Grid>
-                <StackPanel
-                    x:Name="InteractiveContainer"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-                    <interactivity:Interaction.Behaviors>
-                        <desktinyBehaviors:InteractiveTitleBarControlBehavior />
-                    </interactivity:Interaction.Behaviors>
-                    <ComboBox Style="{ThemeResource ShelterVault.AppTitleBar.ComboBox}" Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
-                        <interactivity:Interaction.Behaviors>
-                            <behaviors:ComboBoxChangeLanguageBehavior />
-                        </interactivity:Interaction.Behaviors>
-                        <ComboBoxItem Content="{Binding EnglishLangOptionText, Mode=OneWay}" Tag="en-US" />
-                        <ComboBoxItem Content="{Binding SpanishLangOptionText, Mode=OneWay}" Tag="es-MX" />
-                    </ComboBox>
-                    <Button
-                        x:Name="AppTitleBarSyncButton"
-                        VerticalAlignment="Stretch"
-                        Command="{Binding SyncCommand}"
-                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
-                        Visibility="{Binding ShowSync, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
-                        <Grid ColumnSpacing="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <FontIcon Glyph="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToGlyph}}" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
-                            <TextBlock Grid.Column="1" Text="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToText}}" />
-                        </Grid>
-                    </Button>
-                    <Button
-                        x:Name="AppTitleBarSwitchVaultButton"
-                        VerticalAlignment="Stretch"
-                        Command="{Binding SwitchVaultCommand}"
-                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
-                        Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
-                        <Grid ColumnSpacing="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <FontIcon Glyph="&#xE8AB;" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
-                            <TextBlock Grid.Column="1" Text="{Binding SwitchVaultText, Mode=OneWay}" />
-                        </Grid>
-                    </Button>
-                    <Button
-                        x:Name="AppTitleBarThemeButton"
-                        VerticalAlignment="Stretch"
-                        Command="{Binding ChangeThemeCommand}"
-                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}">
-                        <FontIcon Glyph="{Binding CurrentAppTheme, Converter={StaticResource ThemeToIcon}, Mode=OneWay}" />
-                    </Button>
-                </StackPanel>
-            </Grid>
+            <views:ShelterVaultTitleBar />
         </ui:WinContainer.TitleBar>
         <ui:WinContainer.Content>
             <Frame x:Name="Navigator">
@@ -104,14 +33,7 @@
             </Frame>
         </ui:WinContainer.Content>
         <ui:WinContainer.NocturneContent>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ProgressRing
-                    FontSize="40"
-                    Foreground="{ThemeResource ShelterVaultForeground}"
-                    IsActive="True"
-                    Opacity="1" />
-                <TextBlock x:Uid="SpinnerText" Style="{ThemeResource ShelterVaultTextBlockStyle}" />
-            </StackPanel>
+            <views:Spinner />
         </ui:WinContainer.NocturneContent>
     </ui:WinContainer>
 </Window>
