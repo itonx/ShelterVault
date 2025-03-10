@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Desktiny.UI.Extensions;
 using Desktiny.UI.Tools;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Helpers;
 using ShelterVault.Shared.Messages;
 using System;

@@ -1,4 +1,4 @@
-﻿using ShelterVault.Shared.Attributes;
+﻿using Desktiny.UI.Attributes;
 
 namespace ShelterVault.Shared.Enums
 {

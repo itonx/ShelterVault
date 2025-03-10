@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace ShelterVault.Shared.Extensions
+namespace Desktiny.UI.Extensions
 {
     public static class AttributeExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShelterVault.Shared.Attributes
+namespace Desktiny.UI.Attributes
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class PageTypeAttribute : Attribute

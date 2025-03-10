@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
 
-namespace ShelterVault.Shared.Extensions
+namespace Desktiny.UI.Extensions
 {
     public static class BehaviorExtensions
     {

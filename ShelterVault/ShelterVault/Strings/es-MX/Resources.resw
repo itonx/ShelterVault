@@ -354,4 +354,7 @@
   <data name="PrivacyPolicy.Text" xml:space="preserve">
     <value>Ver Política de Privacidad</value>
   </data>
+  <data name="SpinnerText.Text" xml:space="preserve">
+    <value>Cargando...</value>
+  </data>
 </root>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
 
-namespace ShelterVault.Shared.Attributes
+namespace Desktiny.UI.Attributes
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class ThemeStyleAttribute : Attribute

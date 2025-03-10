@@ -1,7 +1,7 @@
-﻿using Desktiny.UI.Services;
+﻿using Desktiny.UI.Extensions;
+using Desktiny.UI.Services;
 using Microsoft.UI.Xaml.Data;
 using ShelterVault.Shared.Enums;
-using ShelterVault.Shared.Extensions;
 using System;
 using System.ComponentModel;
 
