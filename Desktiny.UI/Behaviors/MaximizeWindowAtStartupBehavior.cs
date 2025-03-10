@@ -1,6 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Desktiny.UI.Tools;
+using Microsoft.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
-using ShelterVault.Shared.Interop;
 using System;
 
 namespace Desktiny.UI.Behaviors

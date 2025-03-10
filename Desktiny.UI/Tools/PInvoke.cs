@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ShelterVault.Shared.Interop
+namespace Desktiny.UI.Tools
 {
     public class PInvoke
     {

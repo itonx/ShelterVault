@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ShelterVault.Shared.Interfaces
+namespace Desktiny.UI.Interfaces
 {
     public interface IPendingChangesChallenge
     {
