@@ -8,16 +8,16 @@
             <!--  Override Default styles  -->
             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32000000" />
             <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
-            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <!--  Override ShelterVault styles  -->
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="White" />
 
             <!--  Override Default styles  -->
-            <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32FFFFFF" />
-            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+            <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
+            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

@@ -15,7 +15,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid x:Name="WindowContainer">
+                        <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition />

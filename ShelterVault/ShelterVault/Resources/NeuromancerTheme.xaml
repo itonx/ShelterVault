@@ -124,6 +124,8 @@
             <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedUnfocused" Color="{StaticResource ShelterVaultMainForeground}" />
             <StaticResource x:Key="ComboBoxItemPillFillBrush" ResourceKey="ShelterVaultMainForeground" />
 
+            <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
+            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
             <StaticResource x:Key="NavigationViewItemForeground" ResourceKey="ShelterVaultMainForeground" />
             <StaticResource x:Key="NavigationViewItemForegroundPointerOver" ResourceKey="ShelterVaultMainForeground" />
             <StaticResource x:Key="NavigationViewItemForegroundSelected" ResourceKey="ShelterVaultMainForeground" />

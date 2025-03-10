@@ -17,7 +17,7 @@
     mc:Ignorable="d">
     <ui:WinContainer
         x:Name="WindowContainer"
-        AppTheme="{Binding CurrentAppTheme}"
+        AppTheme="{Binding CurrentAppTheme, Mode=OneWay}"
         FullHeight="True"
         IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
         MaximizeAtStartup="true"
