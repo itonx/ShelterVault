@@ -36,7 +36,7 @@
                                 <Grid
                                     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                                     Opacity="0.8"
-                                    Visibility="{Binding IsNocturneVisible, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                                    Visibility="{Binding IsNocturneVisible, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
                                     <ContentPresenter Content="{TemplateBinding NocturneContent}" />
                                 </Grid>
                             </Grid>

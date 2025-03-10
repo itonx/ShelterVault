@@ -8,7 +8,7 @@ namespace Desktiny.UI.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value is bool val && val ? Visibility.Visible : Visibility.Collapsed;
+            return value is bool val && val == bool.Parse(parameter?.ToString() ?? "false") ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

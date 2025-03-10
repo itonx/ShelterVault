@@ -67,8 +67,8 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <FontIcon Glyph="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToGlyphConverter}}" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
-                            <TextBlock Grid.Column="1" Text="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToTextConverter}}" />
+                            <FontIcon Glyph="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToGlyph}}" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
+                            <TextBlock Grid.Column="1" Text="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToText}}" />
                         </Grid>
                     </Button>
                     <Button
@@ -91,7 +91,7 @@
                         VerticalAlignment="Stretch"
                         Command="{Binding ChangeThemeCommand}"
                         Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}">
-                        <FontIcon Glyph="{Binding CurrentAppTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
+                        <FontIcon Glyph="{Binding CurrentAppTheme, Converter={StaticResource ThemeToIcon}, Mode=OneWay}" />
                     </Button>
                 </StackPanel>
             </Grid>

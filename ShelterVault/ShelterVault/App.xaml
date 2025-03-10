@@ -14,12 +14,11 @@
             </ResourceDictionary.MergedDictionaries>
             <!--  Other app resources here  -->
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
-            <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIconConverter" />
-            <converters:CloudSyncStatusToTextConverter x:Key="CloudSyncStatusToTextConverter" />
-            <converters:CloudSyncStatusToGlyphConverter x:Key="CloudSyncStatusToGlyphConverter" />
+            <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIcon" />
+            <converters:CloudSyncStatusToTextConverter x:Key="CloudSyncStatusToText" />
+            <converters:CloudSyncStatusToGlyphConverter x:Key="CloudSyncStatusToGlyph" />
             <converters:BoolToPasswordVisibilityConverter x:Key="BoolToPasswordVisibility" />
-            <converters:CredentialsViewModelStateToVisibilityConverter x:Key="StateToVisibilityConverter" />
-            <converters:ShowHideToVisibilityConverter x:Key="ShowHideToVisibility" />
+            <converters:CredentialsViewModelStateToVisibilityConverter x:Key="StateToVisibility" />
             <converters:CloudProviderTypeToVisibilityConverter x:Key="CloudProviderTypeToVisibility" />
             <converters:ShelterVaultAppStateToTitleMarginConverter x:Key="ShelterVaultAppStateToTitleMargin" />
             <converters:ShelterVaultAppStateToTitleBarMarginConverter x:Key="ShelterVaultAppStateToTitleBarMargin" />

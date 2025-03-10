@@ -81,7 +81,7 @@
                                         <TextBox x:Uid="AzureConfigurationKey" Text="{Binding CosmosKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBox x:Uid="AzureConfigurationDatabase" Text="{Binding CosmosDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBox x:Uid="AzureConfigurationContainer" Text="{Binding CosmosContainer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        <StackPanel Spacing="10" Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}">
+                                        <StackPanel Spacing="10" Visibility="{Binding ShowThroughput, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
                                             <StackPanel Orientation="Horizontal" Spacing="10">
                                                 <TextBlock x:Uid="AzureConfigurationThroughput" />
                                                 <TextBlock Text="{Binding DatabaseThroughput, Mode=OneWay}" />
@@ -101,7 +101,7 @@
                                                 Width="120"
                                                 Command="{Binding SyncVaultsCommand}"
                                                 Style="{ThemeResource AccentButtonStyle}"
-                                                Visibility="{Binding ShowThroughput, Converter={StaticResource ShowHideToVisibility}, ConverterParameter=true}" />
+                                                Visibility="{Binding ShowThroughput, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>
