@@ -1,14 +1,14 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using System;
- 
-namespace ShelterVault.Shared.Converters
+
+namespace Desktiny.UI.Converters
 {
     public class BoolToPasswordVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is bool toggleValue && toggleValue) return PasswordRevealMode.Visible;
+            if (value is bool toggleValue && toggleValue) return PasswordRevealMode.Visible;
 
             return PasswordRevealMode.Hidden;
         }
