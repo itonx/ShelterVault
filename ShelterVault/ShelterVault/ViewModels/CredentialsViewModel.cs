@@ -1,13 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Desktiny.UI.Interfaces;
+using Desktiny.UI.Services;
 using Microsoft.UI.Xaml.Controls;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Extensions;
-using ShelterVault.Shared.Interfaces;
 using ShelterVault.Shared.Messages;
 using System;
 using System.Threading;

@@ -4,128 +4,34 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:ShelterVault.Shared.Behaviors"
-    xmlns:converters="using:ShelterVault.Shared.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:desktinyBehaviors="using:Desktiny.UI.Behaviors"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:ShelterVault"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="using:ShelterVault.ViewModels"
+    xmlns:ui="using:Desktiny.UI"
     xmlns:views="using:ShelterVault.Views"
     Title="ShelterVault"
     mc:Ignorable="d">
-    <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <interactivity:Interaction.Behaviors>
-            <behaviors:ShelterVaultThemeBehavior CurrentShelterVaultTheme="{Binding CurrentTheme, Mode=OneWay}" />
-            <behaviors:MaximizeWindowAtStartupBehavior />
-        </interactivity:Interaction.Behaviors>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid
-            x:Name="AppTitleBar"
-            x:FieldModifier="public"
-            Canvas.ZIndex="1">
-            <interactivity:Interaction.Behaviors>
-                <behaviors:AutoSizeAppTitleBarCaptionsBehavior />
-                <behaviors:ShelterVaultThemeAppTitleBehavior />
-                <behaviors:AddMarginOnNavigationViewLoadedBehavior ShelterVaultCurrentAppState="{Binding ShelterVaultCurrentAppState, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-            </interactivity:Interaction.Behaviors>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                <ColumnDefinition />
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="1" ColumnSpacing="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid Margin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleMargin}}" ColumnSpacing="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Image Width="17" Source="/Images/SmallTile.png" />
-                    <TextBlock
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Foreground="{ThemeResource ShelterVaultForeground}">
-                        ShelterVault
-                    </TextBlock>
-                </Grid>
-                <StackPanel
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:InteractiveAppTitleBarControlBehavior />
-                    </interactivity:Interaction.Behaviors>
-                    <ComboBox Style="{ThemeResource ShelterVault.AppTitleBar.ComboBox}" Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
-                        <interactivity:Interaction.Behaviors>
-                            <behaviors:ComboBoxChangeLanguageBehavior />
-                        </interactivity:Interaction.Behaviors>
-                        <ComboBoxItem Content="{Binding EnglishLangOptionText, Mode=OneWay}" Tag="en-US" />
-                        <ComboBoxItem Content="{Binding SpanishLangOptionText, Mode=OneWay}" Tag="es-MX" />
-                    </ComboBox>
-                    <Button
-                        x:Name="AppTitleBarSyncButton"
-                        Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                        Command="{Binding SyncCommand}"
-                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
-                        Visibility="{Binding ShowSync, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
-                        <Grid ColumnSpacing="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <FontIcon Glyph="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToGlyphConverter}}" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
-                            <TextBlock Grid.Column="1" Text="{Binding CurrentCloudSyncStatus, Mode=OneWay, Converter={StaticResource CloudSyncStatusToTextConverter}}" />
-                        </Grid>
-                    </Button>
-                    <Button
-                        x:Name="AppTitleBarSwitchVaultButton"
-                        Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                        Command="{Binding SwitchVaultCommand}"
-                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
-                        Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
-                        <Grid ColumnSpacing="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <FontIcon Glyph="&#xE8AB;" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
-                            <TextBlock Grid.Column="1" Text="{Binding SwitchVaultText, Mode=OneWay}" />
-                        </Grid>
-                    </Button>
-                    <Button
-                        x:Name="AppTitleBarThemeButton"
-                        Width="{Binding ElementName=AppTitleBar, Path=Height}"
-                        Height="{Binding ElementName=AppTitleBar, Path=Height}"
-                        Command="{Binding ChangeThemeCommand}"
-                        Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}">
-                        <FontIcon Glyph="{Binding CurrentTheme, Converter={StaticResource ThemeToIconConverter}, Mode=OneWay}" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Grid>
-        <Grid Grid.RowSpan="2">
-            <Frame x:Name="Navigator" x:FieldModifier="internal">
+    <ui:WinContainer
+        x:Name="WindowContainer"
+        AppTheme="{Binding CurrentAppTheme, Mode=OneWay}"
+        FullHeight="True"
+        IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
+        MaximizeAtStartup="true"
+        TitleBarMargin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleBarMargin}}">
+        <ui:WinContainer.TitleBar>
+            <views:ShelterVaultTitleBar />
+        </ui:WinContainer.TitleBar>
+        <ui:WinContainer.Content>
+            <Frame x:Name="Navigator">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:ShelterVaultAppStateBehavior CurrentAppState="{Binding ShelterVaultCurrentAppState}" />
+                    <desktinyBehaviors:EnumNavigationPageBehavior Target="{Binding ShelterVaultCurrentAppState}" />
                 </interactivity:Interaction.Behaviors>
             </Frame>
-            <Grid Visibility="{Binding IsProgressBarVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
-                <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.8" />
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <ProgressRing
-                        FontSize="40"
-                        Foreground="{ThemeResource ShelterVaultForeground}"
-                        IsActive="True"
-                        Opacity="1" />
-                    <TextBlock Style="{ThemeResource ShelterVaultTextBlockStyle}" Text="Loading..." />
-                </StackPanel>
-            </Grid>
-        </Grid>
-    </Grid>
+        </ui:WinContainer.Content>
+        <ui:WinContainer.NocturneContent>
+            <views:Spinner />
+        </ui:WinContainer.NocturneContent>
+    </ui:WinContainer>
 </Window>

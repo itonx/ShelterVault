@@ -1,9 +1,9 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Desktiny.UI.Extensions;
+using Desktiny.UI.Interfaces;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using ShelterVault.Models;
-using ShelterVault.Shared.Extensions;
-using ShelterVault.Shared.Interfaces;
 using System;
 using System.Collections.Generic;
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Desktiny.UI.Services;
+using Desktiny.UI.Tools;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -16,7 +18,7 @@ namespace ShelterVault
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public partial class App : Application
+    public partial class App : Application, IAppWindow
     {
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -32,17 +34,17 @@ namespace ShelterVault
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
+            MainWindow = new MainWindow();
             AppDispatcher.UIThreadDispatcher = DispatcherQueue.GetForCurrentThread();
-            m_window.Activate();
+            MainWindow.Activate();
         }
 
         /// <summary>
         /// Gets the current <see cref="Window"/>
         /// </summary>
-        internal Window m_window;
+        public Window MainWindow { get; private set; }
 
         /// <summary>
         /// Gets the current <see cref="App"/> instance in use
@@ -78,6 +80,7 @@ namespace ShelterVault
             services.AddSingleton<IShelterVaultSyncStatus, ShelterVaultSyncStatus>();
 
             // Services
+            services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IProgressBarService, ProgressBarService>();
@@ -107,10 +110,5 @@ namespace ShelterVault
 
             return services.BuildServiceProvider();
         }
-    }
-
-    public static class AppDispatcher
-    {
-        public static DispatcherQueue UIThreadDispatcher { get; set; }
     }
 }

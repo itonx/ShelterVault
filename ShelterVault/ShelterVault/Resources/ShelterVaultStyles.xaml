@@ -34,10 +34,6 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
     <Style
-        x:Key="ShelterVaultContentDialog"
-        BasedOn="{StaticResource DefaultContentDialogStyle}"
-        TargetType="ContentDialog" />
-    <Style
         x:Key="ShelterVaultComboBox"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="ComboBox">
@@ -152,5 +148,10 @@
         <Setter Property="PaneDisplayMode" Value="Left" />
         <Setter Property="CompactPaneLength" Value="50" />
         <Setter Property="OpenPaneLength" Value="280" />
+    </Style>
+    <Style BasedOn="{StaticResource DefaultContentDialogStyle}" TargetType="ContentDialog">
+        <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
+        <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource ShelterVaultForeground}" />
     </Style>
 </ResourceDictionary>

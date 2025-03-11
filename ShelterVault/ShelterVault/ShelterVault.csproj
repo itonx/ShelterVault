@@ -75,7 +75,6 @@
     <None Remove="Images\Wide310x150Logo.scale-200.png" />
     <None Remove="Images\Wide310x150Logo.scale-400.png" />
     <None Remove="Resources\NeuromancerTheme.xaml" />
-    <None Remove="Resources\OverrideDefaultTheme.xaml" />
     <None Remove="Resources\ShelterVaultStyles.xaml" />
     <None Remove="Views\ConfirmMasterKeyPage.xaml" />
     <None Remove="Views\CreateMasterKeyPage.xaml" />
@@ -84,7 +83,8 @@
     <None Remove="Views\NavigationViewPage.xaml" />
     <None Remove="Views\PasswordConfirmationView.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
-    <None Remove="Views\ShelterVaultMessageView.xaml" />
+    <None Remove="Views\ShelterVaultTitleBar.xaml" />
+    <None Remove="Views\Spinner.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
@@ -162,13 +162,29 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Desktiny.UI\Desktiny.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ShelterVaultTitleBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Spinner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Resources\ShelterVaultStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Resources\OverrideDefaultTheme.xaml">
+    <Page Update="Resources\OverrideWinUITheme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -193,12 +209,6 @@
 
   <ItemGroup>
     <Page Update="Views\PasswordConfirmationView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\ShelterVaultMessageView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

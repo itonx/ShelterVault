@@ -1,4 +1,4 @@
-﻿using ShelterVault.Shared.Attributes;
+﻿using Desktiny.UI.Attributes;
 using ShelterVault.Shared.Constants;
 using System.ComponentModel;
 
