@@ -40,6 +40,7 @@
         <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
         <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style
         x:Key="ShelterVault.AppTitleBar.Buttons"
@@ -48,6 +49,7 @@
         <Setter Property="Background" Value="{ThemeResource ShelterVaultButtonBackgroundTransparent}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
     </Style>
     <Style x:Key="ShelterVault.AppTitleBar.Buttons.Icon" TargetType="FontIcon">
         <Setter Property="FontSize" Value="14" />

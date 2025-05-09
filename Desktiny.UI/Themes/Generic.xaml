@@ -11,37 +11,24 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:WinContainer">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
+                    <Grid x:Name="WindowContainer" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ContentPresenter
+                            Canvas.ZIndex="1"
+                            Content="{TemplateBinding TitleBar}" />
+                        <Grid x:Name="ClientContainer" Grid.Row="1">
+                            <ContentPresenter />
                             <Grid
-                                x:Name="AppTitleBar"
-                                Margin="{TemplateBinding TitleBarMargin}"
-                                Canvas.ZIndex="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
-                                </Grid.ColumnDefinitions>
-                                <ContentPresenter Grid.Column="1" Content="{TemplateBinding TitleBar}" />
-                            </Grid>
-                            <Grid x:Name="ClientContainer">
-                                <ContentPresenter />
-                                <Grid
-                                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                                    Opacity="0.8"
-                                    Visibility="{Binding IsNocturneVisible, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
-                                    <ContentPresenter Content="{TemplateBinding NocturneContent}" />
-                                </Grid>
+                                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                                Opacity="0.8"
+                                Visibility="{Binding IsNocturneVisible, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
+                                <ContentPresenter Content="{TemplateBinding NocturneContent}" />
                             </Grid>
                         </Grid>
-                    </Border>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

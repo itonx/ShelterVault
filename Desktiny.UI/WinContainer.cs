@@ -42,7 +42,7 @@ namespace Desktiny.UI
 
         public static readonly DependencyProperty TitleBarProperty = DependencyProperty.Register(
             "TitleBar",
-            typeof(object),
+            typeof(TitleBar),
             typeof(WinContainer),
             new PropertyMetadata(null, OnTitleBarChanged));
 
@@ -53,9 +53,9 @@ namespace Desktiny.UI
             Interaction.GetBehaviors(winContainer).Add(autoSizeAppTitleBarCaptionsBehavior);
         }
 
-        public object TitleBar
+        public TitleBar TitleBar
         {
-            get { return GetValue(TitleBarProperty); }
+            get { return (TitleBar)GetValue(TitleBarProperty); }
             set { SetValue(TitleBarProperty, value); }
         }
 
@@ -79,24 +79,6 @@ namespace Desktiny.UI
             set { SetValue(MaximizeAtStartupProperty, value); }
         }
 
-        public static readonly DependencyProperty FullHeightProperty = DependencyProperty.Register(
-            "FullHeight",
-            typeof(bool),
-            typeof(WinContainer),
-            new PropertyMetadata(true, OnFullHeightChanged));
-
-        private static void OnFullHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            WinContainer winContainer = d as WinContainer;
-            winContainer.SetFullHeight((bool)e.NewValue);
-        }
-
-        public bool FullHeight
-        {
-            get { return (bool)GetValue(FullHeightProperty); }
-            set { SetValue(FullHeightProperty, value); }
-        }
-
         public static readonly DependencyProperty AppThemeProperty = DependencyProperty.Register(
             nameof(AppTheme),
             typeof(AppThemeModel),
@@ -116,18 +98,6 @@ namespace Desktiny.UI
         }
 
         private bool? _removeLastThemeResource = null;
-
-        public static readonly DependencyProperty TitleBarMarginProperty = DependencyProperty.Register(
-            "TitleBarMargin",
-            typeof(Thickness),
-            typeof(WinContainer),
-            new PropertyMetadata(new Thickness(0, 0, 0, 0)));
-
-        public Thickness TitleBarMargin
-        {
-            get { return (Thickness)GetValue(TitleBarMarginProperty); }
-            set { SetValue(TitleBarMarginProperty, value); }
-        }
 
         public static readonly DependencyProperty IsNocturneVisibleProperty = DependencyProperty.Register(
             "IsNocturneVisible",
@@ -162,24 +132,17 @@ namespace Desktiny.UI
         private void WinContainer_Loaded(object sender, RoutedEventArgs e)
         {
             SetWindows();
-            SetFullHeight(FullHeight);
+            Grid container = this.GetWindowContainer();
+            container.ActualThemeChanged += Container_ActualThemeChanged;
             SetApptheme(AppTheme);
         }
 
-        private void SetFullHeight(bool fullHeight)
+        private void Container_ActualThemeChanged(FrameworkElement sender, object args)
         {
-            Grid clientContainer = this.GetClientContainer();
-            if (clientContainer == null) return;
-            if (fullHeight)
-            {
-                clientContainer.SetValue(Grid.RowProperty, 0);
-                clientContainer.SetValue(Grid.RowSpanProperty, 2);
-            }
-            else
-            {
-                clientContainer.SetValue(Grid.RowProperty, 1);
-                clientContainer.SetValue(Grid.RowSpanProperty, 1);
-            }
+            Grid container = sender as Grid;
+            this.MainWindow.AppWindow.TitleBar.ButtonHoverBackgroundColor = container.RequestedTheme == ElementTheme.Light ? Color.FromArgb(50, 0, 0, 0) : Color.FromArgb(50, 255, 255, 255);
+            this.MainWindow.AppWindow.TitleBar.ButtonHoverForegroundColor = container.RequestedTheme == ElementTheme.Light ? Colors.Black : Colors.White;
+            this.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = container.RequestedTheme == ElementTheme.Light ? Colors.Black : Colors.White;
         }
 
         private void SetApptheme(AppThemeModel appThemeModel)
@@ -207,16 +170,6 @@ namespace Desktiny.UI
 
             container.RequestedTheme = switchTo;
             container.RequestedTheme = appThemeModel.AppTheme;
-            ApplyThemeToCaptionButtons(appThemeModel.AppTheme);
-        }
-
-        private void ApplyThemeToCaptionButtons(ElementTheme currentTheme)
-        {
-            AppWindow appWindow = this.AppWindow;
-            if (appWindow == null) return;
-            appWindow.TitleBar.ButtonHoverBackgroundColor = currentTheme == ElementTheme.Light ? Color.FromArgb(50, 0, 0, 0) : Color.FromArgb(50, 255, 255, 255);
-            appWindow.TitleBar.ButtonHoverForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
-            appWindow.TitleBar.ButtonForegroundColor = currentTheme == ElementTheme.Light ? Colors.Black : Colors.White;
         }
 
         private void SetWindows()
