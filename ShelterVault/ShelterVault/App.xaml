@@ -20,7 +20,6 @@
             <converters:CloudSyncStatusToGlyphConverter x:Key="CloudSyncStatusToGlyph" />
             <converters:CloudSyncStatusToTextConverter x:Key="CloudSyncStatusToText" />
             <converters:CredentialsViewModelStateToVisibilityConverter x:Key="StateToVisibility" />
-            <converters:ShelterVaultAppStateToTitleBarMarginConverter x:Key="ShelterVaultAppStateToTitleBarMargin" />
             <converters:ShelterVaultAppStateToTitleMarginConverter x:Key="ShelterVaultAppStateToTitleMargin" />
             <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIcon" />
         </ResourceDictionary>
