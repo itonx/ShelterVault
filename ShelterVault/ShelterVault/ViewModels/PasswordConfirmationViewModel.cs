@@ -15,19 +15,19 @@ namespace ShelterVault.ViewModels
         private readonly ILanguageService _languageService;
 
         [ObservableProperty]
-        private bool _is8Characters;
+        public partial bool Is8Characters { get; set; }
         [ObservableProperty]
-        private bool _hasLowercase;
+        public partial bool HasLowercase { get; set; }
         [ObservableProperty]
-        private bool _hasUppercase;
+        public partial bool HasUppercase { get; set; }
         [ObservableProperty]
-        private bool _hasNumber;
+        public partial bool HasNumber { get; set; }
         [ObservableProperty]
-        private bool _hasSpecialChars;
+        public partial bool HasSpecialChars { get; set; }
         [ObservableProperty]
-        private bool _isLessThan32Chars;
+        public partial bool IsLessThan32Chars { get; set; }
         [ObservableProperty]
-        private string _headerText = "Master key password must:";
+        public partial string HeaderText { get; set; }
 
         public PasswordConfirmationViewModel(IDialogManager dialogManager, ILanguageService languageService)
         {
