@@ -20,13 +20,13 @@ namespace ShelterVault.ViewModels
         private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
         [ObservableProperty]
-        private IList<CredentialsViewItem> _credentials;
+        public partial IList<CredentialsViewItem> Credentials { get; set; }
         [ObservableProperty]
-        private object _selectedMenuItem;
+        public partial object SelectedMenuItem { get; set; }
         [ObservableProperty]
-        private string _vaultName;
+        public partial string VaultName { get; set; }
         [ObservableProperty]
-        private bool _isPaneOpen;
+        public partial bool IsPaneOpen { get; set; }
 
         public NavigationViewModel(ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, IUIThreadService uiThreadService, IShelterVault shelterVault, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {

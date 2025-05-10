@@ -26,9 +26,9 @@ namespace ShelterVault.ViewModels
         private readonly IVaultManager _vaultManager;
 
         [ObservableProperty]
-        private List<ShelterVaultModel> _vaults;
+        public partial List<ShelterVaultModel> Vaults { get; set; }
         [ObservableProperty]
-        private ShelterVaultModel _selectedVault;
+        public partial ShelterVaultModel SelectedVault { get; set; }
 
         public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogManager dialogManager, IProgressBarService progressBarService, IShelterVault shelterVault, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager, IShelterVaultLocalDb shelterVaultLocalDb, IVaultManager shelterVaultCreatorManager)
         {

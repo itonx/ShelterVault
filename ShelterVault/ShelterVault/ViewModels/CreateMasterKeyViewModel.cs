@@ -15,20 +15,21 @@ namespace ShelterVault.ViewModels
     internal partial class CreateMasterKeyViewModel : ObservableObject
     {
         private string _shelterVaultDefaultPath;
+
         [ObservableProperty]
-        private PasswordConfirmationViewModel _passwordRequirementsVM;
+        public partial PasswordConfirmationViewModel PasswordRequirementsVM { get; set; }
         [ObservableProperty]
-        private string _name;
+        public partial string Name { get; set; }
         [ObservableProperty]
-        private string _password;
+        public partial string Password { get; set; }
         [ObservableProperty]
-        private string _passwordConfirmation;
+        public partial string PasswordConfirmation { get; set; }
         [ObservableProperty]
-        private string _shelterVaultPath;
+        public partial string ShelterVaultPath { get; set; }
         [ObservableProperty]
-        private bool _showCancel;
+        public partial bool ShowCancel { get; set; }
         [ObservableProperty]
-        private string _defaultPath;
+        public partial string DefaultPath { get; set; }
 
         private readonly IVaultCreatorManager _vaultCreatorManager;
         private readonly IProgressBarService _progressBarService;

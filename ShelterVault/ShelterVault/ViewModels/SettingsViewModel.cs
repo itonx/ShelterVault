@@ -27,25 +27,25 @@ namespace ShelterVault.ViewModels
         private readonly ILogger<SettingsViewModel> _logger;
 
         [ObservableProperty]
-        private IList<CloudProviderType> _cloudProviders;
+        public partial IList<CloudProviderType> CloudProviders { get; set; }
         [ObservableProperty]
-        private CloudProviderType _selectedCloudProvider;
+        public partial CloudProviderType SelectedCloudProvider { get; set; }
         [ObservableProperty]
-        private string _cosmosEndpoint;
+        public partial string CosmosEndpoint { get; set; }
         [ObservableProperty]
-        private string _cosmosKey;
+        public partial string CosmosKey { get; set; }
         [ObservableProperty]
-        private string _cosmosDatabase;
+        public partial string CosmosDatabase { get; set; }
         [ObservableProperty]
-        private string _cosmosContainer;
+        public partial string CosmosContainer { get; set; }
         [ObservableProperty]
-        private bool _showThroughput;
+        public partial bool ShowThroughput { get; set; }
         [ObservableProperty]
-        private string _databaseThroughput;
+        public partial string DatabaseThroughput { get; set; }
         [ObservableProperty]
-        private string _containerPartitionKey;
+        public partial string ContainerPartitionKey { get; set; }
         [ObservableProperty]
-        private string _appVersion;
+        public partial string AppVersion { get; set; }
 
         public SettingsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, ICloudProviderManager cloudProviderManager, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<SettingsViewModel> logger, ICloudSyncManager cloudSyncManager)
         {

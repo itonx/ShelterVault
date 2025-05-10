@@ -19,25 +19,25 @@ namespace ShelterVault.ViewModels
     internal partial class MainWindowViewModel : ObservableObject
     {
         [ObservableProperty]
-        private bool _isProgressBarVisible = false;
+        public partial bool IsProgressBarVisible { get; set; }
         [ObservableProperty]
-        private ShelterVaultAppState _shelterVaultCurrentAppState = ShelterVaultAppState.CreateMasterKey;
+        public partial ShelterVaultAppState ShelterVaultCurrentAppState { get; set; }
         [ObservableProperty]
-        private AppThemeModel _currentAppTheme;
+        public partial AppThemeModel CurrentAppTheme { get; set; }
         [ObservableProperty]
-        private bool _showSwitchVault;
+        public partial bool ShowSwitchVault { get; set; }
         [ObservableProperty]
-        private bool _showSync;
+        public partial bool ShowSync { get; set; }
         [ObservableProperty]
-        private bool _showLangOptions;
+        public partial bool ShowLangOptions { get; set; }
         [ObservableProperty]
-        private string _englishLangOptionText;
+        public partial string EnglishLangOptionText { get; set; }
         [ObservableProperty]
-        private string _spanishLangOptionText;
+        public partial string SpanishLangOptionText { get; set; }
         [ObservableProperty]
-        private string _switchVaultText;
+        public partial string SwitchVaultText { get; set; }
         [ObservableProperty]
-        private CloudSyncStatus _currentCloudSyncStatus;
+        public partial CloudSyncStatus CurrentCloudSyncStatus { get; set; }
 
         private readonly IShelterVaultThemeService _shelterVaultThemeService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
@@ -54,6 +54,7 @@ namespace ShelterVault.ViewModels
             _cloudSyncManager = cloudSyncManager;
             _uiThreadService = uiThreadService;
             _weakReferenceInstanceManager = weakReferenceInstanceManager;
+            ShelterVaultCurrentAppState = ShelterVaultAppState.CreateMasterKey;
             InitialSetup(shelterVault);
         }
 

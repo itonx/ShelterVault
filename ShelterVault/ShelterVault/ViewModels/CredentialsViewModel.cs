@@ -29,19 +29,19 @@ namespace ShelterVault.ViewModels
         private Credentials _selectedCredentialBackup;
 
         [ObservableProperty]
-        private Credentials _selectedCredential;
+        public partial Credentials SelectedCredential { get; set; }
         [ObservableProperty]
-        private bool _showPassword = false;
+        public partial bool ShowPassword { get; set; }
         [ObservableProperty]
-        private CredentialsViewModelState _state = CredentialsViewModelState.New;
+        public partial CredentialsViewModelState State { get; set; }
         [ObservableProperty]
-        private bool _requestFocusOnFirstField;
+        public partial bool RequestFocusOnFirstField { get; set; }
         [ObservableProperty]
-        private PasswordConfirmationViewModel _passwordRequirementsVM;
+        public partial PasswordConfirmationViewModel PasswordRequirementsVM { get; set; }
 
-        public bool ChallengeCompleted { get; private set; } = false;
+        public bool ChallengeCompleted { get; private set; }
 
-        public CredentialsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        public CredentialsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
             _dialogManager = dialogManager;
             _progressBarService = progressBarService;
@@ -52,6 +52,7 @@ namespace ShelterVault.ViewModels
             PasswordRequirementsVM = passwordConfirmationViewModel;
             PasswordRequirementsVM.HeaderText = _languageService.GetLangValue(LangResourceKeys.PASSWORD_MUST);
             RequestFocusOnFirstField = true;
+            State = CredentialsViewModelState.New;
             NewCredentials();
             RegisterMessages();
         }
@@ -132,7 +133,6 @@ namespace ShelterVault.ViewModels
                 ct.ThrowIfCancellationRequested();
                 "ShelterVault".SendToClipboard();
             }, tokenCancellation.Token);
-
         }
 
         [RelayCommand]

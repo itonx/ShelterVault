@@ -56,10 +56,13 @@ namespace ShelterVault.Shared.Extensions
 
         public static void SendToClipboard(this string value)
         {
-            DataPackage data = new();
-            data.RequestedOperation = DataPackageOperation.Copy;
-            data.SetText(value);
-            Clipboard.SetContent(data);
+            App.Current.MainWindow.DispatcherQueue.TryEnqueue(() =>
+            {
+                DataPackage data = new();
+                data.RequestedOperation = DataPackageOperation.Copy;
+                data.SetText(value);
+                Clipboard.SetContent(data);
+            });
         }
 
         public static IEnumerable<string> GetFileNamesByExtension(this string path, string extension)
