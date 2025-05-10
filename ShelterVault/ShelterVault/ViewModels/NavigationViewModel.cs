@@ -25,6 +25,8 @@ namespace ShelterVault.ViewModels
         private object _selectedMenuItem;
         [ObservableProperty]
         private string _vaultName;
+        [ObservableProperty]
+        private bool _isPaneOpen;
 
         public NavigationViewModel(ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, IUIThreadService uiThreadService, IShelterVault shelterVault, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
@@ -36,6 +38,7 @@ namespace ShelterVault.ViewModels
             Credentials = _credentialsManager.GetAllActiveCredentials(_shelterVaultStateService.ShelterVault.UUID).ToList();
             SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
             VaultName = _shelterVaultStateService.ShelterVault.Name;
+            IsPaneOpen = true;
             RegisterMessages();
         }
 
@@ -85,6 +88,10 @@ namespace ShelterVault.ViewModels
                     viewModel._shelterVaultStateService.SetVault(shelterVaultModel);
                     viewModel.VaultName = shelterVaultModel.Name;
                 });
+            });
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, IsPaneOpenMessage>(this, (viewModel, payload) =>
+            {
+                viewModel.IsPaneOpen = !viewModel.IsPaneOpen;
             });
         }
     }

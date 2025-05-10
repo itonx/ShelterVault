@@ -63,6 +63,7 @@
         <Setter Property="Height" Value="30" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FontSize" Value="{ThemeResource ContentControlFontSize}" />
+        <Setter Property="Margin" Value="0,0,5,0" />
     </Style>
     <Style
         x:Key="ShelterVault.MasterKey.ScrollViewer"
@@ -142,14 +143,14 @@
     </Style>
     <Style x:Key="ShelterVault.NavigationView.NavigationView" TargetType="NavigationView">
         <Setter Property="AlwaysShowHeader" Value="True" />
-        <Setter Property="Header" Value=" " />
+        <Setter Property="Header" Value="" />
         <Setter Property="IsBackButtonVisible" Value="Collapsed" />
         <Setter Property="IsBackEnabled" Value="False" />
         <Setter Property="IsSettingsVisible" Value="True" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="PaneDisplayMode" Value="Left" />
-        <Setter Property="CompactPaneLength" Value="50" />
         <Setter Property="OpenPaneLength" Value="280" />
+        <Setter Property="IsPaneToggleButtonVisible" Value="False" />
     </Style>
     <Style BasedOn="{StaticResource DefaultContentDialogStyle}" TargetType="ContentDialog">
         <Setter Property="Foreground" Value="{ThemeResource ShelterVaultForeground}" />

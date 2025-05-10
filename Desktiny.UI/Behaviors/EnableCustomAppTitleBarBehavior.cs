@@ -32,6 +32,8 @@ namespace Desktiny.UI.Behaviors
             AssociatedObject.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
             AssociatedObject.AppWindow.TitleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
             mainWindow.SetTitleBar(AssociatedObject.TitleBar);
+            int titleBarHeight = AssociatedObject.AppWindow.TitleBar.Height;
+            AssociatedObject.TitleBar.Margin = new Thickness(2, 0, titleBarHeight * 2, 0);
         }
     }
 }

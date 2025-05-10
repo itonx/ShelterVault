@@ -13,7 +13,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <NavigationView Style="{StaticResource ShelterVault.NavigationView.NavigationView}">
+    <NavigationView IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ShelterVault.NavigationView.NavigationView}">
         <interactivity:Interaction.Behaviors>
             <behaviors:PageLoaderBehavior SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SettingsPage="views:SettingsPage" />
         </interactivity:Interaction.Behaviors>

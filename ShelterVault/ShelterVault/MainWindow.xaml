@@ -19,7 +19,10 @@
         IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
         MaximizeAtStartup="true">
         <ui:WinContainer.TitleBar>
-            <TitleBar Margin="0,0,85,0">
+            <TitleBar IsPaneToggleButtonVisible="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToIsPaneButtonVisible}}">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:PaneToggleRequestedBehavior />
+                </interactivity:Interaction.Behaviors>
                 <TitleBar.LeftHeader>
                     <StackPanel
                         VerticalAlignment="Center"
@@ -27,9 +30,9 @@
                         Spacing="5">
                         <ImageIcon
                             Width="20"
-                            Margin="10,0,0,0"
+                            Margin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleMargin}}"
                             Source="/Images/SmallTile.png" />
-                        <TextBlock>ShelterVault</TextBlock>
+                        <TextBlock Foreground="{ThemeResource ShelterVaultForeground}">ShelterVault</TextBlock>
                     </StackPanel>
                 </TitleBar.LeftHeader>
                 <TitleBar.RightHeader>
