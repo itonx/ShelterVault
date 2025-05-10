@@ -137,6 +137,11 @@
             <StaticResource x:Key="RadioButtonOuterEllipseStroke" ResourceKey="ShelterVaultMainForeground" />
             <StaticResource x:Key="RadioButtonOuterEllipseStrokePointerOver" ResourceKey="ShelterVaultMainForeground" />
 
+            <StaticResource x:Key="TitleBarPaneToggleButtonForeground" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="TitleBarPaneToggleButtonForegroundPointerOver" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="TitleBarPaneToggleButtonForegroundPressed" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="TitleBarPaneToggleForegroundDisabled" ResourceKey="ShelterVaultMainForeground" />
+            <StaticResource x:Key="TitleBarDeactivatedForegroundBrush" ResourceKey="ShelterVaultMainForeground" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>
