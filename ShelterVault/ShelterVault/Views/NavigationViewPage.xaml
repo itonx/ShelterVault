@@ -44,7 +44,7 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>
-        <Frame>
+        <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <interactivity:Interaction.Behaviors>
                 <desktinyBehaviors:ExecuteOnINavigationImplementedBehavior />
             </interactivity:Interaction.Behaviors>
