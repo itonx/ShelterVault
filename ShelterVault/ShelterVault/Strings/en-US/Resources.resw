@@ -298,7 +298,7 @@
     <value>Save</value>
   </data>
   <data name="CredentialsUrl.Header" xml:space="preserve">
-    <value>URL:</value>
+    <value>Add URL:</value>
   </data>
   <data name="CloudSettingsTitle.Text" xml:space="preserve">
     <value>Cloud settings</value>
@@ -356,5 +356,11 @@
   </data>
   <data name="SpinnerText.Text" xml:space="preserve">
     <value>Loading...</value>
+  </data>
+  <data name="AddUrl.Content" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="DeleteUrl.Text" xml:space="preserve">
+    <value>Delete</value>
   </data>
 </root>
