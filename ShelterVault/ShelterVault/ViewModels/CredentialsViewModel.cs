@@ -11,6 +11,9 @@ using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Extensions;
 using ShelterVault.Shared.Messages;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +21,7 @@ namespace ShelterVault.ViewModels
 {
     internal partial class CredentialsViewModel : ObservableObject, INavigation, IPendingChangesChallenge
     {
+        private const string URL_SEPARATOR = "|";
         private readonly IDialogManager _dialogManager;
         private readonly IProgressBarService _progressBarService;
         private readonly ICredentialsManager _credentialsManager;
@@ -38,6 +42,10 @@ namespace ShelterVault.ViewModels
         public partial bool RequestFocusOnFirstField { get; set; }
         [ObservableProperty]
         public partial PasswordConfirmationViewModel PasswordRequirementsVM { get; set; }
+        [ObservableProperty]
+        public partial ObservableCollection<Uri> Links { get; set; }
+        [ObservableProperty]
+        public partial string TypedUrl { get; set; }
 
         public bool ChallengeCompleted { get; private set; }
 
@@ -55,6 +63,25 @@ namespace ShelterVault.ViewModels
             State = CredentialsViewModelState.New;
             NewCredentials();
             RegisterMessages();
+            Links = new ObservableCollection<Uri>();
+        }
+
+        [RelayCommand]
+        private void UrlAdded()
+        {
+            IList<string> newUrlList = SelectedCredential.Url.Split(URL_SEPARATOR).ToList();
+            newUrlList.Add(TypedUrl);
+            SelectedCredential.Url = string.Join(URL_SEPARATOR, newUrlList);
+            Links.Add(GetUrl(TypedUrl));
+            TypedUrl = string.Empty;
+        }
+
+        [RelayCommand]
+        private void DeleteUrl(object url)
+        {
+            IEnumerable<string> newUrlList = SelectedCredential.Url.Split(URL_SEPARATOR).Where(u => !u.Equals(url));
+            SelectedCredential.Url = string.Join(URL_SEPARATOR, newUrlList);
+            Links = new ObservableCollection<Uri>(newUrlList.Select(u => GetUrl(u)));
         }
 
         public void OnNavigated(object parameter)
@@ -63,6 +90,12 @@ namespace ShelterVault.ViewModels
             SelectedCredential = _credentialsManager.GetCredentials(credentialParameter);
             _selectedCredentialBackup = SelectedCredential.Clone();
             State = CredentialsViewModelState.Updating;
+            Links = new ObservableCollection<Uri>(SelectedCredential.Url.Split(URL_SEPARATOR).Select(u => GetUrl(u)));
+        }
+
+        private Uri GetUrl(string url)
+        {
+            return url.Contains("http://") || url.Contains("https://") ? new Uri(url) : new Uri(string.Concat("https://", url));
         }
 
         public async Task<bool> DiscardChangesAsync(bool completeChallenge = false)
