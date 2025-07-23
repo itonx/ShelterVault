@@ -26,5 +26,15 @@ namespace ShelterVault.Views
                 vm.DeleteUrlCommand.Execute((sender as MenuFlyoutItem).Tag);
             }
         }
+
+        private void SelectedPassword_GotFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            PasswordConfirmationView.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+        }
+
+        private void SelectedPasswordConfirmation_LostFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            PasswordConfirmationView.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+        }
     }
 }

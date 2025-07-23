@@ -28,6 +28,7 @@ namespace ShelterVault.ViewModels
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ILanguageService _languageService;
         private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
+        private readonly IUIThreadService _uiThreadService;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Credentials _selectedCredentialBackup;
@@ -46,10 +47,12 @@ namespace ShelterVault.ViewModels
         public partial ObservableCollection<Uri> Links { get; set; }
         [ObservableProperty]
         public partial string TypedUrl { get; set; }
+        [ObservableProperty]
+        public partial bool ShowClipboardBanner { get; set; }
 
         public bool ChallengeCompleted { get; private set; }
 
-        public CredentialsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        public CredentialsViewModel(IDialogManager dialogManager, IProgressBarService progressBarService, PasswordConfirmationViewModel passwordConfirmationViewModel, ICredentialsManager credentialsManager, IShelterVaultStateService shelterVaultStateService, ILanguageService languageService, IWeakReferenceInstanceManager weakReferenceInstanceManager, IUIThreadService uiThreadService)
         {
             _dialogManager = dialogManager;
             _progressBarService = progressBarService;
@@ -57,6 +60,7 @@ namespace ShelterVault.ViewModels
             _languageService = languageService;
             _shelterVaultStateService = shelterVaultStateService;
             _weakReferenceInstanceManager = weakReferenceInstanceManager;
+            _uiThreadService = uiThreadService;
             PasswordRequirementsVM = passwordConfirmationViewModel;
             PasswordRequirementsVM.HeaderText = _languageService.GetLangValue(LangResourceKeys.PASSWORD_MUST);
             RequestFocusOnFirstField = true;
@@ -159,12 +163,17 @@ namespace ShelterVault.ViewModels
             _cancellationTokenSource = tokenCancellation;
 
             SelectedCredential.Password.SendToClipboard();
+            ShowClipboardBanner = true;
 
             Task.Run(async () =>
             {
                 await Task.Delay(5000);
-                ct.ThrowIfCancellationRequested();
+                if (ct.IsCancellationRequested) return;
                 "ShelterVault".SendToClipboard();
+                _uiThreadService.Execute(() =>
+                {
+                    ShowClipboardBanner = false;
+                });
             }, tokenCancellation.Token);
         }
 

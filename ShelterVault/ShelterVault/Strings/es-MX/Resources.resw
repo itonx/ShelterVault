@@ -363,4 +363,7 @@
   <data name="DeleteUrl.Text" xml:space="preserve">
     <value>Borrar</value>
   </data>
+  <data name="ClipboardCopied.Text" xml:space="preserve">
+    <value>Contraseña copiada al portapapeles. Se limpiará el portapapeles en 5 segundos...</value>
+  </data>
 </root>

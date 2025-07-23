@@ -363,4 +363,7 @@
   <data name="DeleteUrl.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="ClipboardCopied.Text" xml:space="preserve">
+    <value>Password copied to clipboard. Clearing clipboard in 5 seconds...</value>
+  </data>
 </root>
