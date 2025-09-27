@@ -30,6 +30,8 @@ namespace ShelterVault.ViewModels
         public partial bool ShowCancel { get; set; }
         [ObservableProperty]
         public partial string DefaultPath { get; set; }
+        [ObservableProperty]
+        public partial bool ShowPassword { get; set; }
 
         private readonly IVaultCreatorManager _vaultCreatorManager;
         private readonly IProgressBarService _progressBarService;
@@ -73,6 +75,12 @@ namespace ShelterVault.ViewModels
         private void Cancel()
         {
             WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
+        }
+
+        [RelayCommand]
+        private void ChangePasswordVisibility()
+        {
+            ShowPassword = !ShowPassword;
         }
     }
 }
