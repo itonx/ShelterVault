@@ -29,12 +29,12 @@ namespace ShelterVault.Views
 
         private void SelectedPassword_GotFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            PasswordConfirmationView.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            SelectedPasswordTeachingTip.IsOpen = true;
         }
 
-        private void SelectedPasswordConfirmation_LostFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void SelectedPassword_LostFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            PasswordConfirmationView.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+            SelectedPasswordTeachingTip.IsOpen = false;
         }
     }
 }
