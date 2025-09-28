@@ -29,6 +29,8 @@ namespace ShelterVault.ViewModels
         public partial List<ShelterVaultModel> Vaults { get; set; }
         [ObservableProperty]
         public partial ShelterVaultModel SelectedVault { get; set; }
+        [ObservableProperty]
+        public partial bool ShowPassword { get; set; }
 
         public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogManager dialogManager, IProgressBarService progressBarService, IShelterVault shelterVault, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager, IShelterVaultLocalDb shelterVaultLocalDb, IVaultManager shelterVaultCreatorManager)
         {
@@ -91,6 +93,13 @@ namespace ShelterVault.ViewModels
                     }
                 });
             });
+        }
+
+
+        [RelayCommand]
+        private void ChangePasswordVisibility()
+        {
+            ShowPassword = !ShowPassword;
         }
     }
 }
