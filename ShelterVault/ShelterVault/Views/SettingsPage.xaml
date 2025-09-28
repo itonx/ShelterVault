@@ -7,6 +7,7 @@
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Foreground="{ThemeResource ShelterVaultForeground}"
     mc:Ignorable="d">
@@ -110,6 +111,12 @@
                     </toolkit:SettingsExpander.Items>
                 </toolkit:SettingsExpander>
                 <TextBlock x:Uid="AboutSettingsTitle" />
+                <toolkit:SettingsCard
+                    Description="You can support my work with a donation 🧑🏻‍💻"
+                    Header="Sponsor"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEB51;}">
+                    <HyperlinkButton NavigateUri="https://buymeacoffee.com/itonx">Buy me a coffee</HyperlinkButton>
+                </toolkit:SettingsCard>
                 <toolkit:SettingsExpander Description="{Binding AppVersion}">
                     <toolkit:SettingsExpander.Header>
                         <TextBlock
@@ -118,7 +125,7 @@
                             Style="{ThemeResource BodyStrongTextBlockStyle}" />
                     </toolkit:SettingsExpander.Header>
                     <toolkit:SettingsExpander.HeaderIcon>
-                        <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xED35;" />
+                        <ImageIcon Source="/Images/Square44x44Logo.png" />
                     </toolkit:SettingsExpander.HeaderIcon>
                     <toolkit:SettingsExpander.Items>
                         <toolkit:SettingsCard>
@@ -127,7 +134,10 @@
                             </toolkit:SettingsCard.HeaderIcon>
                             <toolkit:SettingsCard.Description>
                                 <HyperlinkButton NavigateUri="https://github.com/itonx/ShelterVault">
-                                    <TextBlock x:Uid="StarOnGitHub" TextDecorations="Underline" Foreground="{ThemeResource ShelterVaultForeground}"/>
+                                    <TextBlock
+                                        x:Uid="StarOnGitHub"
+                                        Foreground="{ThemeResource ShelterVaultForeground}"
+                                        TextDecorations="Underline" />
                                 </HyperlinkButton>
                             </toolkit:SettingsCard.Description>
                         </toolkit:SettingsCard>
@@ -136,9 +146,11 @@
                                 <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xEA18;" />
                             </toolkit:SettingsCard.HeaderIcon>
                             <toolkit:SettingsCard.Description>
-                                <HyperlinkButton
-                                    NavigateUri="https://github.com/itonx/ShelterVault/blob/assets/PrivacyPolicy.md">
-                                    <TextBlock x:Uid="PrivacyPolicy" TextDecorations="Underline" Foreground="{ThemeResource ShelterVaultForeground}"/>
+                                <HyperlinkButton NavigateUri="https://github.com/itonx/ShelterVault/blob/assets/PrivacyPolicy.md">
+                                    <TextBlock
+                                        x:Uid="PrivacyPolicy"
+                                        Foreground="{ThemeResource ShelterVaultForeground}"
+                                        TextDecorations="Underline" />
                                 </HyperlinkButton>
                             </toolkit:SettingsCard.Description>
                         </toolkit:SettingsCard>
