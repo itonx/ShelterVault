@@ -73,7 +73,7 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void UrlAdded()
         {
-            IList<string> newUrlList = SelectedCredential.Url.Split(URL_SEPARATOR).ToList();
+            IList<string> newUrlList = SelectedCredential.Url?.Split(URL_SEPARATOR).ToList() ?? new List<string>();
             newUrlList.Add(TypedUrl);
             SelectedCredential.Url = string.Join(URL_SEPARATOR, newUrlList);
             Links.Add(GetUrl(TypedUrl));

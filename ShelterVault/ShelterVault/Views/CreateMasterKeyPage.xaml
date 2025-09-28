@@ -54,6 +54,7 @@
                     <Button
                         Height="50"
                         Command="{Binding ChangePasswordVisibilityCommand}"
+                        IsTabStop="False"
                         Visibility="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}">
                         <StackPanel Style="{StaticResource ShelterVault.Credentials.Buttons.StackPanel}">
                             <FontIcon Foreground="{ThemeResource ShelterVaultCredentialsButtonShowIconForeground}" Glyph="&#xF78D;" />
@@ -62,6 +63,7 @@
                     <Button
                         Height="50"
                         Command="{Binding ChangePasswordVisibilityCommand}"
+                        IsTabStop="False"
                         Visibility="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
                         <StackPanel Style="{StaticResource ShelterVault.Credentials.Buttons.StackPanel}">
                             <FontIcon Foreground="{ThemeResource ShelterVaultCredentialsButtonHideIconForeground}" Glyph="&#xED1A;" />
