@@ -65,7 +65,7 @@
                         IsTabStop="False"
                         Visibility="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}">
                         <StackPanel Style="{StaticResource ShelterVault.Credentials.Buttons.StackPanel}">
-                            <FontIcon Foreground="{ThemeResource ShelterVaultCredentialsButtonShowIconForeground}" Glyph="&#xF78D;" />
+                            <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xF78D;" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -75,7 +75,7 @@
                         IsTabStop="False"
                         Visibility="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
                         <StackPanel Style="{StaticResource ShelterVault.Credentials.Buttons.StackPanel}">
-                            <FontIcon Foreground="{ThemeResource ShelterVaultCredentialsButtonHideIconForeground}" Glyph="&#xED1A;" />
+                            <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xED1A;" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
