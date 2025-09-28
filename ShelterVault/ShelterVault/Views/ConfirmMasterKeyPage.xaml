@@ -36,18 +36,50 @@
                     <FontIcon FontSize="25" Glyph="&#xF8AA;" />
                 </Button>
             </Grid>
-            <PasswordBox
-                x:Name="password"
-                x:Uid="TitleMasterKey"
-                Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
-                <interactivity:Interaction.Behaviors>
-                    <desktinyBehaviors:FocusBehavior OnEvent="Loaded" />
-                    <desktinyBehaviors:KeyDownToCommandBehavior
-                        Command="{Binding ConfirmMasterKeyCommand}"
-                        CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        VirtualKeyTrigger="Enter" />
-                </interactivity:Interaction.Behaviors>
-            </PasswordBox>
+            <Grid ColumnSpacing="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <PasswordBox
+                    x:Name="password"
+                    x:Uid="TitleMasterKey"
+                    PasswordRevealMode="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToPasswordVisibility}}"
+                    Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
+                    <interactivity:Interaction.Behaviors>
+                        <desktinyBehaviors:FocusBehavior OnEvent="Loaded" />
+                        <desktinyBehaviors:KeyDownToCommandBehavior
+                            Command="{Binding ConfirmMasterKeyCommand}"
+                            CommandParameter="{Binding ElementName=password, Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            VirtualKeyTrigger="Enter" />
+                    </interactivity:Interaction.Behaviors>
+                </PasswordBox>
+                <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal">
+                    <Button
+                        Width="50"
+                        Height="50"
+                        Command="{Binding ChangePasswordVisibilityCommand}"
+                        IsTabStop="False"
+                        Visibility="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}">
+                        <StackPanel Style="{StaticResource ShelterVault.Credentials.Buttons.StackPanel}">
+                            <FontIcon Foreground="{ThemeResource ShelterVaultCredentialsButtonShowIconForeground}" Glyph="&#xF78D;" />
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        Width="50"
+                        Height="50"
+                        Command="{Binding ChangePasswordVisibilityCommand}"
+                        IsTabStop="False"
+                        Visibility="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
+                        <StackPanel Style="{StaticResource ShelterVault.Credentials.Buttons.StackPanel}">
+                            <FontIcon Foreground="{ThemeResource ShelterVaultCredentialsButtonHideIconForeground}" Glyph="&#xED1A;" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </Page>
