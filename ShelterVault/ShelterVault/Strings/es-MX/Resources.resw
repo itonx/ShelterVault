@@ -349,7 +349,7 @@
     <value>Acerca de</value>
   </data>
   <data name="StarOnGitHub.Text" xml:space="preserve">
-    <value>Agrega a favoritos (GitHub)</value>
+    <value>Agrega a favoritos en GitHub</value>
   </data>
   <data name="PrivacyPolicy.Text" xml:space="preserve">
     <value>Ver Política de Privacidad</value>
@@ -371,5 +371,11 @@
   </data>
   <data name="SettingsHeader.Text" xml:space="preserve">
     <value>Configuraciones</value>
+  </data>
+  <data name="CloudProviderType.Azure" xml:space="preserve">
+    <value>Azure</value>
+  </data>
+  <data name="CloudProviderType.None" xml:space="preserve">
+    <value>Ninguno</value>
   </data>
 </root>
