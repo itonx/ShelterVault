@@ -23,6 +23,7 @@
             <converters:ShelterVaultAppStateToTitleMarginConverter x:Key="ShelterVaultAppStateToTitleMargin" />
             <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIcon" />
             <converters:ShelterVaultAppStateToIsPaneButtonVisibleConverter x:Key="ShelterVaultAppStateToIsPaneButtonVisible" />
+            <converters:CloudProviderTypeToTextLangConverter x:Key="CloudProviderTypeToTextLang" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

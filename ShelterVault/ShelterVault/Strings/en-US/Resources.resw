@@ -372,4 +372,10 @@
   <data name="SettingsHeader.Text" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="CloudProviderType.Azure" xml:space="preserve">
+    <value>Azure</value>
+  </data>
+  <data name="CloudProviderType.None" xml:space="preserve">
+    <value>None</value>
+  </data>
 </root>

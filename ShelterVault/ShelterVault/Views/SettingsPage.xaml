@@ -62,7 +62,15 @@
                                         x:Uid="CloudConfigProviders"
                                         Margin="0,5"
                                         ItemsSource="{Binding CloudProviders, Mode=OneWay}"
-                                        SelectedItem="{Binding SelectedCloudProvider, Mode=TwoWay}" />
+                                        SelectedItem="{Binding SelectedCloudProvider, Mode=TwoWay}">
+                                        <RadioButtons.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                                    <TextBlock Foreground="{ThemeResource ShelterVaultForeground}" Text="{Binding Converter={StaticResource CloudProviderTypeToTextLang}}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </RadioButtons.ItemTemplate>
+                                    </RadioButtons>
                                     <StackPanel
                                         Grid.Column="1"
                                         Margin="100,0"
