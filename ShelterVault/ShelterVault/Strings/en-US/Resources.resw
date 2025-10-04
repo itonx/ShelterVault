@@ -366,4 +366,10 @@
   <data name="ClipboardCopied.Text" xml:space="preserve">
     <value>Password copied to clipboard. Clearing clipboard in 5 seconds...</value>
   </data>
+  <data name="SponsorCard.Description" xml:space="preserve">
+    <value>You can support my work with a donation 🧑🏻‍💻</value>
+  </data>
+  <data name="SettingsHeader.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>

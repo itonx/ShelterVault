@@ -366,4 +366,10 @@
   <data name="ClipboardCopied.Text" xml:space="preserve">
     <value>Contraseña copiada al portapapeles. Se limpiará el portapapeles en 5 segundos...</value>
   </data>
+  <data name="SponsorCard.Description" xml:space="preserve">
+    <value>Puedes apoyar este proyecto con una donación 🧑🏻‍💻</value>
+  </data>
+  <data name="SettingsHeader.Text" xml:space="preserve">
+    <value>Configuraciones</value>
+  </data>
 </root>
