@@ -10,7 +10,7 @@
   <Identity
     Name="itonx.ShelterVault"
     Publisher="CN=91492E87-C14D-4CB0-8B89-08C89D66F75E"
-    Version="1.0.7.0" />
+    Version="1.0.8.0" />
 
   <mp:PhoneIdentity PhoneProductId="b938f999-69e5-441a-b75b-3d55e0eb0fea" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
