@@ -130,7 +130,7 @@
                     <toolkit:SettingsExpander.Items>
                         <toolkit:SettingsCard>
                             <toolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xE943;" />
+                                <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xE735;" />
                             </toolkit:SettingsCard.HeaderIcon>
                             <toolkit:SettingsCard.Description>
                                 <HyperlinkButton NavigateUri="https://github.com/itonx/ShelterVault">
