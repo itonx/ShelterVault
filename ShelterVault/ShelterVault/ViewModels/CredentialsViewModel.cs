@@ -83,7 +83,7 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void DeleteUrl(object url)
         {
-            IEnumerable<string> newUrlList = SelectedCredential.Url.Split(URL_SEPARATOR).Where(u => !u.Equals(url));
+            IEnumerable<string> newUrlList = SelectedCredential.Url.Split(URL_SEPARATOR).Where(u => !string.IsNullOrWhiteSpace(u) && !GetUrl(u).Equals(url));
             SelectedCredential.Url = string.Join(URL_SEPARATOR, newUrlList);
             Links = new ObservableCollection<Uri>(newUrlList.Select(u => GetUrl(u)));
         }
@@ -94,11 +94,12 @@ namespace ShelterVault.ViewModels
             SelectedCredential = _credentialsManager.GetCredentials(credentialParameter);
             _selectedCredentialBackup = SelectedCredential.Clone();
             State = CredentialsViewModelState.Updating;
-            Links = new ObservableCollection<Uri>(SelectedCredential.Url.Split(URL_SEPARATOR).Select(u => GetUrl(u)));
+            Links = new ObservableCollection<Uri>(SelectedCredential.Url?.Split(URL_SEPARATOR).Select(u => GetUrl(u)).Where(u => u != null) ?? Enumerable.Empty<Uri>());
         }
 
         private Uri GetUrl(string url)
         {
+            if (string.IsNullOrWhiteSpace(url)) return null;
             return url.Contains("http://") || url.Contains("https://") ? new Uri(url) : new Uri(string.Concat("https://", url));
         }
 
