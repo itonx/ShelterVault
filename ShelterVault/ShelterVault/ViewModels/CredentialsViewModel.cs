@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Desktiny.UI.Interfaces;
-using Desktiny.UI.Services;
+using Desktiny.WinUI.Interfaces;
+using Desktiny.WinUI.Services;
 using Microsoft.UI.Xaml.Controls;
 using ShelterVault.Managers;
 using ShelterVault.Models;

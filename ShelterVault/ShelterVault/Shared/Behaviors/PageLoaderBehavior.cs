@@ -1,5 +1,5 @@
-﻿using Desktiny.UI.Extensions;
-using Desktiny.UI.Interfaces;
+﻿using Desktiny.WinUI.Extensions;
+using Desktiny.WinUI.Interfaces;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;

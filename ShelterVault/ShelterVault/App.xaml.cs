@@ -1,5 +1,5 @@
-﻿using Desktiny.UI.Services;
-using Desktiny.UI.Tools;
+﻿using Desktiny.WinUI.Services;
+using Desktiny.WinUI.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
@@ -84,7 +84,7 @@ namespace ShelterVault
             services.AddSingleton<ILanguageService, LanguageService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IProgressBarService, ProgressBarService>();
-            services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<IDialogLangService, DialogLangService>();
             services.AddSingleton<IShelterVaultStateService, ShelterVaultStateService>();
             services.AddSingleton<IShelterVaultThemeService, ShelterVaultThemeService>();
             services.AddSingleton<IShelterVaultCosmosDBService, ShelterVaultCosmosDBService>();
