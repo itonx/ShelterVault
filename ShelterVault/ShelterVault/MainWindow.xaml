@@ -5,20 +5,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:ShelterVault.Shared.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:desktinyBehaviors="using:Desktiny.UI.Behaviors"
+    xmlns:desktinyBehaviors="using:Desktiny.WinUI.Behaviors"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:ShelterVault"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:Desktiny.UI"
+    xmlns:ui="using:Desktiny.WinUI"
     xmlns:views="using:ShelterVault.Views"
     Title="ShelterVault"
     mc:Ignorable="d">
-    <ui:WinContainer
+    <ui:Winston
         x:Name="WindowContainer"
         AppTheme="{Binding CurrentAppTheme, Mode=OneWay}"
         IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
         MaximizeAtStartup="true">
-        <ui:WinContainer.TitleBar>
+        <ui:Winston.TitleBar>
             <TitleBar IsPaneToggleButtonVisible="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToIsPaneButtonVisible}}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:PaneToggleRequestedBehavior />
@@ -39,16 +39,16 @@
                     <views:ShelterVaultTitleBar />
                 </TitleBar.RightHeader>
             </TitleBar>
-        </ui:WinContainer.TitleBar>
-        <ui:WinContainer.Content>
+        </ui:Winston.TitleBar>
+        <ui:Winston.Content>
             <Frame x:Name="Navigator">
                 <interactivity:Interaction.Behaviors>
                     <desktinyBehaviors:EnumNavigationPageBehavior Target="{Binding ShelterVaultCurrentAppState}" />
                 </interactivity:Interaction.Behaviors>
             </Frame>
-        </ui:WinContainer.Content>
-        <ui:WinContainer.NocturneContent>
+        </ui:Winston.Content>
+        <ui:Winston.NocturneContent>
             <views:Spinner />
-        </ui:WinContainer.NocturneContent>
-    </ui:WinContainer>
+        </ui:Winston.NocturneContent>
+    </ui:Winston>
 </Window>

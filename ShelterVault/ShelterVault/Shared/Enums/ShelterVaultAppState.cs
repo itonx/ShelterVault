@@ -1,4 +1,4 @@
-﻿using Desktiny.UI.Attributes;
+﻿using Desktiny.WinUI.Attributes;
 using ShelterVault.Views;
 
 namespace ShelterVault.Shared.Enums

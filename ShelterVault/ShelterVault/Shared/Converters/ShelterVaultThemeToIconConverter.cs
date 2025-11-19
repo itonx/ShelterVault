@@ -1,6 +1,6 @@
-﻿using Desktiny.UI.Attributes;
-using Desktiny.UI.Extensions;
-using Desktiny.UI.Models;
+﻿using Desktiny.WinUI.Attributes;
+using Desktiny.WinUI.Extensions;
+using Desktiny.WinUI.Models;
 using Microsoft.UI.Xaml.Data;
 using ShelterVault.Shared.Extensions;
 using System;
