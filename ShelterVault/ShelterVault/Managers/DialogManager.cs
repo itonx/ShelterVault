@@ -25,7 +25,7 @@ namespace ShelterVault.Managers
         public async Task ShowConfirmationDialogAsync(string messageResourceKey, string titleResourceKey = Desktiny.WinUI.Constants.Global.DIALOG_TITLE_DEFAULT, string primaryButtonTextResourceKey = Desktiny.WinUI.Constants.Global.DIALOG_CLOSE_DEFAULT)
         {
             _shelterVaultStateService.SetDialogStatus(true);
-            await _dialogService.ShowYesNoAsync(messageResourceKey, titleResourceKey, primaryButtonTextResourceKey);
+            await _dialogService.ShowInformationAsync(messageResourceKey, titleResourceKey, primaryButtonTextResourceKey);
             _shelterVaultStateService.SetDialogStatus(false);
         }
 

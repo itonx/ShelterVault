@@ -121,9 +121,10 @@
                 <TextBlock x:Uid="AboutSettingsTitle" />
                 <toolkit:SettingsCard
                     x:Uid="SponsorCard"
+                    Foreground="{ThemeResource ShelterVaultForeground}"
                     Header="Sponsor"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEB51;}">
-                    <HyperlinkButton NavigateUri="https://buymeacoffee.com/itonx">Buy me a coffee</HyperlinkButton>
+                    <HyperlinkButton Foreground="{ThemeResource ShelterVaultForeground}" NavigateUri="https://buymeacoffee.com/itonx">Buy me a coffee</HyperlinkButton>
                 </toolkit:SettingsCard>
                 <toolkit:SettingsExpander Description="{Binding AppVersion}">
                     <toolkit:SettingsExpander.Header>
