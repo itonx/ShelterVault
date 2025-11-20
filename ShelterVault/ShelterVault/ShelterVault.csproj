@@ -147,7 +147,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402" />
     <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="Desktiny.WinUI" Version="1.0.1" />
+    <PackageReference Include="Desktiny.WinUI" Version="1.0.3" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.55.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
