@@ -19,10 +19,8 @@
         Orientation="Horizontal">
         <ComboBox Style="{ThemeResource ShelterVault.AppTitleBar.ComboBox}" Visibility="{Binding ShowLangOptions, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
             <interactivity:Interaction.Behaviors>
-                <behaviors:ComboBoxChangeLanguageBehavior />
+                <desktinyBehaviors:ComboBoxChangeLanguageBehavior />
             </interactivity:Interaction.Behaviors>
-            <ComboBoxItem Content="{Binding EnglishLangOptionText, Mode=OneWay}" Tag="en-US" />
-            <ComboBoxItem Content="{Binding SpanishLangOptionText, Mode=OneWay}" Tag="es-MX" />
         </ComboBox>
         <Button
             x:Name="AppTitleBarSyncButton"
@@ -49,7 +47,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <FontIcon Glyph="&#xE8AB;" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
-                <TextBlock Grid.Column="1" Text="{Binding SwitchVaultText, Mode=OneWay}" />
+                <TextBlock x:Uid="AppBarSwitchVault" Grid.Column="1" />
             </Grid>
         </Button>
         <Button
