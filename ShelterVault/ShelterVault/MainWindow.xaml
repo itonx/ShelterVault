@@ -16,6 +16,7 @@
     <desktiny:Winston
         x:Name="WindowContainer"
         AppTheme="{Binding CurrentAppTheme, Mode=OneWay}"
+        EnableTitleBarThemeButtons="True"
         IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
         MaximizeAtStartup="true">
         <desktiny:Winston.TitleBar>
