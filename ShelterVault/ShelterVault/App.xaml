@@ -16,12 +16,12 @@
             <!--  Other app resources here  -->
             <desktinyConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
             <desktinyConverters:BoolToPasswordVisibilityConverter x:Key="BoolToPasswordVisibility" />
+            <desktinyConverters:ThemeToIconConverter x:Key="ThemeToIcon" />
             <converters:CloudProviderTypeToVisibilityConverter x:Key="CloudProviderTypeToVisibility" />
             <converters:CloudSyncStatusToGlyphConverter x:Key="CloudSyncStatusToGlyph" />
             <converters:CloudSyncStatusToTextConverter x:Key="CloudSyncStatusToText" />
             <converters:CredentialsViewModelStateToVisibilityConverter x:Key="StateToVisibility" />
             <converters:ShelterVaultAppStateToTitleMarginConverter x:Key="ShelterVaultAppStateToTitleMargin" />
-            <converters:ShelterVaultThemeToIconConverter x:Key="ThemeToIcon" />
             <converters:ShelterVaultAppStateToIsPaneButtonVisibleConverter x:Key="ShelterVaultAppStateToIsPaneButtonVisible" />
             <converters:CloudProviderTypeToTextLangConverter x:Key="CloudProviderTypeToTextLang" />
         </ResourceDictionary>

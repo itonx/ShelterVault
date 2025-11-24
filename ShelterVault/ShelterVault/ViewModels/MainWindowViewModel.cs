@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktiny.WinUI.Models;
 using Desktiny.WinUI.Services;
+using Microsoft.UI.Xaml;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
@@ -10,6 +11,7 @@ using ShelterVault.Services;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -32,15 +34,13 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         public partial CloudSyncStatus CurrentCloudSyncStatus { get; set; }
 
-        private readonly IShelterVaultThemeService _shelterVaultThemeService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ICloudSyncManager _cloudSyncManager;
         private readonly IUIThreadService _uiThreadService;
         private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
-        public MainWindowViewModel(IShelterVault shelterVault, IShelterVaultThemeService shelterVaultThemeService, IShelterVaultStateService shelterVaultStateService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        public MainWindowViewModel(IShelterVault shelterVault, IShelterVaultStateService shelterVaultStateService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
         {
-            _shelterVaultThemeService = shelterVaultThemeService;
             _shelterVaultStateService = shelterVaultStateService;
             _cloudSyncManager = cloudSyncManager;
             _uiThreadService = uiThreadService;
@@ -57,12 +57,6 @@ namespace ShelterVault.ViewModels
         }
 
         [RelayCommand]
-        private void ChangeTheme()
-        {
-            CurrentAppTheme = _shelterVaultThemeService.GetNextTheme(CurrentAppTheme);
-        }
-
-        [RelayCommand]
         private void Sync()
         {
             if (ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
@@ -75,11 +69,23 @@ namespace ShelterVault.ViewModels
         private void InitialSetup(IShelterVault shelterVault)
         {
             RegisterMessages();
-            CurrentAppTheme = _shelterVaultThemeService.GetTheme();
+            RegisterThemes();
+            CurrentAppTheme = ThemeService.GetTheme();
             if (shelterVault.AreThereVaults()) ShelterVaultCurrentAppState = ShelterVaultAppState.ConfirmMasterKey;
             ShowLangOptions = true;
             ShowSwitchVault = false;
             StartSynchronizationTask();
+        }
+
+        private void RegisterThemes()
+        {
+            List<AppThemeModel> themes = new()
+            {
+                new AppThemeModel("Light", ElementTheme.Light, "Resources/OverrideWinUITheme.xaml", "\uE793"),
+                new AppThemeModel("Dark", ElementTheme.Dark, "Resources/OverrideWinUITheme.xaml", "\uF0CE"),
+                new AppThemeModel("Neuromancer", ElementTheme.Dark, "Resources/NeuromancerTheme.xaml", "\uE950")
+            };
+            ThemeService.RegisterThemes(themes);
         }
 
         private void RegisterMessages()
