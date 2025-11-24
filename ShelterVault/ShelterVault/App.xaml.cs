@@ -86,7 +86,6 @@ namespace ShelterVault
             services.AddSingleton<IProgressBarService, ProgressBarService>();
             services.AddSingleton<IDialogLangService, DialogLangService>();
             services.AddSingleton<IShelterVaultStateService, ShelterVaultStateService>();
-            services.AddSingleton<IShelterVaultThemeService, ShelterVaultThemeService>();
             services.AddSingleton<IShelterVaultCosmosDBService, ShelterVaultCosmosDBService>();
             services.AddSingleton<IUIThreadService, UIThreadService>();
             services.AddSingleton<IWeakReferenceInstanceManager, WeakReferenceInstanceManager>();
