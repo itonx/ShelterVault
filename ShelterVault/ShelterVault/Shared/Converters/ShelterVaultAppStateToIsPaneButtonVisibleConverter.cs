@@ -8,7 +8,7 @@ namespace ShelterVault.Shared.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value is ShelterVaultAppState appState && appState == ShelterVaultAppState.NavigationView;
+            return value is AppPage appState && appState == AppPage.NavigationView;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

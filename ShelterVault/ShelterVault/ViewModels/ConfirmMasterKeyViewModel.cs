@@ -1,12 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Desktiny.WinUI.EventMessages;
+using Desktiny.WinUI.Managers;
 using Desktiny.WinUI.Services;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +53,7 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void NewVault()
         {
-            WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.CreateMasterKey));
+            EventManager.Publish(new EnumNavigation(AppPage.CreateMasterKey));
         }
 
 
@@ -64,7 +67,7 @@ namespace ShelterVault.ViewModels
                 {
                     _shelterVaultLocalDb.SetDbName(SelectedVault.Name);
                     _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
-                    WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.NavigationView));
+                    EventManager.Publish(new EnumNavigation(AppPage.NavigationView));
                 }
                 else await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_WRONG_MASTER_KEY);
             }

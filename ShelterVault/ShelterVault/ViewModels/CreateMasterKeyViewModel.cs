@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+using Desktiny.WinUI.EventMessages;
+using Desktiny.WinUI.Managers;
 using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Services;
-using ShelterVault.Shared.Messages;
+using ShelterVault.Shared.Enums;
 using System;
 using System.IO;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace ShelterVault.ViewModels
                     string salt = Guid.NewGuid().ToString();
                     string uuid = Guid.NewGuid().ToString();
                     bool wasVaultCreated = _vaultCreatorManager.CreateVault(uuid, Name, Password, salt);
-                    if (wasVaultCreated) WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
+                    if (wasVaultCreated) EventManager.Publish(new EnumNavigation(AppPage.ConfirmMasterKey));
                 }
             }
             finally
@@ -74,7 +75,7 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void Cancel()
         {
-            WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(Shared.Enums.ShelterVaultAppState.ConfirmMasterKey));
+            EventManager.Publish(new EnumNavigation(AppPage.ConfirmMasterKey));
         }
 
         [RelayCommand]
