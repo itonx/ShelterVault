@@ -29,6 +29,13 @@ ShelterVault helps you to save your passwords in your local machine. **All passw
 
 Install it from the Microsoft Store.
 
+<p align="center">
+  <img width="60" height="60" alt="ShelterVault" src="https://github.com/itonx/ShelterVault/blob/assets/desktiny_dark_400x400.png">
+</p>
+<p align="center">
+	<a target="_blank" href="https://github.com/itonx/Desktiny.WinUI"><strong>Powered by Desktiny</strong></a>
+</p>
+
 # 🛡️ Main features:
 
 - Create a master key.
