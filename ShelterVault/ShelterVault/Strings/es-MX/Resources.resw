@@ -378,4 +378,7 @@
   <data name="CloudProviderType.None" xml:space="preserve">
     <value>Ninguno</value>
   </data>
+  <data name="PoweredByDesktiny.Text" xml:space="preserve">
+    <value>Impulsado por Desktiny</value>
+  </data>
 </root>
