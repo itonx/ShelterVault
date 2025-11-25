@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Desktiny.WinUI.EventMessages;
+using Desktiny.WinUI.Managers;
 using Desktiny.WinUI.Models;
 using Desktiny.WinUI.Services;
 using Microsoft.UI.Xaml;
@@ -22,7 +24,7 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         public partial bool IsProgressBarVisible { get; set; }
         [ObservableProperty]
-        public partial ShelterVaultAppState ShelterVaultCurrentAppState { get; set; }
+        public partial AppPage ShelterVaultCurrentAppState { get; set; }
         [ObservableProperty]
         public partial AppThemeModel CurrentAppTheme { get; set; }
         [ObservableProperty]
@@ -45,7 +47,7 @@ namespace ShelterVault.ViewModels
             _cloudSyncManager = cloudSyncManager;
             _uiThreadService = uiThreadService;
             _weakReferenceInstanceManager = weakReferenceInstanceManager;
-            ShelterVaultCurrentAppState = ShelterVaultAppState.CreateMasterKey;
+            ShelterVaultCurrentAppState = AppPage.CreateMasterKey;
             InitialSetup(shelterVault);
         }
 
@@ -53,13 +55,13 @@ namespace ShelterVault.ViewModels
         private void SwitchVault()
         {
             _shelterVaultStateService.ResetState();
-            WeakReferenceMessenger.Default.Send(new CurrentAppStateRequestMessage(ShelterVaultAppState.ConfirmMasterKey));
+            EventManager.Publish(new EnumNavigation(AppPage.ConfirmMasterKey));
         }
 
         [RelayCommand]
         private void Sync()
         {
-            if (ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
+            if (ShelterVaultCurrentAppState == AppPage.NavigationView)
             {
                 WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(ShelterVaultPage.SETTINGS));
             }
@@ -71,7 +73,7 @@ namespace ShelterVault.ViewModels
             RegisterMessages();
             RegisterThemes();
             CurrentAppTheme = ThemeService.GetTheme();
-            if (shelterVault.AreThereVaults()) ShelterVaultCurrentAppState = ShelterVaultAppState.ConfirmMasterKey;
+            if (shelterVault.AreThereVaults()) ShelterVaultCurrentAppState = AppPage.ConfirmMasterKey;
             ShowLangOptions = true;
             ShowSwitchVault = false;
             StartSynchronizationTask();
@@ -91,21 +93,8 @@ namespace ShelterVault.ViewModels
         private void RegisterMessages()
         {
             _weakReferenceInstanceManager.AddInstance(this);
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, CurrentAppStateRequestMessage>(this, (receiver, payload) =>
-            {
-                receiver.ShelterVaultCurrentAppState = payload.Value;
-                RefreshSyncStatusInfo();
-                if (payload.Value == ShelterVaultAppState.NavigationView)
-                {
-                    ShowLangOptions = false;
-                    ShowSwitchVault = true;
-                }
-                else
-                {
-                    ShowLangOptions = true;
-                    ShowSwitchVault = false;
-                }
-            });
+            EventManager.Subscribe<EnumNavigation>(this, OnCurrentAppPageMessageReceived);
+
             WeakReferenceMessenger.Default.Register<MainWindowViewModel, ProgressBarRequestMessage>(this, (viewModel, payload) =>
             {
                 viewModel.IsProgressBarVisible = payload.Value;
@@ -136,9 +125,25 @@ namespace ShelterVault.ViewModels
             });
         }
 
+        private void OnCurrentAppPageMessageReceived(EnumNavigation enumNavigation)
+        {
+            this.ShelterVaultCurrentAppState = (AppPage)enumNavigation.Page;
+            RefreshSyncStatusInfo();
+            if (this.ShelterVaultCurrentAppState == AppPage.NavigationView)
+            {
+                ShowLangOptions = false;
+                ShowSwitchVault = true;
+            }
+            else
+            {
+                ShowLangOptions = true;
+                ShowSwitchVault = false;
+            }
+        }
+
         private void RefreshSyncStatusInfo()
         {
-            if (ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
+            if (ShelterVaultCurrentAppState == AppPage.NavigationView)
             {
                 CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
                 ShowSync = cloudSyncInformation.HasCloudConfiguration;
@@ -159,7 +164,7 @@ namespace ShelterVault.ViewModels
                 while (true)
                 {
                     await Task.Delay(60 * 1000);
-                    if (ShelterVaultCurrentAppState == ShelterVaultAppState.NavigationView)
+                    if (ShelterVaultCurrentAppState == AppPage.NavigationView)
                     {
                         CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
                         try

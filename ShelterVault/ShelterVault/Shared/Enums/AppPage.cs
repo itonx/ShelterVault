@@ -3,7 +3,7 @@ using ShelterVault.Views;
 
 namespace ShelterVault.Shared.Enums
 {
-    public enum ShelterVaultAppState
+    public enum AppPage
     {
         [PageType(typeof(CreateMasterKeyPage))]
         CreateMasterKey,
