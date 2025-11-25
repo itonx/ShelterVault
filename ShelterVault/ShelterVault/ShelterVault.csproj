@@ -23,6 +23,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <ItemGroup> 
+    <None Remove="Images\desktiny_dark_400x400.png" /> 
     <None Remove="Images\LargeTile.scale-100.png" />
     <None Remove="Images\LargeTile.scale-125.png" />
     <None Remove="Images\LargeTile.scale-150.png" />
@@ -89,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <Content Include="Images\desktiny_dark_400x400.png" />
     <Content Include="Images\LargeTile.scale-100.png" />
     <Content Include="Images\LargeTile.scale-125.png" />
     <Content Include="Images\LargeTile.scale-150.png" />

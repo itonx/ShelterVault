@@ -126,7 +126,7 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xEB51;}">
                     <HyperlinkButton Foreground="{ThemeResource ShelterVaultForeground}" NavigateUri="https://buymeacoffee.com/itonx">Buy me a coffee</HyperlinkButton>
                 </toolkit:SettingsCard>
-                <toolkit:SettingsExpander Description="{Binding AppVersion}">
+                <toolkit:SettingsExpander Description="{Binding AppVersion}" IsExpanded="True">
                     <toolkit:SettingsExpander.Header>
                         <TextBlock
                             x:Uid="VersionCardTitle"
@@ -137,6 +137,19 @@
                         <ImageIcon Source="/Images/Square44x44Logo.png" />
                     </toolkit:SettingsExpander.HeaderIcon>
                     <toolkit:SettingsExpander.Items>
+                        <toolkit:SettingsCard>
+                            <toolkit:SettingsCard.HeaderIcon>
+                                <ImageIcon Source="/Images/desktiny_dark_400x400.png" />
+                            </toolkit:SettingsCard.HeaderIcon>
+                            <toolkit:SettingsCard.Description>
+                                <HyperlinkButton NavigateUri="https://github.com/itonx/Desktiny.WinUI">
+                                    <TextBlock
+                                        x:Uid="PoweredByDesktiny"
+                                        Foreground="{ThemeResource ShelterVaultForeground}"
+                                        TextDecorations="Underline" />
+                                </HyperlinkButton>
+                            </toolkit:SettingsCard.Description>
+                        </toolkit:SettingsCard>
                         <toolkit:SettingsCard>
                             <toolkit:SettingsCard.HeaderIcon>
                                 <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xE735;" />
