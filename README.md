@@ -5,11 +5,7 @@
 ---
 
 <p align="center">
-  <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/itonx/ShelterVault/blob/assets/ShelterVaultDarkThemeLogo.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://github.com/itonx/ShelterVault/blob/assets/ShelterVaultLightThemeLogo.png">
-  <img alt="ShelterVault" src="https://github.com/itonx/ShelterVault/blob/assets/ShelterVaultDarkThemeLogo.png">
-  </picture>
+  <img width="200" alt="ShelterVault" src="https://github.com/itonx/ShelterVault/blob/main/ShelterVault/ShelterVault/Images/ShelterVault.png">
 </p>
 <p align="center">
   <a href="https://github.com/itonx/ShelterVault/actions/workflows/main.yml" target="_blank"><img src="https://github.com/itonx/ShelterVault/actions/workflows/main.yml/badge.svg?branch=main"/></a>
@@ -30,7 +26,7 @@ ShelterVault helps you to save your passwords in your local machine. **All passw
 Install it from the Microsoft Store.
 
 <p align="center">
-  <img width="60" height="60" alt="ShelterVault" src="https://github.com/itonx/ShelterVault/blob/assets/desktiny_dark_400x400.png">
+  <img alt="Desktiny.WinUI" src="https://github.com/itonx/Desktiny.WinUI/blob/main/assets/desktiny.png">
 </p>
 <p align="center">
 	<a target="_blank" href="https://github.com/itonx/Desktiny.WinUI"><strong>Powered by Desktiny</strong></a>
