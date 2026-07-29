@@ -1,4 +1,5 @@
-﻿using Desktiny.WinUI.Services;
+﻿using System;
+using Desktiny.WinUI.Services;
 using Desktiny.WinUI.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,7 +9,6 @@ using ShelterVault.DataLayer;
 using ShelterVault.Managers;
 using ShelterVault.Services;
 using ShelterVault.ViewModels;
-using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -71,7 +71,6 @@ namespace ShelterVault
                 loggingBuilder.AddDebug();
             });
 
-
             //LocalDb
             services.AddSingleton<IShelterVaultLocalDb, ShelterVaultLocalDb>();
             services.AddSingleton<IShelterVault, DataLayer.ShelterVault>();
@@ -98,6 +97,7 @@ namespace ShelterVault
             services.AddScoped<ICredentialsManager, CredentialsManager>();
             services.AddScoped<ICloudSyncManager, CloudSyncManager>();
             services.AddScoped<IDialogManager, DialogManager>();
+            services.AddScoped<IKeyDerivationManager, KeyDerivationManager>();
 
             // Viewmodels
             services.AddTransient<NavigationViewModel>();

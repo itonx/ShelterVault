@@ -1,14 +1,17 @@
-﻿using ShelterVault.DataLayer;
+﻿using System;
+using ShelterVault.DataLayer;
 using ShelterVault.Models;
 using ShelterVault.Services;
 using ShelterVault.Shared.Enums;
-using System;
 
 namespace ShelterVault.Managers
 {
     public interface ICloudProviderManager
     {
-        bool UpsertCloudConfiguration<T>(CloudProviderType cloudProviderType, T cloudConfigurationModel);
+        bool UpsertCloudConfiguration<T>(
+            CloudProviderType cloudProviderType,
+            T cloudConfigurationModel
+        );
         T GetCloudConfiguration<T>(CloudProviderType cloudProviderType);
         bool UpdateVaultCloudProvider(CloudProviderType cloudProviderType);
         CloudProviderType GetCurrentCloudProvider();
@@ -21,7 +24,12 @@ namespace ShelterVault.Managers
         private readonly IShelterVaultCloudConfig _shelterVaultCloudConfig;
         private readonly IShelterVault _shelterVault;
 
-        public CloudProviderManager(IEncryptionService encryptionService, IShelterVaultStateService shelterVaultStateService, IShelterVaultCloudConfig shelterVaultCloudConfig, IShelterVault shelterVault)
+        public CloudProviderManager(
+            IEncryptionService encryptionService,
+            IShelterVaultStateService shelterVaultStateService,
+            IShelterVaultCloudConfig shelterVaultCloudConfig,
+            IShelterVault shelterVault
+        )
         {
             _encryptionService = encryptionService;
             _shelterVaultStateService = shelterVaultStateService;
@@ -31,23 +39,44 @@ namespace ShelterVault.Managers
 
         public T GetCloudConfiguration<T>(CloudProviderType cloudProviderType)
         {
-            ShelterVaultCloudConfigModel shelterVaultCloudConfigModel = _shelterVaultCloudConfig.GetCloudConfiguration(cloudProviderType.ToString());
-            if (shelterVaultCloudConfigModel == null) return default(T);
+            ShelterVaultCloudConfigModel shelterVaultCloudConfigModel =
+                _shelterVaultCloudConfig.GetCloudConfiguration(cloudProviderType.ToString());
+            if (shelterVaultCloudConfigModel == null)
+                return default(T);
             (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
-            string decryptedJsonModel = _encryptionService.DecryptAes(shelterVaultCloudConfigModel, derivedKey, salt);
+            string decryptedJsonModel = _encryptionService.DecryptAes(
+                shelterVaultCloudConfigModel,
+                derivedKey,
+                salt
+            );
             return System.Text.Json.JsonSerializer.Deserialize<T>(decryptedJsonModel);
         }
 
-        public bool UpsertCloudConfiguration<T>(CloudProviderType cloudProviderType, T cloudConfigurationModel)
+        public bool UpsertCloudConfiguration<T>(
+            CloudProviderType cloudProviderType,
+            T cloudConfigurationModel
+        )
         {
             try
             {
-                string jsonModel = System.Text.Json.JsonSerializer.Serialize(cloudConfigurationModel);
-                (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
-                (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(jsonModel, derivedKey, salt);
+                string jsonModel = System.Text.Json.JsonSerializer.Serialize(
+                    cloudConfigurationModel
+                );
+                (byte[] derivedKey, _) = _shelterVaultStateService.GetLocalEncryptionValues();
+                (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(
+                    jsonModel,
+                    derivedKey
+                );
 
-                ShelterVaultCloudConfigModel config = new(cloudProviderType.ToString(), encryptedValues);
-                bool result = _shelterVaultCloudConfig.UpsertCloudConfiguration(config.Name, config.EncryptedValues, config.Iv);
+                ShelterVaultCloudConfigModel config = new(
+                    cloudProviderType.ToString(),
+                    encryptedValues
+                );
+                bool result = _shelterVaultCloudConfig.UpsertCloudConfiguration(
+                    config.Name,
+                    config.EncryptedValues,
+                    config.Iv
+                );
 
                 return result;
             }
