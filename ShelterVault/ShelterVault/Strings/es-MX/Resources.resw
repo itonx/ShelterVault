@@ -381,4 +381,19 @@
   <data name="PoweredByDesktiny.Text" xml:space="preserve">
     <value>Impulsado por Desktiny</value>
   </data>
+  <data name="VaultSettingsTitle.Text" xml:space="preserve">
+    <value>Configuración del baúl</value>
+  </data>
+  <data name="VaultMigrationExpander.Description" xml:space="preserve">
+    <value>Actualiza tu baúl para mejorar la seguridad</value>
+  </data>
+  <data name="VaultMigrationTitle.Text" xml:space="preserve">
+    <value>Migración de baúl</value>
+  </data>
+  <data name="Argon2MigrationTitle.Text" xml:space="preserve">
+    <value>Migración Argon2 (Recomendado)</value>
+  </data>
+  <data name="Argon2Upgrade.Content" xml:space="preserve">
+    <value>Iniciar Migración Argon2</value>
+  </data>
 </root>
