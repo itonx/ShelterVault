@@ -39,6 +39,39 @@
             Grid.Row="1"
             Style="{StaticResource ShelterVault.Settings.ScrollViewer}">
             <StackPanel Spacing="10">
+                <TextBlock x:Uid="VaultSettingsTitle" />
+                <toolkit:SettingsExpander x:Uid="VaultMigrationExpander">
+                    <toolkit:SettingsExpander.Header>
+                        <TextBlock
+                            x:Uid="VaultMigrationTitle"
+                            Foreground="{ThemeResource ShelterVaultForeground}"
+                            Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                    </toolkit:SettingsExpander.Header>
+                    <toolkit:SettingsExpander.HeaderIcon>
+                        <FontIcon Foreground="{ThemeResource ShelterVaultForeground}" Glyph="&#xE753;" />
+                    </toolkit:SettingsExpander.HeaderIcon>
+                    <toolkit:SettingsExpander.Items>
+                        <toolkit:SettingsCard>
+                            <toolkit:SettingsCard.Description>
+                                <Grid MinHeight="100" Margin="0,10">
+                                    <StackPanel Spacing="10">
+                                        <TextBlock
+                                            x:Uid="Argon2MigrationTitle"
+                                            HorizontalAlignment="Left"
+                                            Foreground="{ThemeResource ShelterVaultForeground}"
+                                            Style="{ThemeResource SubtitleTextBlockStyle}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <Button
+                                                x:Uid="Argon2Upgrade"
+                                                Command="{Binding MigrateToArgon2Command}"
+                                                Style="{ThemeResource AccentButtonStyle}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </toolkit:SettingsCard.Description>
+                        </toolkit:SettingsCard>
+                    </toolkit:SettingsExpander.Items>
+                </toolkit:SettingsExpander>
                 <TextBlock x:Uid="CloudSettingsTitle" />
                 <toolkit:SettingsExpander x:Uid="CloudSettingsExpander">
                     <toolkit:SettingsExpander.Header>

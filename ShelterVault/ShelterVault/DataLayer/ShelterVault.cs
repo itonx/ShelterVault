@@ -19,6 +19,7 @@ namespace ShelterVault.DataLayer
         bool UpdateVaultCloudProvider(int cloudProvider);
         bool DeleteVault(string uuid);
         IEnumerable<ShelterVaultModel> GetAllActiveVaults();
+        IEnumerable<ShelterVaultModel> GetVaults();
         ShelterVaultModel GetVaultByUUID(string uuid);
         ShelterVaultModel GetCurrentVault();
         bool AreThereVaults();
@@ -129,6 +130,14 @@ namespace ShelterVault.DataLayer
         public ShelterVaultModel GetCurrentVault()
         {
             ShelterVaultModel result = _shelterVaultLocalDb.QueryFirst<ShelterVaultModel>(
+                "SELECT * FROM shelter_vault WHERE version > 0"
+            );
+            return result;
+        }
+
+        public IEnumerable<ShelterVaultModel> GetVaults()
+        {
+            IEnumerable<ShelterVaultModel> result = _shelterVaultLocalDb.Query<ShelterVaultModel>(
                 "SELECT * FROM shelter_vault WHERE version > 0"
             );
             return result;

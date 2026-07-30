@@ -98,6 +98,7 @@ namespace ShelterVault
             services.AddScoped<ICloudSyncManager, CloudSyncManager>();
             services.AddScoped<IDialogManager, DialogManager>();
             services.AddScoped<IKeyDerivationManager, KeyDerivationManager>();
+            services.AddScoped<IEncryptionMigrationManager, EncryptionMigrationManager>();
 
             // Viewmodels
             services.AddTransient<NavigationViewModel>();
