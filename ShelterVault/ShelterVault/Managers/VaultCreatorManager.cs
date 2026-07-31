@@ -1,33 +1,29 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using ShelterVault.DataLayer;
+using ShelterVault.Interfaces;
 using ShelterVault.Models;
-using ShelterVault.Services;
 using ShelterVault.Shared.Extensions;
 
 namespace ShelterVault.Managers
 {
-    public interface IVaultCreatorManager
-    {
-        bool CreateVault(string uuid, string name, string masterKey);
-    }
-
     public class VaultCreatorManager : IVaultCreatorManager
     {
-        private readonly IEncryptionService _encryptionService;
+        private readonly IEncryptionServiceFactory _encryptionServiceFactory;
         private readonly IShelterVault _shelterVault;
         private readonly IShelterVaultLocalDb _shelterVaultLocalDb;
         private readonly ICloudSyncManager _cloudSyncManager;
+        private readonly int DEFAULT_ENCRYPTION_VERSION = (int)EncryptionVersion.v2;
 
         public VaultCreatorManager(
-            IEncryptionService encryptionService,
+            IEncryptionServiceFactory encryptionServiceFactory,
             IShelterVault shelterVault,
             ICloudSyncManager cloudSyncManager,
             IShelterVaultLocalDb shelterVaultLocalDb,
             IShelterVaultCredentials shelterVaultCredentials
         )
         {
-            _encryptionService = encryptionService;
+            _encryptionServiceFactory = encryptionServiceFactory;
             _shelterVault = shelterVault;
             _cloudSyncManager = cloudSyncManager;
             _shelterVaultLocalDb = shelterVaultLocalDb;
@@ -37,21 +33,26 @@ namespace ShelterVault.Managers
         {
             try
             {
-                byte[] saltBytes = RandomNumberGenerator.GetBytes(16);
-                byte[] derivedKey = _encryptionService.DeriveKeyFromPassword(masterKey, saltBytes);
+                var encryptionService = _encryptionServiceFactory.Create(
+                    DEFAULT_ENCRYPTION_VERSION
+                );
 
-                (byte[] encryptedTestValue, byte[] iv) = _encryptionService.EncryptAes(
-                    uuid,
+                byte[] saltBytes = RandomNumberGenerator.GetBytes(32);
+                byte[] derivedKey = encryptionService.DeriveKeyFromPassword(masterKey, saltBytes);
+                byte[] vaultKey = RandomNumberGenerator.GetBytes(32);
+
+                (byte[] encryptedVaultKey, byte[] iv) = encryptionService.EncryptAes(
+                    vaultKey,
                     derivedKey
                 );
                 _shelterVaultLocalDb.SetDbName(name);
                 bool vaultCreated = _shelterVault.CreateShelterVault(
                     uuid,
                     name,
-                    encryptedTestValue.ToBase64(),
+                    encryptedVaultKey.ToBase64(),
                     iv.ToBase64(),
                     saltBytes.ToBase64(),
-                    1
+                    DEFAULT_ENCRYPTION_VERSION
                 );
                 if (vaultCreated)
                 {

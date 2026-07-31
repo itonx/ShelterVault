@@ -1,24 +1,15 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using System;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using ShelterVault.DataLayer;
+using ShelterVault.Interfaces;
 using ShelterVault.Models;
-using ShelterVault.Services;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
-using System;
-using System.Threading.Tasks;
 
 namespace ShelterVault.Managers
 {
-    public interface ICloudSyncManager
-    {
-        Task<bool> UpsertItemAsync<T>(T shelterVaultModel, bool validateItem = false) where T : IShelterVaultLocalModel;
-        Task DeleteItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
-        Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel;
-        Task SyncVaults();
-        CloudSyncInformation GetCurrentCloudSyncInformation();
-    }
-
     public class CloudSyncManager : ICloudSyncManager
     {
         private readonly IShelterVaultCosmosDBService _shelterVaultCosmosDBService;
@@ -28,7 +19,14 @@ namespace ShelterVault.Managers
         private readonly ILogger<CloudSyncManager> _logger;
         public readonly IShelterVaultStateService _shelterVaultStateService;
 
-        public CloudSyncManager(IShelterVaultCosmosDBService shelterVaultCosmosDBService, ICloudProviderManager cloudProviderManager, IShelterVault shelterVault, IShelterVaultSyncStatus shelterVaultSyncStatus, ILogger<CloudSyncManager> logger, IShelterVaultStateService shelterVaultStateService)
+        public CloudSyncManager(
+            IShelterVaultCosmosDBService shelterVaultCosmosDBService,
+            ICloudProviderManager cloudProviderManager,
+            IShelterVault shelterVault,
+            IShelterVaultSyncStatus shelterVaultSyncStatus,
+            ILogger<CloudSyncManager> logger,
+            IShelterVaultStateService shelterVaultStateService
+        )
         {
             _shelterVaultCosmosDBService = shelterVaultCosmosDBService;
             _cloudProviderManager = cloudProviderManager;
@@ -38,7 +36,8 @@ namespace ShelterVault.Managers
             _shelterVaultStateService = shelterVaultStateService;
         }
 
-        public async Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
+        public async Task<ICosmosDBModel> GetItemAsync<T>(T shelterVaultModel)
+            where T : IShelterVaultLocalModel
         {
             try
             {
@@ -63,7 +62,8 @@ namespace ShelterVault.Managers
             }
         }
 
-        public async Task<bool> UpsertItemAsync<T>(T shelterVaultModel, bool validateItem = false) where T : IShelterVaultLocalModel
+        public async Task<bool> UpsertItemAsync<T>(T shelterVaultModel, bool validateItem = false)
+            where T : IShelterVaultLocalModel
         {
             try
             {
@@ -72,7 +72,13 @@ namespace ShelterVault.Managers
                 {
                     case CloudProviderType.Azure:
                         ICosmosDBModel cosmosDBVault = shelterVaultModel.ToCosmosDBModel();
-                        if (validateItem && !await _shelterVaultCosmosDBService.CanAffectItemAsync(cosmosDBVault.id)) return true;
+                        if (
+                            validateItem
+                            && !await _shelterVaultCosmosDBService.CanAffectItemAsync(
+                                cosmosDBVault.id
+                            )
+                        )
+                            return true;
                         await _shelterVaultCosmosDBService.UpsertItemAsync(cosmosDBVault);
                         break;
                     default:
@@ -87,7 +93,8 @@ namespace ShelterVault.Managers
             }
         }
 
-        public async Task DeleteItemAsync<T>(T shelterVaultModel) where T : IShelterVaultLocalModel
+        public async Task DeleteItemAsync<T>(T shelterVaultModel)
+            where T : IShelterVaultLocalModel
         {
             CloudProviderType providerType = _cloudProviderManager.GetCurrentCloudProvider();
             switch (providerType)
@@ -111,13 +118,23 @@ namespace ShelterVault.Managers
                     try
                     {
                         await _shelterVaultCosmosDBService.SyncAllAsync(shelterVaultModel.UUID);
-                        _shelterVaultSyncStatus.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.UpToDate);
-                        WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.UpToDate));
+                        _shelterVaultSyncStatus.UpdateSyncStatus(
+                            CloudProviderType.Azure,
+                            CloudSyncStatus.UpToDate
+                        );
+                        WeakReferenceMessenger.Default.Send(
+                            new RefreshCurrentSyncStatusMessage(CloudSyncStatus.UpToDate)
+                        );
                     }
                     catch (Exception)
                     {
-                        _shelterVaultSyncStatus.UpdateSyncStatus(CloudProviderType.Azure, CloudSyncStatus.SynchFailed);
-                        WeakReferenceMessenger.Default.Send(new RefreshCurrentSyncStatusMessage(CloudSyncStatus.SynchFailed));
+                        _shelterVaultSyncStatus.UpdateSyncStatus(
+                            CloudProviderType.Azure,
+                            CloudSyncStatus.SynchFailed
+                        );
+                        WeakReferenceMessenger.Default.Send(
+                            new RefreshCurrentSyncStatusMessage(CloudSyncStatus.SynchFailed)
+                        );
                         throw;
                     }
                     break;

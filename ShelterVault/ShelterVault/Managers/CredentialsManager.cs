@@ -3,32 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ShelterVault.DataLayer;
+using ShelterVault.Interfaces;
 using ShelterVault.Models;
-using ShelterVault.Services;
 
 namespace ShelterVault.Managers
 {
-    public interface ICredentialsManager
-    {
-        Task<Credentials> InsertCredentials(Credentials credentials);
-        Task<Credentials> UpdateCredentials(Credentials credentials);
-        Credentials GetCredentials(CredentialsViewItem credentialsViewItem);
-        Credentials GetCredentials(string uuid, bool active = true);
-        Task<bool> DeleteCredentials(string uuid);
-        IEnumerable<CredentialsViewItem> GetAllActiveCredentials(string shelterVaultUuid);
-    }
-
     public class CredentialsManager : ICredentialsManager
     {
         private readonly IShelterVaultCredentials _shelterVaultCredentials;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IShelterVaultEncryption _encryptionService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly ICloudSyncManager _cloudSyncManager;
 
         public CredentialsManager(
             IShelterVaultStateService shelterVaultStateService,
             IShelterVaultCredentials shelterVaultCredentials,
-            IEncryptionService encryptionService,
+            IShelterVaultEncryption encryptionService,
             ICloudSyncManager cloudSyncManager
         )
         {
@@ -42,10 +32,10 @@ namespace ShelterVault.Managers
         {
             try
             {
-                (byte[] derivedKey, _) = _shelterVaultStateService.GetLocalEncryptionValues();
+                (byte[] encryptionKey, _) = _shelterVaultStateService.GetLocalEncryptionValues();
                 (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(
                     credentials.GetJsonValues(),
-                    derivedKey
+                    encryptionKey
                 );
 
                 ShelterVaultCredentialsModel shelterVaultCredentials = new(
@@ -72,11 +62,11 @@ namespace ShelterVault.Managers
         {
             try
             {
-                (byte[] derivedKey, byte[] salt) =
+                (byte[] encryptionKey, byte[] salt) =
                     _shelterVaultStateService.GetLocalEncryptionValues();
                 (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(
                     credentials.GetJsonValues(),
-                    derivedKey
+                    encryptionKey
                 );
 
                 ShelterVaultCredentialsModel shelterVaultCredentials = new(
@@ -94,8 +84,7 @@ namespace ShelterVault.Managers
 
                     string decryptedValues = _encryptionService.DecryptAes(
                         shelterVaultCredentials,
-                        derivedKey,
-                        salt
+                        encryptionKey
                     );
                     await _cloudSyncManager.UpsertItemAsync(
                         shelterVaultCredentials,
@@ -125,12 +114,9 @@ namespace ShelterVault.Managers
 
         public Credentials GetCredentials(CredentialsViewItem credentialsViewItem)
         {
-            (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
-            string jsonValues = _encryptionService.DecryptAes(
-                credentialsViewItem,
-                derivedKey,
-                salt
-            );
+            (byte[] encryptionKey, byte[] salt) =
+                _shelterVaultStateService.GetLocalEncryptionValues();
+            string jsonValues = _encryptionService.DecryptAes(credentialsViewItem, encryptionKey);
             return new(jsonValues, credentialsViewItem);
         }
 
@@ -140,12 +126,12 @@ namespace ShelterVault.Managers
                 _shelterVaultCredentials.GetCredentialsByUUID(uuid);
             if (shelterVaultCredentialsModel == null || shelterVaultCredentialsModel.Version == -1)
                 return null;
-            (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
+            (byte[] encryptionKey, byte[] salt) =
+                _shelterVaultStateService.GetLocalEncryptionValues();
 
             string decryptedValues = _encryptionService.DecryptAes(
                 shelterVaultCredentialsModel,
-                derivedKey,
-                salt
+                encryptionKey
             );
             return new(decryptedValues, shelterVaultCredentialsModel);
         }
@@ -179,11 +165,12 @@ namespace ShelterVault.Managers
             IList<CredentialsViewItem> credentialsList = new List<CredentialsViewItem>();
             IEnumerable<ShelterVaultCredentialsModel> shelterVaultCredentials =
                 _shelterVaultCredentials.GetAllActiveCredentials(shelterVaultUuid);
-            (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
+            (byte[] encryptionKey, byte[] salt) =
+                _shelterVaultStateService.GetLocalEncryptionValues();
 
             foreach (ShelterVaultCredentialsModel item in shelterVaultCredentials)
             {
-                string jsonValues = _encryptionService.DecryptAes(item, derivedKey, salt);
+                string jsonValues = _encryptionService.DecryptAes(item, encryptionKey);
                 CredentialsViewItem credentials = new(
                     item,
                     Credentials.GetCredentialFrom(jsonValues)

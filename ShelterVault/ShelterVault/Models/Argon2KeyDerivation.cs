@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Konscious.Security.Cryptography;
-using ShelterVault.Models;
 
-namespace ShelterVault.Services
+namespace ShelterVault.Models
 {
-    public sealed class Argon2KeyDerivationService : IKeyDerivationService
+    public sealed class Argon2KeyDerivation
     {
         public byte[] DeriveKey(string password, KeyDerivationOptions options)
         {

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using ShelterVault.DataLayer;
+using ShelterVault.Factories;
+using ShelterVault.Interfaces;
 using ShelterVault.Managers;
 using ShelterVault.Services;
 using ShelterVault.ViewModels;
@@ -71,6 +73,9 @@ namespace ShelterVault
                 loggingBuilder.AddDebug();
             });
 
+            // Factories
+            services.AddSingleton<IEncryptionServiceFactory, EncryptionServiceFactory>();
+
             //LocalDb
             services.AddSingleton<IShelterVaultLocalDb, ShelterVaultLocalDb>();
             services.AddSingleton<IShelterVault, DataLayer.ShelterVault>();
@@ -81,7 +86,6 @@ namespace ShelterVault
             // Services
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<ILanguageService, LanguageService>();
-            services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IProgressBarService, ProgressBarService>();
             services.AddSingleton<IDialogLangService, DialogLangService>();
             services.AddSingleton<IShelterVaultStateService, ShelterVaultStateService>();
@@ -90,6 +94,7 @@ namespace ShelterVault
             services.AddSingleton<IWeakReferenceInstanceManager, WeakReferenceInstanceManager>();
             services.AddSingleton<ICloudProviderManager, CloudProviderManager>();
             services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<IShelterVaultEncryption, ShelterVaultEncryption>();
 
             // Managers
             services.AddScoped<IVaultCreatorManager, VaultCreatorManager>();
@@ -97,7 +102,6 @@ namespace ShelterVault
             services.AddScoped<ICredentialsManager, CredentialsManager>();
             services.AddScoped<ICloudSyncManager, CloudSyncManager>();
             services.AddScoped<IDialogManager, DialogManager>();
-            services.AddScoped<IKeyDerivationManager, KeyDerivationManager>();
             services.AddScoped<IEncryptionMigrationManager, EncryptionMigrationManager>();
 
             // Viewmodels

@@ -9,8 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using Desktiny.WinUI.EventMessages;
 using Desktiny.WinUI.Managers;
 using ShelterVault.DataLayer;
-using ShelterVault.Managers;
-using ShelterVault.Services;
+using ShelterVault.Interfaces;
 using ShelterVault.Shared.Enums;
 
 namespace ShelterVault.ViewModels

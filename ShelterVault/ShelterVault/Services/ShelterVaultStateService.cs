@@ -1,57 +1,61 @@
-﻿using ShelterVault.Models;
-using ShelterVault.Shared.Extensions;
-using System;
+﻿using System;
 using System.Security.Cryptography;
+using ShelterVault.Interfaces;
+using ShelterVault.Models;
+using ShelterVault.Shared.Extensions;
 
 namespace ShelterVault.Services
 {
-    public interface IShelterVaultStateService
-    {
-        (byte[], byte[]) GetLocalEncryptionValues();
-        void SetVault(ShelterVaultModel shelterVaultModel);
-        void SetVault(ShelterVaultModel shelterVaultModel, string masterKey);
-        void ResetState();
-        ShelterVaultModel ShelterVault { get; }
-        void SetDialogStatus(bool isDialogOpen);
-        bool GetDialogStatus();
-    }
-
     public class ShelterVaultStateService : IShelterVaultStateService
     {
-        private readonly IEncryptionService _encryptionService;
+        private readonly IShelterVaultEncryption _encryptionService;
         private byte[] _inMemoryDerivedKeyProtected;
         private byte[] _inMemorySaltProtected;
         private bool _isDialogOpen;
 
-        public ShelterVaultStateService(IEncryptionService encryptionService)
+        public ShelterVaultStateService(IShelterVaultEncryption encryptionService)
         {
             _encryptionService = encryptionService;
         }
 
-
         public ShelterVaultModel ShelterVault { get; private set; }
 
-        private byte[] GetDerivedKeyUnprotected()
+        private byte[] GetEncryptionKeyUnprotected()
         {
-            return ProtectedData.Unprotect(_inMemoryDerivedKeyProtected, null, DataProtectionScope.CurrentUser);
+            return ProtectedData.Unprotect(
+                _inMemoryDerivedKeyProtected,
+                null,
+                DataProtectionScope.CurrentUser
+            );
         }
 
         private byte[] GetSaltUnprotected()
         {
-            return ProtectedData.Unprotect(_inMemorySaltProtected, null, DataProtectionScope.CurrentUser);
+            return ProtectedData.Unprotect(
+                _inMemorySaltProtected,
+                null,
+                DataProtectionScope.CurrentUser
+            );
         }
 
         public (byte[], byte[]) GetLocalEncryptionValues()
         {
-            return (GetDerivedKeyUnprotected(), GetSaltUnprotected());
+            return (GetEncryptionKeyUnprotected(), GetSaltUnprotected());
         }
 
         public void SetVault(ShelterVaultModel shelterVaultModel, string masterKey)
         {
             SetVault(shelterVaultModel);
             byte[] salt = shelterVaultModel.Salt.FromBase64ToBytes();
-            byte[] derivedKey = _encryptionService.DeriveKeyFromPassword(masterKey, salt);
-            ProtectEncryptionValues(derivedKey, salt);
+            byte[] encryptionKeyBytes = _encryptionService.DeriveKeyFromPassword(masterKey, salt);
+            ProtectEncryptionValues(encryptionKeyBytes, salt);
+        }
+
+        public void SetVault(ShelterVaultModel shelterVaultModel, byte[] encryptionKey)
+        {
+            SetVault(shelterVaultModel);
+            byte[] salt = shelterVaultModel.Salt.FromBase64ToBytes();
+            ProtectEncryptionValues(encryptionKey, salt);
         }
 
         public void SetVault(ShelterVaultModel shelterVaultModel)
@@ -66,10 +70,18 @@ namespace ShelterVault.Services
             ShelterVault = new();
         }
 
-        private void ProtectEncryptionValues(byte[] derivedKey, byte[] salt)
+        private void ProtectEncryptionValues(byte[] encryptionKey, byte[] salt)
         {
-            _inMemoryDerivedKeyProtected = ProtectedData.Protect(derivedKey, null, DataProtectionScope.CurrentUser);
-            _inMemorySaltProtected = ProtectedData.Protect(salt, null, DataProtectionScope.CurrentUser);
+            _inMemoryDerivedKeyProtected = ProtectedData.Protect(
+                encryptionKey,
+                null,
+                DataProtectionScope.CurrentUser
+            );
+            _inMemorySaltProtected = ProtectedData.Protect(
+                salt,
+                null,
+                DataProtectionScope.CurrentUser
+            );
         }
 
         public void SetDialogStatus(bool isDialogOpen)
