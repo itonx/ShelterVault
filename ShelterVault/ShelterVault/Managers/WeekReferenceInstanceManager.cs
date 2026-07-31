@@ -1,15 +1,10 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
+using ShelterVault.Interfaces;
 
 namespace ShelterVault.Managers
 {
-    public interface IWeakReferenceInstanceManager
-    {
-        public void AddInstance<T>(T instance, bool removeExisting = true);
-        public void UnregisterInstances<T>();
-    }
-
     public class WeakReferenceInstanceManager : IWeakReferenceInstanceManager
     {
         private readonly List<object> _instances = new List<object>();

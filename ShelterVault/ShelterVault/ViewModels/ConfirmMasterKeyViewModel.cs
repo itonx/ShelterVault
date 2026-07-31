@@ -1,19 +1,20 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktiny.WinUI.EventMessages;
 using Desktiny.WinUI.Managers;
 using Desktiny.WinUI.Services;
 using ShelterVault.DataLayer;
-using ShelterVault.Managers;
+using ShelterVault.Interfaces;
 using ShelterVault.Models;
-using ShelterVault.Services;
 using ShelterVault.Shared.Constants;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
@@ -30,12 +31,23 @@ namespace ShelterVault.ViewModels
 
         [ObservableProperty]
         public partial List<ShelterVaultModel> Vaults { get; set; }
+
         [ObservableProperty]
         public partial ShelterVaultModel SelectedVault { get; set; }
+
         [ObservableProperty]
         public partial bool ShowPassword { get; set; }
 
-        public ConfirmMasterKeyViewModel(IShelterVaultStateService shelterVaultStateService, IDialogManager dialogManager, IProgressBarService progressBarService, IShelterVault shelterVault, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager, IShelterVaultLocalDb shelterVaultLocalDb, IVaultManager shelterVaultCreatorManager)
+        public ConfirmMasterKeyViewModel(
+            IShelterVaultStateService shelterVaultStateService,
+            IDialogManager dialogManager,
+            IProgressBarService progressBarService,
+            IShelterVault shelterVault,
+            IUIThreadService uiThreadService,
+            IWeakReferenceInstanceManager weakReferenceInstanceManager,
+            IShelterVaultLocalDb shelterVaultLocalDb,
+            IVaultManager shelterVaultCreatorManager
+        )
         {
             _shelterVaultStateService = shelterVaultStateService;
             _dialogManager = dialogManager;
@@ -46,7 +58,8 @@ namespace ShelterVault.ViewModels
             _weakReferenceInstanceManager = weakReferenceInstanceManager;
             _vaultManager = shelterVaultCreatorManager;
             Vaults = shelterVault.GetAllActiveVaults().ToList();
-            if (Vaults.Any()) SelectedVault = Vaults.FirstOrDefault();
+            if (Vaults.Any())
+                SelectedVault = Vaults.FirstOrDefault();
             RegisterMessages();
         }
 
@@ -56,20 +69,41 @@ namespace ShelterVault.ViewModels
             EventManager.Publish(new EnumNavigation(AppPage.CreateMasterKey));
         }
 
-
         [RelayCommand]
         private async Task ConfirmMasterKey(object parameter)
         {
             try
             {
                 await _progressBarService.Show();
-                if (_vaultManager.IsValid(parameter?.ToString(), SelectedVault))
+                byte[] encryptionKeyTmp;
+                if (
+                    _vaultManager.IsValid(
+                        parameter?.ToString(),
+                        SelectedVault,
+                        out encryptionKeyTmp
+                    )
+                )
                 {
                     _shelterVaultLocalDb.SetDbName(SelectedVault.Name);
-                    _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
+                    if (SelectedVault.Version == (int)EncryptionVersion.v1)
+                    {
+                        _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
+                    }
+                    else if (SelectedVault.Version == (int)EncryptionVersion.v2)
+                    {
+                        _shelterVaultStateService.SetVault(SelectedVault, encryptionKeyTmp);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Version");
+                    }
+
                     EventManager.Publish(new EnumNavigation(AppPage.NavigationView));
                 }
-                else await _dialogManager.ShowConfirmationDialogAsync(LangResourceKeys.DIALOG_WRONG_MASTER_KEY);
+                else
+                    await _dialogManager.ShowConfirmationDialogAsync(
+                        LangResourceKeys.DIALOG_WRONG_MASTER_KEY
+                    );
             }
             finally
             {
@@ -80,24 +114,33 @@ namespace ShelterVault.ViewModels
         private void RegisterMessages()
         {
             _weakReferenceInstanceManager.AddInstance(this);
-            WeakReferenceMessenger.Default.Register<ConfirmMasterKeyViewModel, RefreshVaultListRequestMessage>(this, (viewModel, payload) =>
-            {
-                _uiThreadService.Execute(() =>
+            WeakReferenceMessenger.Default.Register<
+                ConfirmMasterKeyViewModel,
+                RefreshVaultListRequestMessage
+            >(
+                this,
+                (viewModel, payload) =>
                 {
-                    if (payload.Value)
+                    _uiThreadService.Execute(() =>
                     {
-                        string selectedVaultTmp = viewModel.SelectedVault.UUID;
-                        viewModel.Vaults = viewModel._shelterVault.GetAllActiveVaults().ToList();
-                        if (viewModel.Vaults.Any())
+                        if (payload.Value)
                         {
-                            viewModel.SelectedVault = null;
-                            viewModel.SelectedVault = viewModel.Vaults.Find(x => x.UUID.Equals(selectedVaultTmp));
+                            string selectedVaultTmp = viewModel.SelectedVault.UUID;
+                            viewModel.Vaults = viewModel
+                                ._shelterVault.GetAllActiveVaults()
+                                .ToList();
+                            if (viewModel.Vaults.Any())
+                            {
+                                viewModel.SelectedVault = null;
+                                viewModel.SelectedVault = viewModel.Vaults.Find(x =>
+                                    x.UUID.Equals(selectedVaultTmp)
+                                );
+                            }
                         }
-                    }
-                });
-            });
+                    });
+                }
+            );
         }
-
 
         [RelayCommand]
         private void ChangePasswordVisibility()

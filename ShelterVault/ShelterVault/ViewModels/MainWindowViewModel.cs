@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktiny.WinUI.EventMessages;
@@ -7,15 +11,10 @@ using Desktiny.WinUI.Models;
 using Desktiny.WinUI.Services;
 using Microsoft.UI.Xaml;
 using ShelterVault.DataLayer;
-using ShelterVault.Managers;
+using ShelterVault.Interfaces;
 using ShelterVault.Models;
-using ShelterVault.Services;
 using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace ShelterVault.ViewModels
 {
@@ -23,16 +22,22 @@ namespace ShelterVault.ViewModels
     {
         [ObservableProperty]
         public partial bool IsProgressBarVisible { get; set; }
+
         [ObservableProperty]
         public partial AppPage ShelterVaultCurrentAppState { get; set; }
+
         [ObservableProperty]
         public partial AppThemeModel CurrentAppTheme { get; set; }
+
         [ObservableProperty]
         public partial bool ShowSwitchVault { get; set; }
+
         [ObservableProperty]
         public partial bool ShowSync { get; set; }
+
         [ObservableProperty]
         public partial bool ShowLangOptions { get; set; }
+
         [ObservableProperty]
         public partial CloudSyncStatus CurrentCloudSyncStatus { get; set; }
 
@@ -41,7 +46,13 @@ namespace ShelterVault.ViewModels
         private readonly IUIThreadService _uiThreadService;
         private readonly IWeakReferenceInstanceManager _weakReferenceInstanceManager;
 
-        public MainWindowViewModel(IShelterVault shelterVault, IShelterVaultStateService shelterVaultStateService, ICloudSyncManager cloudSyncManager, IUIThreadService uiThreadService, IWeakReferenceInstanceManager weakReferenceInstanceManager)
+        public MainWindowViewModel(
+            IShelterVault shelterVault,
+            IShelterVaultStateService shelterVaultStateService,
+            ICloudSyncManager cloudSyncManager,
+            IUIThreadService uiThreadService,
+            IWeakReferenceInstanceManager weakReferenceInstanceManager
+        )
         {
             _shelterVaultStateService = shelterVaultStateService;
             _cloudSyncManager = cloudSyncManager;
@@ -63,17 +74,19 @@ namespace ShelterVault.ViewModels
         {
             if (ShelterVaultCurrentAppState == AppPage.NavigationView)
             {
-                WeakReferenceMessenger.Default.Send(new ShowPageRequestMessage(ShelterVaultPage.SETTINGS));
+                WeakReferenceMessenger.Default.Send(
+                    new ShowPageRequestMessage(ShelterVaultPage.SETTINGS)
+                );
             }
         }
-
 
         private void InitialSetup(IShelterVault shelterVault)
         {
             RegisterMessages();
             RegisterThemes();
             CurrentAppTheme = ThemeService.GetTheme();
-            if (shelterVault.AreThereVaults()) ShelterVaultCurrentAppState = AppPage.ConfirmMasterKey;
+            if (shelterVault.AreThereVaults())
+                ShelterVaultCurrentAppState = AppPage.ConfirmMasterKey;
             ShowLangOptions = true;
             ShowSwitchVault = false;
             StartSynchronizationTask();
@@ -83,9 +96,24 @@ namespace ShelterVault.ViewModels
         {
             List<AppThemeModel> themes = new()
             {
-                new AppThemeModel("Light", ElementTheme.Light, "Resources/OverrideWinUITheme.xaml", "\uE793"),
-                new AppThemeModel("Dark", ElementTheme.Dark, "Resources/OverrideWinUITheme.xaml", "\uF0CE"),
-                new AppThemeModel("Neuromancer", ElementTheme.Dark, "Resources/NeuromancerTheme.xaml", "\uE950")
+                new AppThemeModel(
+                    "Light",
+                    ElementTheme.Light,
+                    "Resources/OverrideWinUITheme.xaml",
+                    "\uE793"
+                ),
+                new AppThemeModel(
+                    "Dark",
+                    ElementTheme.Dark,
+                    "Resources/OverrideWinUITheme.xaml",
+                    "\uF0CE"
+                ),
+                new AppThemeModel(
+                    "Neuromancer",
+                    ElementTheme.Dark,
+                    "Resources/NeuromancerTheme.xaml",
+                    "\uE950"
+                ),
             };
             ThemeService.RegisterThemes(themes);
         }
@@ -95,34 +123,53 @@ namespace ShelterVault.ViewModels
             _weakReferenceInstanceManager.AddInstance(this);
             EventManager.Subscribe<EnumNavigation>(this, OnCurrentAppPageMessageReceived);
 
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ProgressBarRequestMessage>(this, (viewModel, payload) =>
-            {
-                viewModel.IsProgressBarVisible = payload.Value;
-            });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, RefreshCurrentSyncStatusMessage>(this, (viewModel, payload) =>
-            {
-                viewModel._uiThreadService.Execute(() =>
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ProgressBarRequestMessage>(
+                this,
+                (viewModel, payload) =>
                 {
-                    viewModel.CurrentCloudSyncStatus = payload.Value;
-                });
-            });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, CloudProviderChangedMessage>(this, (viewModel, payload) =>
-            {
-                viewModel._uiThreadService.Execute(() =>
+                    viewModel.IsProgressBarVisible = payload.Value;
+                }
+            );
+            WeakReferenceMessenger.Default.Register<
+                MainWindowViewModel,
+                RefreshCurrentSyncStatusMessage
+            >(
+                this,
+                (viewModel, payload) =>
                 {
-                    CloudSyncInformation cloudSyncInformation = viewModel._cloudSyncManager.GetCurrentCloudSyncInformation();
-                    viewModel.ShowSync = cloudSyncInformation.HasCloudConfiguration;
-                    viewModel.CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
-                });
-            });
-            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ShowSyncStatusMessage>(this, (viewModel, payload) =>
-            {
-                viewModel._uiThreadService.Execute(() =>
+                    viewModel._uiThreadService.Execute(() =>
+                    {
+                        viewModel.CurrentCloudSyncStatus = payload.Value;
+                    });
+                }
+            );
+            WeakReferenceMessenger.Default.Register<
+                MainWindowViewModel,
+                CloudProviderChangedMessage
+            >(
+                this,
+                (viewModel, payload) =>
                 {
-                    if (payload.Value)
-                        viewModel.RefreshSyncStatusInfo();
-                });
-            });
+                    viewModel._uiThreadService.Execute(() =>
+                    {
+                        CloudSyncInformation cloudSyncInformation =
+                            viewModel._cloudSyncManager.GetCurrentCloudSyncInformation();
+                        viewModel.ShowSync = cloudSyncInformation.HasCloudConfiguration;
+                        viewModel.CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
+                    });
+                }
+            );
+            WeakReferenceMessenger.Default.Register<MainWindowViewModel, ShowSyncStatusMessage>(
+                this,
+                (viewModel, payload) =>
+                {
+                    viewModel._uiThreadService.Execute(() =>
+                    {
+                        if (payload.Value)
+                            viewModel.RefreshSyncStatusInfo();
+                    });
+                }
+            );
         }
 
         private void OnCurrentAppPageMessageReceived(EnumNavigation enumNavigation)
@@ -145,7 +192,8 @@ namespace ShelterVault.ViewModels
         {
             if (ShelterVaultCurrentAppState == AppPage.NavigationView)
             {
-                CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
+                CloudSyncInformation cloudSyncInformation =
+                    _cloudSyncManager.GetCurrentCloudSyncInformation();
                 ShowSync = cloudSyncInformation.HasCloudConfiguration;
                 CurrentCloudSyncStatus = cloudSyncInformation.CurrentSyncStatus;
             }
@@ -166,7 +214,8 @@ namespace ShelterVault.ViewModels
                     await Task.Delay(60 * 1000);
                     if (ShelterVaultCurrentAppState == AppPage.NavigationView)
                     {
-                        CloudSyncInformation cloudSyncInformation = _cloudSyncManager.GetCurrentCloudSyncInformation();
+                        CloudSyncInformation cloudSyncInformation =
+                            _cloudSyncManager.GetCurrentCloudSyncInformation();
                         try
                         {
                             if (cloudSyncInformation.CanSynchronize)

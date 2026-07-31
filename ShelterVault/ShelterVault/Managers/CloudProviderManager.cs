@@ -1,31 +1,20 @@
 ﻿using System;
 using ShelterVault.DataLayer;
+using ShelterVault.Interfaces;
 using ShelterVault.Models;
-using ShelterVault.Services;
 using ShelterVault.Shared.Enums;
 
 namespace ShelterVault.Managers
 {
-    public interface ICloudProviderManager
-    {
-        bool UpsertCloudConfiguration<T>(
-            CloudProviderType cloudProviderType,
-            T cloudConfigurationModel
-        );
-        T GetCloudConfiguration<T>(CloudProviderType cloudProviderType);
-        bool UpdateVaultCloudProvider(CloudProviderType cloudProviderType);
-        CloudProviderType GetCurrentCloudProvider();
-    }
-
     public class CloudProviderManager : ICloudProviderManager
     {
-        private readonly IEncryptionService _encryptionService;
+        private readonly IShelterVaultEncryption _encryptionService;
         private readonly IShelterVaultStateService _shelterVaultStateService;
         private readonly IShelterVaultCloudConfig _shelterVaultCloudConfig;
         private readonly IShelterVault _shelterVault;
 
         public CloudProviderManager(
-            IEncryptionService encryptionService,
+            IShelterVaultEncryption encryptionService,
             IShelterVaultStateService shelterVaultStateService,
             IShelterVaultCloudConfig shelterVaultCloudConfig,
             IShelterVault shelterVault
@@ -43,11 +32,11 @@ namespace ShelterVault.Managers
                 _shelterVaultCloudConfig.GetCloudConfiguration(cloudProviderType.ToString());
             if (shelterVaultCloudConfigModel == null)
                 return default(T);
-            (byte[] derivedKey, byte[] salt) = _shelterVaultStateService.GetLocalEncryptionValues();
+            (byte[] encryptionKey, byte[] salt) =
+                _shelterVaultStateService.GetLocalEncryptionValues();
             string decryptedJsonModel = _encryptionService.DecryptAes(
                 shelterVaultCloudConfigModel,
-                derivedKey,
-                salt
+                encryptionKey
             );
             return System.Text.Json.JsonSerializer.Deserialize<T>(decryptedJsonModel);
         }
@@ -62,10 +51,10 @@ namespace ShelterVault.Managers
                 string jsonModel = System.Text.Json.JsonSerializer.Serialize(
                     cloudConfigurationModel
                 );
-                (byte[] derivedKey, _) = _shelterVaultStateService.GetLocalEncryptionValues();
+                (byte[] encryptionKey, _) = _shelterVaultStateService.GetLocalEncryptionValues();
                 (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(
                     jsonModel,
-                    derivedKey
+                    encryptionKey
                 );
 
                 ShelterVaultCloudConfigModel config = new(
