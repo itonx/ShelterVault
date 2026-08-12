@@ -124,7 +124,11 @@ namespace ShelterVault.Managers
             dialog.DefaultButton = ContentDialogButton.Primary;
             var page = new CreateMasterKeyPage();
             page.SetDialogMode();
+            page.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(
+                Microsoft.UI.Colors.Transparent
+            );
             dialog.Content = page;
+            dialog.Resources["ContentDialogMaxWidth"] = 700;
 
             return dialog;
         }

@@ -36,5 +36,13 @@ namespace ShelterVault.Views
                 viewModel.IsDialogMode = true;
             }
         }
+
+        private void password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is CreateMasterKeyViewModel vm)
+            {
+                vm.TriggerPasswordValidationsCommand.Execute(vm.Password);
+            }
+        }
     }
 }
