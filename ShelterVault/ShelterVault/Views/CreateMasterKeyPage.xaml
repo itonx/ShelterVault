@@ -13,7 +13,10 @@
     mc:Ignorable="d">
     <ScrollViewer Margin="0,20" Style="{StaticResource ShelterVault.MasterKey.ScrollViewer}">
         <StackPanel Style="{StaticResource ShelterVault.MasterKey.StackPanel}">
-            <TextBlock FontSize="15" Style="{ThemeResource ShelterVaultLoginBannerStyle}" />
+            <TextBlock
+                FontSize="15"
+                Style="{ThemeResource ShelterVaultLoginBannerStyle}"
+                Visibility="{Binding IsDialogMode, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}" />
             <InfoBar
                 x:Uid="MasterKeyEncryptionInfo"
                 HorizontalAlignment="Center"
@@ -24,7 +27,8 @@
             <TextBox
                 x:Uid="TitleVaultName"
                 Style="{ThemeResource ShelterVaul.MasterKey.TextBox}"
-                Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Visibility="{Binding IsDialogMode, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}">
                 <interactivity:Interaction.Behaviors>
                     <desktinyBehaviors:FocusBehavior OnEvent="Loaded" />
                 </interactivity:Interaction.Behaviors>
@@ -93,8 +97,9 @@
                 Grid.Column="1"
                 FontSize="15"
                 Style="{ThemeResource ShelterVaultTextBlockStyle}"
-                Text="{Binding DefaultPath}" />
-            <Grid ColumnSpacing="10">
+                Text="{Binding DefaultPath}"
+                Visibility="{Binding IsDialogMode, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}" />
+            <Grid ColumnSpacing="10" Visibility="{Binding IsDialogMode, Converter={StaticResource BoolToVisibility}, ConverterParameter=false}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />

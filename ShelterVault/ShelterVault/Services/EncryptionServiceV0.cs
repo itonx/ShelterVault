@@ -155,5 +155,10 @@ namespace ShelterVault.Services
 
             return (encrypted, lastIV);
         }
+
+        public (byte[], byte[]) EncryptAes(string plainText, byte[] key, int? version)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -28,5 +28,13 @@ namespace ShelterVault.Views
         {
             passwordTeachingTip.IsOpen = false;
         }
+
+        public void SetDialogMode()
+        {
+            if (this.DataContext is CreateMasterKeyViewModel viewModel)
+            {
+                viewModel.IsDialogMode = true;
+            }
+        }
     }
 }

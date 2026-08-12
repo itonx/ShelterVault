@@ -18,5 +18,12 @@ namespace ShelterVault.Interfaces
             string secondaryButtonResourceKey = Desktiny.WinUI.Constants.Global.DIALOG_CLOSE_YES,
             ContentDialogResult expectedResult = ContentDialogResult.Primary
         );
+
+        Task<string> ShowNewVaultMigrationDialog(
+            string titleResourceKey = Desktiny.WinUI.Constants.Global.DIALOG_TITLE_DEFAULT,
+            string primaryButtonTextResourceKey = Desktiny.WinUI.Constants.Global.DIALOG_CLOSE_NO,
+            string secondaryButtonResourceKey = Desktiny.WinUI.Constants.Global.DIALOG_CLOSE_YES,
+            ContentDialogResult expectedResult = ContentDialogResult.Secondary
+        );
     }
 }

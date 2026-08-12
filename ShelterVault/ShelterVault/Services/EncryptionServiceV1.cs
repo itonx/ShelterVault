@@ -138,5 +138,10 @@ namespace ShelterVault.Services
 
             return (result, Encoding.UTF8.GetBytes("unusedvalueforaesgcm"));
         }
+
+        public (byte[], byte[]) EncryptAes(string plainText, byte[] key, int? version)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

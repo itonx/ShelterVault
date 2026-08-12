@@ -5,6 +5,7 @@ namespace ShelterVault.Interfaces
     public interface IShelterVaultEncryption
     {
         (byte[], byte[]) EncryptAes(string plainText, byte[] key);
+        (byte[], byte[]) EncryptAes(string plainText, byte[] key, int? version);
         (byte[], byte[]) EncryptAes(byte[] unencryptedBytes, byte[] key);
         string DecryptAes(byte[] cipherText, byte[] key, byte[] iv);
         byte[] DecryptAesBytes(byte[] cipherText, byte[] key, byte[] iv);

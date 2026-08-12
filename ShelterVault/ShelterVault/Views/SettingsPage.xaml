@@ -39,8 +39,8 @@
             Grid.Row="1"
             Style="{StaticResource ShelterVault.Settings.ScrollViewer}">
             <StackPanel Spacing="10">
-                <TextBlock x:Uid="VaultSettingsTitle" />
-                <toolkit:SettingsExpander x:Uid="VaultMigrationExpander">
+                <TextBlock x:Uid="VaultSettingsTitle" Visibility="{Binding DisplayArgonMigration}" />
+                <toolkit:SettingsExpander x:Uid="VaultMigrationExpander" Visibility="{Binding DisplayArgonMigration}">
                     <toolkit:SettingsExpander.Header>
                         <TextBlock
                             x:Uid="VaultMigrationTitle"

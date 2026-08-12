@@ -1,11 +1,14 @@
-﻿using ShelterVault.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ShelterVault.Models;
 
 namespace ShelterVault.DataLayer
 {
     public interface IShelterVaultCredentials
     {
-        bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
+        bool InsertCredentials(
+            ShelterVaultCredentialsModel shelterVaultCredentialsModel,
+            string tmpDb = null
+        );
         bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel);
         bool DeleteCredentials(string uuid);
         IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials(string shelterVaultUuid);
@@ -23,9 +26,13 @@ namespace ShelterVault.DataLayer
             _shelterVaultLocalDb = shelterVaultLocalDb;
         }
 
-        public bool InsertCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel)
+        public bool InsertCredentials(
+            ShelterVaultCredentialsModel shelterVaultCredentialsModel,
+            string tmpDb = null
+        )
         {
-            string query = @"
+            string query =
+                @"
                 INSERT INTO shelter_vault_credentials
                 VALUES($uuid, $encryptedValues, $iv, $shelterVaultUuid, $version)
             ";
@@ -35,16 +42,17 @@ namespace ShelterVault.DataLayer
                 encryptedValues = shelterVaultCredentialsModel.EncryptedValues,
                 iv = shelterVaultCredentialsModel.Iv,
                 shelterVaultUuid = shelterVaultCredentialsModel.ShelterVaultUuid,
-                version = shelterVaultCredentialsModel.Version
+                version = shelterVaultCredentialsModel.Version,
             };
 
-            int insertedCredentials = _shelterVaultLocalDb.Execute(query, param);
+            int insertedCredentials = _shelterVaultLocalDb.Execute(query, param, tmpDb);
             return insertedCredentials > 0;
         }
 
         public bool UpdateCredentials(ShelterVaultCredentialsModel shelterVaultCredentialsModel)
         {
-            string query = @"
+            string query =
+                @"
                 UPDATE shelter_vault_credentials
                 SET
                 encryptedValues=$encryptedValues, iv=$iv, shelterVaultUuid=$shelterVaultUuid, version=$version
@@ -56,7 +64,7 @@ namespace ShelterVault.DataLayer
                 iv = shelterVaultCredentialsModel.Iv,
                 shelterVaultUuid = shelterVaultCredentialsModel.ShelterVaultUuid,
                 version = shelterVaultCredentialsModel.Version,
-                uuid = shelterVaultCredentialsModel.UUID
+                uuid = shelterVaultCredentialsModel.UUID,
             };
 
             int updatedCredentials = _shelterVaultLocalDb.Execute(query, param);
@@ -65,7 +73,8 @@ namespace ShelterVault.DataLayer
 
         public bool DeleteCredentials(string uuid)
         {
-            string query = @"
+            string query =
+                @"
                 DELETE FROM shelter_vault_credentials
                 WHERE uuid=$uuid
             ";
@@ -75,7 +84,8 @@ namespace ShelterVault.DataLayer
 
         public bool DeleteCredentialsByVaultId(string shelterVaultUuid)
         {
-            string query = @"
+            string query =
+                @"
                 DELETE FROM shelter_vault_credentials
                 WHERE shelterVaultUuid=$shelterVaultUuid
             ";
@@ -85,33 +95,50 @@ namespace ShelterVault.DataLayer
 
         public IEnumerable<ShelterVaultCredentialsModel> GetAllCredentials(string shelterVaultUuid)
         {
-            string query = @"
+            string query =
+                @"
                 SELECT * FROM shelter_vault_credentials
                 WHERE shelterVaultUuid=$shelterVaultUuid
             ";
-            IEnumerable<ShelterVaultCredentialsModel> results = _shelterVaultLocalDb.Query<ShelterVaultCredentialsModel>(query, new { shelterVaultUuid });
+            IEnumerable<ShelterVaultCredentialsModel> results =
+                _shelterVaultLocalDb.Query<ShelterVaultCredentialsModel>(
+                    query,
+                    new { shelterVaultUuid }
+                );
             return results;
         }
 
-        public IEnumerable<ShelterVaultCredentialsModel> GetAllActiveCredentials(string shelterVaultUuid)
+        public IEnumerable<ShelterVaultCredentialsModel> GetAllActiveCredentials(
+            string shelterVaultUuid
+        )
         {
-            string query = @"
+            string query =
+                @"
                 SELECT * FROM shelter_vault_credentials
                 WHERE shelterVaultUuid=$shelterVaultUuid
                 AND version > 0
             ";
-            IEnumerable<ShelterVaultCredentialsModel> results = _shelterVaultLocalDb.Query<ShelterVaultCredentialsModel>(query, new { shelterVaultUuid });
+            IEnumerable<ShelterVaultCredentialsModel> results =
+                _shelterVaultLocalDb.Query<ShelterVaultCredentialsModel>(
+                    query,
+                    new { shelterVaultUuid }
+                );
             return results;
         }
 
         public ShelterVaultCredentialsModel GetCredentialsByUUID(string uuid)
         {
-            string query = @"
+            string query =
+                @"
                 SELECT * FROM shelter_vault_credentials
                 WHERE uuid=$uuid
             ";
 
-            ShelterVaultCredentialsModel result = _shelterVaultLocalDb.QueryFirstOrDefault<ShelterVaultCredentialsModel>(query, new { uuid });
+            ShelterVaultCredentialsModel result =
+                _shelterVaultLocalDb.QueryFirstOrDefault<ShelterVaultCredentialsModel>(
+                    query,
+                    new { uuid }
+                );
             return result;
         }
     }

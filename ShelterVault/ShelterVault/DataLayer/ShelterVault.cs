@@ -13,7 +13,8 @@ namespace ShelterVault.DataLayer
             string encryptedTestValue,
             string iv,
             string salt,
-            long version
+            long version,
+            string tmpDb = null
         );
         bool UpdateShelterVault(string uuid, string name, long version);
         bool UpdateVaultCloudProvider(int cloudProvider);
@@ -47,7 +48,8 @@ namespace ShelterVault.DataLayer
             string encryptedTestValue,
             string iv,
             string salt,
-            long version
+            long version,
+            string tmpDb = null
         )
         {
             KeyValuePair<string, object> insertVault = new(
@@ -70,7 +72,7 @@ namespace ShelterVault.DataLayer
                 insertVault,
             };
 
-            return _shelterVaultLocalDb.ExecuteQueries(queries);
+            return _shelterVaultLocalDb.ExecuteQueries(queries, tmpDb);
         }
 
         public bool UpdateVaultCloudProvider(int cloudProvider)
