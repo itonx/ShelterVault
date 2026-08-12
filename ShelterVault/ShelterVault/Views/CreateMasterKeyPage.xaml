@@ -44,10 +44,10 @@
                     GotFocus="password_GotFocus"
                     LostFocus="password_LostFocus"
                     Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    PasswordChanged="password_PasswordChanged"
                     PasswordRevealMode="{Binding ShowPassword, Mode=OneWay, Converter={StaticResource BoolToPasswordVisibility}}"
                     Style="{ThemeResource ShelterVault.MasterKey.PasswordBox}">
                     <interactivity:Interaction.Behaviors>
-                        <desktinyBehaviors:ExecuteCommandOnPasswordChangedBehavior Command="{Binding PasswordRequirementsVM.PasswordChangedCommand, Mode=OneTime}" />
                         <desktinyBehaviors:KeyDownToCommandBehavior Command="{Binding CreateMasterKeyCommand}" VirtualKeyTrigger="Enter" />
                     </interactivity:Interaction.Behaviors>
                 </PasswordBox>

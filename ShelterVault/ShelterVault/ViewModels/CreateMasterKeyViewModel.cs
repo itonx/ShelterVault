@@ -46,8 +46,6 @@ namespace ShelterVault.ViewModels
         [ObservableProperty]
         public partial bool IsDialogMode { get; set; } = false;
 
-        public string DialogResult { get; internal set; } = "";
-
         private readonly IVaultCreatorManager _vaultCreatorManager;
         private readonly IProgressBarService _progressBarService;
 
@@ -69,12 +67,18 @@ namespace ShelterVault.ViewModels
 
         partial void OnNameChanged(string value)
         {
+            if (IsDialogMode)
+                return;
+
             DefaultPath = Path.Combine(_shelterVaultDefaultPath, string.Concat(value, ".db"));
         }
 
         [RelayCommand]
         private async Task CreateMasterKey()
         {
+            if (IsDialogMode)
+                return;
+
             try
             {
                 if (await PasswordRequirementsVM.ArePasswordsValid(Password, PasswordConfirmation))
@@ -95,6 +99,9 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private void Cancel()
         {
+            if (IsDialogMode)
+                return;
+
             EventManager.Publish(new EnumNavigation(AppPage.ConfirmMasterKey));
         }
 
@@ -102,6 +109,12 @@ namespace ShelterVault.ViewModels
         private void ChangePasswordVisibility()
         {
             ShowPassword = !ShowPassword;
+        }
+
+        [RelayCommand]
+        private void TriggerPasswordValidations(string password)
+        {
+            PasswordRequirementsVM.PasswordChangedCommand.Execute(password);
         }
     }
 }
