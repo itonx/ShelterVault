@@ -1,10 +1,10 @@
-﻿using Dapper;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Dapper;
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
 
 namespace ShelterVault.DataLayer
 {
@@ -21,18 +21,16 @@ namespace ShelterVault.DataLayer
 
     public interface ICommonDbOperation
     {
-        bool ExecuteQueries(IEnumerable<KeyValuePair<string, object>> queries);
+        bool ExecuteQueries(IEnumerable<KeyValuePair<string, object>> queries, string tmpDb = null);
         IEnumerable<T> QueryAcrossDatabases<T>(IEnumerable<string> fileNames, string query);
         T QueryFirst<T>(string query, object param = null);
         T QueryFirstOrDefault<T>(string query, object param = null);
         IEnumerable<T> Query<T>(string query, object param = null);
-        int Execute(string query, object param = null);
+        int Execute(string query, object param = null, string tmpDb = null);
         object ExecuteScalar(string query, object param = null);
     }
 
-    public interface IShelterVaultLocalDb : IShelterVaultDBConfiguration, ICommonDbOperation
-    {
-    }
+    public interface IShelterVaultLocalDb : IShelterVaultDBConfiguration, ICommonDbOperation { }
 
     public class ShelterVaultLocalDb : IShelterVaultLocalDb
     {
@@ -43,9 +41,11 @@ namespace ShelterVault.DataLayer
         public string DbExtension => ".db";
         public string DbName { get; private set; }
         public string TmpDbName { get; private set; }
-        public string DbPath => Path.Combine(DefaultShelterVaultPath, string.Concat(DbName, DbExtension));
+        public string DbPath =>
+            Path.Combine(DefaultShelterVaultPath, string.Concat(DbName, DbExtension));
         public string DbConnectionString => $"Data Source={DbPath};Pooling=True;";
-        public string TmpDbPath => Path.Combine(DefaultShelterVaultPath, string.Concat(TmpDbName, DbExtension));
+        public string TmpDbPath =>
+            Path.Combine(DefaultShelterVaultPath, string.Concat(TmpDbName, DbExtension));
         public string TmpDbConnectionString => $"Data Source={TmpDbPath};Pooling=True;";
 
         public ShelterVaultLocalDb(ILogger<ShelterVaultLocalDb> logger)
@@ -58,11 +58,14 @@ namespace ShelterVault.DataLayer
             DbName = dbName;
         }
 
-        public bool ExecuteQueries(IEnumerable<KeyValuePair<string, object>> queries)
+        public bool ExecuteQueries(
+            IEnumerable<KeyValuePair<string, object>> queries,
+            string tmpDb = null
+        )
         {
             try
             {
-                using SqliteConnection connection = GetOpenSqliteConnection();
+                using SqliteConnection connection = GetOpenSqliteConnection(tmpDb);
                 foreach (var query in queries)
                 {
                     connection.Execute(query.Key, param: query.Value);
@@ -87,7 +90,8 @@ namespace ShelterVault.DataLayer
                 {
                     using SqliteConnection connection = GetOpenSqliteConnection(path);
                     T result = connection.QueryFirstOrDefault<T>(query);
-                    if (result != null) results.Add(result);
+                    if (result != null)
+                        results.Add(result);
                 }
             }
             catch (Exception ex)
@@ -144,11 +148,11 @@ namespace ShelterVault.DataLayer
             }
         }
 
-        public int Execute(string query, object param = null)
+        public int Execute(string query, object param = null, string tmpDb = null)
         {
             try
             {
-                using SqliteConnection connection = GetOpenSqliteConnection();
+                using SqliteConnection connection = GetOpenSqliteConnection(tmpDb);
                 int affected = connection.Execute(query, param);
                 return affected;
             }
@@ -176,8 +180,10 @@ namespace ShelterVault.DataLayer
 
         private SqliteConnection GetOpenSqliteConnection(string tmpDbName = null)
         {
-            if (string.IsNullOrWhiteSpace(tmpDbName) && string.IsNullOrWhiteSpace(DbName)) throw new MissingMemberException("Database name is not set.");
-            if (!Path.Exists(DefaultShelterVaultPath)) Directory.CreateDirectory(DefaultShelterVaultPath);
+            if (string.IsNullOrWhiteSpace(tmpDbName) && string.IsNullOrWhiteSpace(DbName))
+                throw new MissingMemberException("Database name is not set.");
+            if (!Path.Exists(DefaultShelterVaultPath))
+                Directory.CreateDirectory(DefaultShelterVaultPath);
 
             SqliteConnection connection = null;
 

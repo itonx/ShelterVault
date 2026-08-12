@@ -54,6 +54,9 @@ namespace ShelterVault.ViewModels
         public partial string ContainerPartitionKey { get; set; }
 
         [ObservableProperty]
+        public partial bool DisplayArgonMigration { get; set; } = false;
+
+        [ObservableProperty]
         public partial string AppVersion { get; set; }
 
         public SettingsViewModel(
@@ -72,6 +75,7 @@ namespace ShelterVault.ViewModels
             _shelterVaultSyncStatus = shelterVaultSyncStatus;
             _cloudSyncManager = cloudSyncManager;
             _logger = logger;
+            DisplayArgonMigration = encryptionMigrationManager.IsArgonMigrationAvailable();
             AppVersion = GetAppVersion();
             CloudProviders = new List<CloudProviderType>(
                 (CloudProviderType[])Enum.GetValues(typeof(CloudProviderType))
@@ -216,7 +220,11 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private async Task MigrateToArgon2()
         {
-            await _encryptionMigrationManager.MigrateEncryptedDataToArgon2Async(1, 2);
+            var mk = await _dialogManager.ShowNewVaultMigrationDialog();
+            if (string.IsNullOrWhiteSpace(mk))
+                return;
+
+            await _encryptionMigrationManager.MigrateEncryptedDataToArgon2Async(1, 2, mk);
         }
     }
 }

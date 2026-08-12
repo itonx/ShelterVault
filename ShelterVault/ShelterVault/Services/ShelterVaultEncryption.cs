@@ -83,10 +83,21 @@ namespace ShelterVault.Services
             return encryptionService.EncryptAes(unencryptedBytes, key);
         }
 
-        private IEncryptionService GetEncryptionService()
+        public (byte[], byte[]) EncryptAes(string plainText, byte[] key, int? version)
         {
-            var vault = _shelterVault.GetCurrentVault();
-            return _encryptionServiceFactory.Create((int)vault.Version);
+            var encryptionService = GetEncryptionService(version);
+            return encryptionService.EncryptAes(plainText, key);
+        }
+
+        private IEncryptionService GetEncryptionService(int? version = null)
+        {
+            if (version == null)
+            {
+                var vault = _shelterVault.GetCurrentVault();
+                return _encryptionServiceFactory.Create((int)vault.Version);
+            }
+
+            return _encryptionServiceFactory.Create((int)version);
         }
     }
 }

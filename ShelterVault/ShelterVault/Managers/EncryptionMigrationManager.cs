@@ -15,22 +15,32 @@ namespace ShelterVault.Managers
         private readonly IShelterVault _shelterVault;
         private readonly IShelterVaultCredentials _shelterVaultCredentials;
         private readonly IShelterVaultStateService _shelterVaultStateService;
-        private readonly EncryptionServiceFactory _encryptionServiceFactory;
+        private readonly IEncryptionServiceFactory _encryptionServiceFactory;
+        private readonly IVaultCreatorManager _vaultCreatorManager;
+        private readonly ICredentialsManager _credentialsManager;
 
         public EncryptionMigrationManager(
             IShelterVault shelterVaultLocalDb,
             IShelterVaultCredentials shelterVaultCredentials,
             IShelterVaultStateService shelterVaultStateService,
-            EncryptionServiceFactory encryptionServiceFactory
+            IEncryptionServiceFactory encryptionServiceFactory,
+            IVaultCreatorManager vaultCreatorManager,
+            ICredentialsManager credentialsManager
         )
         {
             _shelterVault = shelterVaultLocalDb;
             _shelterVaultCredentials = shelterVaultCredentials;
             _shelterVaultStateService = shelterVaultStateService;
             _encryptionServiceFactory = encryptionServiceFactory;
+            _vaultCreatorManager = vaultCreatorManager;
+            _credentialsManager = credentialsManager;
         }
 
-        public async Task MigrateEncryptedDataToArgon2Async(long previousVersion, long newVersion)
+        public async Task MigrateEncryptedDataToArgon2Async(
+            long previousVersion,
+            long newVersion,
+            string masterKey
+        )
         {
             if (previousVersion >= newVersion || previousVersion <= 0 || newVersion <= 0)
             {
@@ -59,7 +69,38 @@ namespace ShelterVault.Managers
                 decryptedCredentials.Add(new(decryptedValues, oldCredential));
             }
 
-            var newEncryptionService = _encryptionServiceFactory.Create((int)newVault.Version);
+            var newEncryptionService = _encryptionServiceFactory.Create((int)newVersion);
+            string newVaultUUID = Guid.NewGuid().ToString();
+            byte[] newEncryptionKey = null;
+            string newVaultName = string.Concat($"(v{newVersion})", oldVault.Name);
+
+            _vaultCreatorManager.CreateVault(
+                newVaultUUID,
+                newVaultName,
+                masterKey,
+                out newEncryptionKey
+            );
+
+            List<Task> insertCredentialsTasks = new List<Task>();
+            foreach (var decryptedCredential in decryptedCredentials)
+            {
+                decryptedCredential.ShelterVaultUuid = newVaultUUID;
+                Task insertCredentialsTask = _credentialsManager.InsertCredentials(
+                    decryptedCredential,
+                    newEncryptionKey,
+                    newVaultName,
+                    (int)newVersion
+                );
+                insertCredentialsTasks.Add(insertCredentialsTask);
+            }
+
+            await Task.WhenAll(insertCredentialsTasks);
+        }
+
+        public bool IsArgonMigrationAvailable()
+        {
+            var vault = _shelterVault.GetCurrentVault();
+            return vault?.Version == 1;
         }
     }
 }

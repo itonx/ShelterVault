@@ -33,23 +33,45 @@ namespace ShelterVault.Managers
             try
             {
                 (byte[] encryptionKey, _) = _shelterVaultStateService.GetLocalEncryptionValues();
+                return await InsertCredentials(credentials, encryptionKey, null, null);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Credentials> InsertCredentials(
+            Credentials credentials,
+            byte[] encryptionKey,
+            string tmpDb = null,
+            int? version = null
+        )
+        {
+            try
+            {
                 (byte[], byte[]) encryptedValues = _encryptionService.EncryptAes(
                     credentials.GetJsonValues(),
-                    encryptionKey
+                    encryptionKey,
+                    version
                 );
 
                 ShelterVaultCredentialsModel shelterVaultCredentials = new(
                     credentials.ShelterVaultUuid,
                     encryptedValues
                 );
-                bool inserted = _shelterVaultCredentials.InsertCredentials(shelterVaultCredentials);
+                bool inserted = _shelterVaultCredentials.InsertCredentials(
+                    shelterVaultCredentials,
+                    tmpDb
+                );
 
                 if (!inserted)
                     return null;
 
                 credentials.UUID = shelterVaultCredentials.UUID;
                 credentials.Iv = shelterVaultCredentials.Iv;
-                await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
+                if (tmpDb == null)
+                    await _cloudSyncManager.UpsertItemAsync(shelterVaultCredentials);
                 return credentials;
             }
             catch (Exception)
@@ -181,6 +203,15 @@ namespace ShelterVault.Managers
             return credentialsList.Any()
                 ? credentialsList
                 : Enumerable.Empty<CredentialsViewItem>();
+        }
+
+        public Task<Credentials> InsertCredentials(
+            Credentials credentials,
+            byte[] encryptionKey,
+            string tmpDb = null
+        )
+        {
+            throw new NotImplementedException();
         }
     }
 }

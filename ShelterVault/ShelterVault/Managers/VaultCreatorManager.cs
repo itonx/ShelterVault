@@ -67,5 +67,42 @@ namespace ShelterVault.Managers
 
             return true;
         }
+
+        public bool CreateVault(string uuid, string name, string masterKey, out byte[] vaultKey) //Argon
+        {
+            vaultKey = null;
+
+            try
+            {
+                var encryptionService = _encryptionServiceFactory.Create(
+                    DEFAULT_ENCRYPTION_VERSION
+                );
+
+                byte[] saltBytes = RandomNumberGenerator.GetBytes(32);
+                byte[] derivedKey = encryptionService.DeriveKeyFromPassword(masterKey, saltBytes);
+                vaultKey = RandomNumberGenerator.GetBytes(32);
+
+                (byte[] encryptedVaultKey, byte[] iv) = encryptionService.EncryptAes(
+                    vaultKey,
+                    derivedKey
+                );
+
+                bool vaultCreated = _shelterVault.CreateShelterVault(
+                    uuid,
+                    name,
+                    encryptedVaultKey.ToBase64(),
+                    iv.ToBase64(),
+                    saltBytes.ToBase64(),
+                    DEFAULT_ENCRYPTION_VERSION,
+                    name
+                );
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Desktiny.WinUI.EventMessages;
 using Desktiny.WinUI.Managers;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using ShelterVault.DataLayer;
 using ShelterVault.Interfaces;
 using ShelterVault.Shared.Enums;
@@ -41,6 +42,11 @@ namespace ShelterVault.ViewModels
 
         [ObservableProperty]
         public partial bool ShowPassword { get; set; }
+
+        [ObservableProperty]
+        public partial bool IsDialogMode { get; set; } = false;
+
+        public string DialogResult { get; internal set; } = "";
 
         private readonly IVaultCreatorManager _vaultCreatorManager;
         private readonly IProgressBarService _progressBarService;
