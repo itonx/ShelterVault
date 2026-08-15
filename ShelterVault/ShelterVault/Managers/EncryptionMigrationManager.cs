@@ -72,7 +72,7 @@ namespace ShelterVault.Managers
             var newEncryptionService = _encryptionServiceFactory.Create((int)newVersion);
             string newVaultUUID = Guid.NewGuid().ToString();
             byte[] newEncryptionKey = null;
-            string newVaultName = string.Concat($"(v{newVersion})", oldVault.Name);
+            string newVaultName = string.Concat($"(v{newVersion}) ", oldVault.Name);
 
             _vaultCreatorManager.CreateVault(
                 newVaultUUID,

@@ -396,4 +396,13 @@
   <data name="Argon2Upgrade.Content" xml:space="preserve">
     <value>Iniciar Migración Argon2</value>
   </data>
+  <data name="ArgonMigrationNotification.Text" xml:space="preserve">
+    <value>Hay una actualización de cifrado disponible. Para iniciar la migración, ve a Configuración &gt; Migración de baúl &gt; Iniciar Migración Argon2.</value>
+  </data>
+  <data name="ArgonMigrationNotificationError.Text" xml:space="preserve">
+    <value>Ocurrió un error durante la migración.</value>
+  </data>
+  <data name="ArgonMigrationNotificationOk.Text" xml:space="preserve">
+    <value>Migración completada. Ahora puedes usar el nuevo baúl usando la opción de cambiar de baúl. El baúl anterior puede ser borrado del directorio .sheltervault ubicado en el directorio home de tu usuario.</value>
+  </data>
 </root>

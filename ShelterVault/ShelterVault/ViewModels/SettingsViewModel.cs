@@ -220,11 +220,31 @@ namespace ShelterVault.ViewModels
         [RelayCommand]
         private async Task MigrateToArgon2()
         {
-            var mk = await _dialogManager.ShowNewVaultMigrationDialog();
-            if (string.IsNullOrWhiteSpace(mk))
-                return;
+            try
+            {
+                var mk = await _dialogManager.ShowNewVaultMigrationDialog();
 
-            await _encryptionMigrationManager.MigrateEncryptedDataToArgon2Async(1, 2, mk);
+                if (string.IsNullOrWhiteSpace(mk))
+                    return;
+
+                await _progressBarService.Show();
+                await _encryptionMigrationManager.MigrateEncryptedDataToArgon2Async(1, 2, mk);
+                await Task.Delay(1500);
+                await _dialogManager.ShowConfirmationDialogAsync(
+                    LangResourceKeys.DIALOG_ARGON_MIGRATION_NOTIFICATION_OK
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error syncing vaults");
+                await _dialogManager.ShowConfirmationDialogAsync(
+                    LangResourceKeys.DIALOG_ARGON_MIGRATION_NOTIFICATION_ERROR
+                );
+            }
+            finally
+            {
+                await _progressBarService.Hide();
+            }
         }
     }
 }

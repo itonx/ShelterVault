@@ -111,6 +111,7 @@ namespace ShelterVault
             services.AddTransient<CreateMasterKeyViewModel>();
             services.AddTransient<ConfirmMasterKeyViewModel>();
             services.AddTransient<SettingsViewModel>();
+            services.AddTransient<HomeViewModel>();
 
             return services.BuildServiceProvider();
         }

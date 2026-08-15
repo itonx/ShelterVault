@@ -396,4 +396,13 @@
   <data name="Argon2Upgrade.Content" xml:space="preserve">
     <value>Start Argon2 Migration</value>
   </data>
+  <data name="ArgonMigrationNotification.Text" xml:space="preserve">
+    <value>A vault encryption update is available. To start the migration, go to Settings &gt; Vault Migration &gt; Start Argon2 Migration.</value>
+  </data>
+  <data name="ArgonMigrationNotificationError.Text" xml:space="preserve">
+    <value>An error occurred during the migration.</value>
+  </data>
+  <data name="ArgonMigrationNotificationOk.Text" xml:space="preserve">
+    <value>Vault migration completed. You can now switch to the new vault. The old vault can be removed from the .sheltervault directory located in your user's home folder.</value>
+  </data>
 </root>
