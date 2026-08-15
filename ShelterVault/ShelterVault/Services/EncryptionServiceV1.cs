@@ -114,7 +114,7 @@ namespace ShelterVault.Services
             return EncryptAes(plainBytes, key);
         }
 
-        public (byte[], byte[]) EncryptAes(byte[] unencryptedBytes, byte[] key)
+        private (byte[], byte[]) EncryptAes(byte[] unencryptedBytes, byte[] key)
         {
             if (unencryptedBytes == null || unencryptedBytes.Length == 0)
                 throw new ArgumentNullException(nameof(unencryptedBytes));

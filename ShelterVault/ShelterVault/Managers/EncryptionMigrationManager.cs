@@ -50,15 +50,20 @@ namespace ShelterVault.Managers
             var vaults = _shelterVault.GetVaults();
             var oldVault = vaults.Where(v => v.Version == previousVersion).FirstOrDefault();
             var newVault = vaults.Where(v => v.Version == newVersion).FirstOrDefault();
+            string newVaultName = string.Concat($"(v{newVersion}) ", oldVault.Name);
 
-            if (oldVault == null || newVault != null)
+            if (
+                oldVault == null
+                || newVault != null
+                || _vaultCreatorManager.VaultExists(newVaultName)
+            )
             {
                 throw new EncryptionMigrationException();
             }
 
             var oldEncryptionService = _encryptionServiceFactory.Create((int)oldVault.Version);
 
-            var oldCredentials = _shelterVaultCredentials.GetAllCredentials(oldVault.UUID);
+            var oldCredentials = _shelterVaultCredentials.GetAllActiveCredentials(oldVault.UUID);
             var decryptedCredentials = new List<Credentials>();
             (byte[] encryptionKey, byte[] salt) =
                 _shelterVaultStateService.GetLocalEncryptionValues();
@@ -72,7 +77,6 @@ namespace ShelterVault.Managers
             var newEncryptionService = _encryptionServiceFactory.Create((int)newVersion);
             string newVaultUUID = Guid.NewGuid().ToString();
             byte[] newEncryptionKey = null;
-            string newVaultName = string.Concat($"(v{newVersion}) ", oldVault.Name);
 
             _vaultCreatorManager.CreateVault(
                 newVaultUUID,

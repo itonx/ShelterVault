@@ -236,7 +236,7 @@ namespace ShelterVault.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error syncing vaults");
+                _logger.LogError(ex, "Error on vault migration");
                 await _dialogManager.ShowConfirmationDialogAsync(
                     LangResourceKeys.DIALOG_ARGON_MIGRATION_NOTIFICATION_ERROR
                 );

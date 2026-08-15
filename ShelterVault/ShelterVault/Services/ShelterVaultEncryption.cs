@@ -77,12 +77,6 @@ namespace ShelterVault.Services
             return encryptionService.EncryptAes(plainText, key);
         }
 
-        public (byte[], byte[]) EncryptAes(byte[] unencryptedBytes, byte[] key)
-        {
-            var encryptionService = GetEncryptionService();
-            return encryptionService.EncryptAes(unencryptedBytes, key);
-        }
-
         public (byte[], byte[]) EncryptAes(string plainText, byte[] key, int? version)
         {
             var encryptionService = GetEncryptionService(version);
