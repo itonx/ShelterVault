@@ -405,4 +405,7 @@
   <data name="ArgonMigrationNotificationOk.Text" xml:space="preserve">
     <value>Migración completada. Ahora puedes usar el nuevo baúl usando la opción de cambiar de baúl. El baúl anterior puede ser borrado del directorio .sheltervault ubicado en el directorio home de tu usuario.</value>
   </data>
+  <data name="Argon2MigrationDescription.Text" xml:space="preserve">
+    <value>Encripta tu baúl usando un cifrado que provee un método de encriptación más robusto. Se creará un baúl nuevo con el nombre (v2) + nombre del baúl actual.</value>
+  </data>
 </root>

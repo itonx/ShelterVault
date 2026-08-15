@@ -201,7 +201,7 @@ namespace ShelterVault.Managers
             }
 
             return credentialsList.Any()
-                ? credentialsList
+                ? credentialsList.OrderBy(c => c.Title)
                 : Enumerable.Empty<CredentialsViewItem>();
         }
 
