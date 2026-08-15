@@ -15,10 +15,40 @@ namespace ShelterVault.Services
 
         public (byte[], byte[]) EncryptAes(string plainText, byte[] key)
         {
-            if (plainText == null || plainText.Length <= 0)
+            if (string.IsNullOrWhiteSpace(plainText))
                 throw new ArgumentNullException(nameof(plainText));
-            byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
-            return EncryptAes(plainBytes, key);
+            if (key == null || key.Length == 0)
+                throw new ArgumentNullException(nameof(key));
+
+            byte[] encrypted;
+            byte[] lastIV;
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = key;
+                lastIV = aesAlg.IV;
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (
+                        CryptoStream csEncrypt = new CryptoStream(
+                            msEncrypt,
+                            encryptor,
+                            CryptoStreamMode.Write
+                        )
+                    )
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
+            }
+
+            return (encrypted, lastIV);
         }
 
         public string DecryptAes(
@@ -116,44 +146,6 @@ namespace ShelterVault.Services
                 Algorithm = EncryptionVersion.v1,
             };
             return _pbkdf2KeyDerivation.DeriveKey(password, kdo);
-        }
-
-        public (byte[], byte[]) EncryptAes(byte[] unencryptedBytes, byte[] key)
-        {
-            if (unencryptedBytes == null || unencryptedBytes.Length == 0)
-                throw new ArgumentNullException(nameof(unencryptedBytes));
-            if (key == null || key.Length == 0)
-                throw new ArgumentNullException(nameof(key));
-
-            byte[] encrypted;
-            byte[] lastIV;
-
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = key;
-                lastIV = aesAlg.IV;
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                using (MemoryStream msEncrypt = new MemoryStream())
-                {
-                    using (
-                        CryptoStream csEncrypt = new CryptoStream(
-                            msEncrypt,
-                            encryptor,
-                            CryptoStreamMode.Write
-                        )
-                    )
-                    {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            swEncrypt.Write(unencryptedBytes);
-                        }
-                        encrypted = msEncrypt.ToArray();
-                    }
-                }
-            }
-
-            return (encrypted, lastIV);
         }
 
         public (byte[], byte[]) EncryptAes(string plainText, byte[] key, int? version)

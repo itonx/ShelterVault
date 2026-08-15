@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using ShelterVault.DataLayer;
 using ShelterVault.Interfaces;
@@ -39,7 +40,7 @@ namespace ShelterVault.Managers
 
                 byte[] saltBytes = RandomNumberGenerator.GetBytes(32);
                 byte[] derivedKey = encryptionService.DeriveKeyFromPassword(masterKey, saltBytes);
-                byte[] vaultKey = RandomNumberGenerator.GetBytes(32);
+                string vaultKey = RandomNumberGenerator.GetHexString(32, lowercase: true);
 
                 (byte[] encryptedVaultKey, byte[] iv) = encryptionService.EncryptAes(
                     vaultKey,
@@ -80,10 +81,10 @@ namespace ShelterVault.Managers
 
                 byte[] saltBytes = RandomNumberGenerator.GetBytes(32);
                 byte[] derivedKey = encryptionService.DeriveKeyFromPassword(masterKey, saltBytes);
-                vaultKey = RandomNumberGenerator.GetBytes(32);
+                string vaultKeyStr = RandomNumberGenerator.GetHexString(32, lowercase: true);
 
                 (byte[] encryptedVaultKey, byte[] iv) = encryptionService.EncryptAes(
-                    vaultKey,
+                    vaultKeyStr,
                     derivedKey
                 );
 
@@ -96,6 +97,7 @@ namespace ShelterVault.Managers
                     DEFAULT_ENCRYPTION_VERSION,
                     name
                 );
+                vaultKey = Encoding.UTF8.GetBytes(vaultKeyStr);
             }
             catch
             {
@@ -103,6 +105,15 @@ namespace ShelterVault.Managers
             }
 
             return true;
+        }
+
+        public bool VaultExists(string dbName)
+        {
+            string targetPath = Path.Combine(
+                _shelterVaultLocalDb.DefaultShelterVaultPath,
+                dbName + ".db"
+            );
+            return File.Exists(targetPath);
         }
     }
 }

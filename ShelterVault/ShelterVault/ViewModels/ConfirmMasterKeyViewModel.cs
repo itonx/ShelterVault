@@ -105,6 +105,12 @@ namespace ShelterVault.ViewModels
                         LangResourceKeys.DIALOG_WRONG_MASTER_KEY
                     );
             }
+            catch (Exception ex)
+            {
+                await _dialogManager.ShowConfirmationDialogAsync(
+                    LangResourceKeys.DIALOG_WRONG_MASTER_KEY
+                );
+            }
             finally
             {
                 await _progressBarService.Hide();
