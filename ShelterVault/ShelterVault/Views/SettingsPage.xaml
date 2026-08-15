@@ -63,9 +63,7 @@
                                             HorizontalAlignment="Left"
                                             Foreground="{ThemeResource ShelterVaultForeground}"
                                             Style="{ThemeResource SubtitleTextBlockStyle}" />
-                                        <TextBlock>
-                                            Encripta tu baúl usando un cifrado que provee un método de encriptación más robusto. Se creará un baúl nuevo con el nombre (v2) + nombre del baúl actual.
-                                        </TextBlock>
+                                        <TextBlock x:Uid="Argon2MigrationDescription" />
                                         <StackPanel Orientation="Horizontal" Spacing="10">
                                             <Button
                                                 x:Uid="Argon2Upgrade"
