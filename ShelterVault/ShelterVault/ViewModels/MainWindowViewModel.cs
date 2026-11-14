@@ -69,7 +69,6 @@ namespace ShelterVault.ViewModels
         private void SwitchVault()
         {
             _shelterVaultStateService.ResetState();
-            EventManager.Publish(new EnumNavigation(AppPage.ConfirmMasterKey));
         }
 
         [RelayCommand]

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Security.Cryptography;
+using Desktiny.WinUI.EventMessages;
+using Desktiny.WinUI.Managers;
 using ShelterVault.Interfaces;
 using ShelterVault.Models;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Extensions;
 
 namespace ShelterVault.Services
@@ -68,6 +71,7 @@ namespace ShelterVault.Services
             _inMemoryDerivedKeyProtected = Array.Empty<byte>();
             _inMemorySaltProtected = Array.Empty<byte>();
             ShelterVault = new();
+            EventManager.Publish(new EnumNavigation(AppPage.ConfirmMasterKey));
         }
 
         private void ProtectEncryptionValues(byte[] encryptionKey, byte[] salt)
