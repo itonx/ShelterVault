@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Visibility="{Binding DisplayArgonMigration, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid MinHeight="100" Margin="0,10">

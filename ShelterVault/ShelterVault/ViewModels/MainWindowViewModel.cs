@@ -186,6 +186,7 @@ namespace ShelterVault.ViewModels
             }
             else
             {
+                VaultName = "";
                 ShowLangOptions = true;
                 ShowSwitchVault = false;
             }

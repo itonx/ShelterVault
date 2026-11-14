@@ -19,6 +19,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ComboBox
                     x:Uid="TitleSelectVault"
@@ -34,6 +35,14 @@
                     Command="{Binding NewVaultCommand}"
                     Style="{ThemeResource ShelterVault.MasterKey.Button.Add}">
                     <FontIcon FontSize="25" Glyph="&#xF8AA;" />
+                </Button>
+                <Button
+                    x:Name="DeleteVault"
+                    x:Uid="DeleteVaultButton"
+                    Grid.Column="2"
+                    Command="{Binding DeleteVaultCommand}"
+                    Style="{ThemeResource ShelterVault.MasterKey.Button.Delete}">
+                    <FontIcon FontSize="25" Glyph="&#xE74D;" />
                 </Button>
             </Grid>
             <Grid ColumnSpacing="5">

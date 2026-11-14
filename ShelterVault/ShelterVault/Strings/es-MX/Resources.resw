@@ -411,4 +411,10 @@
   <data name="NavigationViewCredentials.Content" xml:space="preserve">
     <value>Credenciales</value>
   </data>
+  <data name="DeleteVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Borrar baúl</value>
+  </data>
+  <data name="DialogDeleteVaultConfiguration.Text" xml:space="preserve">
+    <value>El baúl será borrado. ¿Desea continuar?</value>
+  </data>
 </root>

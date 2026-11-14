@@ -43,7 +43,7 @@
                 <toolkit:SettingsExpander
                     x:Uid="VaultMigrationExpander"
                     IsExpanded="True"
-                    Visibility="{Binding DisplayArgonMigration}">
+                    Visibility="{Binding ElementName=VaultMigrationUserControl, Path=Visibility, UpdateSourceTrigger=PropertyChanged}">
                     <toolkit:SettingsExpander.Header>
                         <TextBlock
                             x:Uid="VaultMigrationTitle"
@@ -56,7 +56,7 @@
                     <toolkit:SettingsExpander.Items>
                         <toolkit:SettingsCard>
                             <toolkit:SettingsCard.Description>
-                                <local:VaultMigrationControl />
+                                <local:VaultMigrationControl x:Name="VaultMigrationUserControl" />
                             </toolkit:SettingsCard.Description>
                         </toolkit:SettingsCard>
                     </toolkit:SettingsExpander.Items>

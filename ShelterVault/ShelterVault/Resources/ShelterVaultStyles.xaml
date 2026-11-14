@@ -88,6 +88,15 @@
         <Setter Property="VerticalAlignment" Value="Bottom" />
     </Style>
     <Style
+        x:Key="ShelterVault.MasterKey.Button.Delete"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Height" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="Width" Value="{StaticResource ShelterVaultControlHeight}" />
+        <Setter Property="FontSize" Value="25" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+    </Style>
+    <Style
         x:Key="ShelterVault.MasterKey.Buttons.Cancel"
         BasedOn="{StaticResource DefaultButtonStyle}"
         TargetType="Button">
