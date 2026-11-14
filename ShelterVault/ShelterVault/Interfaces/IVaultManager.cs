@@ -6,6 +6,7 @@ namespace ShelterVault.Interfaces
     public interface IVaultManager
     {
         IList<VaultModel> GetCurrentVaultWithCredentials();
+        ShelterVaultModel GetCurrentVault();
         bool IsValid(
             string masterKey,
             ShelterVaultModel shelterVaultModel,

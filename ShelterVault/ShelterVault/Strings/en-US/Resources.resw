@@ -406,6 +406,9 @@
     <value>Vault migration completed. You can now switch to the new vault. The old vault can be removed from the .sheltervault directory located in your user's home folder.</value>
   </data>
   <data name="Argon2MigrationDescription.Text" xml:space="preserve">
-    <value>Encrypt your vault using a more robust encryption method. A new vault will be created with the name (v2) + your current vault name.</value>
+    <value>Encrypt your vault using a more robust encryption method. A new vault will be created with the name "(v3) {VAULT_NAME}".</value>
+  </data>
+  <data name="NavigationViewCredentials.Content" xml:space="preserve">
+    <value>Credentials</value>
   </data>
 </root>

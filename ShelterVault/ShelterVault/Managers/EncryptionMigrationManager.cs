@@ -74,7 +74,6 @@ namespace ShelterVault.Managers
                 decryptedCredentials.Add(new(decryptedValues, oldCredential));
             }
 
-            var newEncryptionService = _encryptionServiceFactory.Create((int)newVersion);
             string newVaultUUID = Guid.NewGuid().ToString();
             byte[] newEncryptionKey = null;
 
@@ -104,7 +103,7 @@ namespace ShelterVault.Managers
         public bool IsArgonMigrationAvailable()
         {
             var vault = _shelterVault.GetCurrentVault();
-            return vault?.Version == 1;
+            return vault?.Version == 1 || vault?.Version == 2;
         }
     }
 }

@@ -89,7 +89,10 @@ namespace ShelterVault.ViewModels
                     {
                         _shelterVaultStateService.SetVault(SelectedVault, parameter?.ToString());
                     }
-                    else if (SelectedVault.Version == (int)EncryptionVersion.v2)
+                    else if (
+                        SelectedVault.Version == (int)EncryptionVersion.v2
+                        || SelectedVault.Version == (int)EncryptionVersion.v3
+                    )
                     {
                         _shelterVaultStateService.SetVault(SelectedVault, encryptionKeyTmp);
                     }

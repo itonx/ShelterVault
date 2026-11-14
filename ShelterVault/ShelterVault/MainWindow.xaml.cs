@@ -15,7 +15,8 @@ namespace ShelterVault
         public MainWindow()
         {
             this.InitializeComponent();
-            this.WindowContainer.DataContext = App.Current.Services.GetService<MainWindowViewModel>();
+            this.WindowContainer.DataContext =
+                App.Current.Services.GetService<MainWindowViewModel>();
         }
     }
 }

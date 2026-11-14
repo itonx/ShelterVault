@@ -56,22 +56,7 @@
                     <toolkit:SettingsExpander.Items>
                         <toolkit:SettingsCard>
                             <toolkit:SettingsCard.Description>
-                                <Grid MinHeight="100" Margin="0,10">
-                                    <StackPanel Spacing="10">
-                                        <TextBlock
-                                            x:Uid="Argon2MigrationTitle"
-                                            HorizontalAlignment="Left"
-                                            Foreground="{ThemeResource ShelterVaultForeground}"
-                                            Style="{ThemeResource SubtitleTextBlockStyle}" />
-                                        <TextBlock x:Uid="Argon2MigrationDescription" />
-                                        <StackPanel Orientation="Horizontal" Spacing="10">
-                                            <Button
-                                                x:Uid="Argon2Upgrade"
-                                                Command="{Binding MigrateToArgon2Command}"
-                                                Style="{ThemeResource AccentButtonStyle}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Grid>
+                                <local:VaultMigrationControl />
                             </toolkit:SettingsCard.Description>
                         </toolkit:SettingsCard>
                     </toolkit:SettingsExpander.Items>
