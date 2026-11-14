@@ -105,6 +105,7 @@ namespace ShelterVault
             services.AddScoped<IEncryptionMigrationManager, EncryptionMigrationManager>();
 
             // Viewmodels
+            services.AddTransient<VaultMigrationViewModel>();
             services.AddTransient<NavigationViewModel>();
             services.AddTransient<PasswordConfirmationViewModel>();
             services.AddTransient<CredentialsViewModel>();

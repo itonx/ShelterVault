@@ -14,7 +14,7 @@ namespace ShelterVault.Managers
         private readonly IShelterVault _shelterVault;
         private readonly IShelterVaultLocalDb _shelterVaultLocalDb;
         private readonly ICloudSyncManager _cloudSyncManager;
-        private readonly int DEFAULT_ENCRYPTION_VERSION = (int)EncryptionVersion.v2;
+        private readonly int DEFAULT_ENCRYPTION_VERSION = (int)EncryptionVersion.v3;
 
         public VaultCreatorManager(
             IEncryptionServiceFactory encryptionServiceFactory,

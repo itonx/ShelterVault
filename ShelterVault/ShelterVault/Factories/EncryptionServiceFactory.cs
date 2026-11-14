@@ -18,7 +18,8 @@ namespace ShelterVault.Factories
             {
                 (int)EncryptionVersion.v1 => new EncryptionServiceV0(),
                 (int)EncryptionVersion.v2 => new EncryptionServiceV1(),
-                _ => new EncryptionServiceV1(),
+                (int)EncryptionVersion.v3 => new EncryptionServiceV2(),
+                _ => new EncryptionServiceV2(),
             };
         }
     }

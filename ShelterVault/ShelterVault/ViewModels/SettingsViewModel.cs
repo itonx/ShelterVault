@@ -24,7 +24,6 @@ namespace ShelterVault.ViewModels
         private readonly IShelterVaultSyncStatus _shelterVaultSyncStatus;
         private readonly ICloudSyncManager _cloudSyncManager;
         private readonly ILogger<SettingsViewModel> _logger;
-        private readonly IEncryptionMigrationManager _encryptionMigrationManager;
 
         [ObservableProperty]
         public partial IList<CloudProviderType> CloudProviders { get; set; }
@@ -54,9 +53,6 @@ namespace ShelterVault.ViewModels
         public partial string ContainerPartitionKey { get; set; }
 
         [ObservableProperty]
-        public partial bool DisplayArgonMigration { get; set; } = false;
-
-        [ObservableProperty]
         public partial string AppVersion { get; set; }
 
         public SettingsViewModel(
@@ -66,7 +62,8 @@ namespace ShelterVault.ViewModels
             IShelterVaultSyncStatus shelterVaultSyncStatus,
             ILogger<SettingsViewModel> logger,
             ICloudSyncManager cloudSyncManager,
-            IEncryptionMigrationManager encryptionMigrationManager
+            IEncryptionMigrationManager encryptionMigrationManager,
+            IVaultManager vaultManager
         )
         {
             _dialogManager = dialogManager;
@@ -75,14 +72,12 @@ namespace ShelterVault.ViewModels
             _shelterVaultSyncStatus = shelterVaultSyncStatus;
             _cloudSyncManager = cloudSyncManager;
             _logger = logger;
-            DisplayArgonMigration = encryptionMigrationManager.IsArgonMigrationAvailable();
             AppVersion = GetAppVersion();
             CloudProviders = new List<CloudProviderType>(
                 (CloudProviderType[])Enum.GetValues(typeof(CloudProviderType))
             );
             SelectedCloudProvider = _cloudProviderManager.GetCurrentCloudProvider();
             ReadCosmosDBSettings();
-            _encryptionMigrationManager = encryptionMigrationManager;
         }
 
         private string GetAppVersion()
@@ -209,36 +204,6 @@ namespace ShelterVault.ViewModels
                 _logger.LogError(ex, "Error syncing vaults");
                 await _dialogManager.ShowConfirmationDialogAsync(
                     LangResourceKeys.DIALOG_COSMOS_DB_SYNC_ERROR
-                );
-            }
-            finally
-            {
-                await _progressBarService.Hide();
-            }
-        }
-
-        [RelayCommand]
-        private async Task MigrateToArgon2()
-        {
-            try
-            {
-                var mk = await _dialogManager.ShowNewVaultMigrationDialog();
-
-                if (string.IsNullOrWhiteSpace(mk))
-                    return;
-
-                await _progressBarService.Show();
-                await _encryptionMigrationManager.MigrateEncryptedDataToArgon2Async(1, 2, mk);
-                await Task.Delay(1500);
-                await _dialogManager.ShowConfirmationDialogAsync(
-                    LangResourceKeys.DIALOG_ARGON_MIGRATION_NOTIFICATION_OK
-                );
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error on vault migration");
-                await _dialogManager.ShowConfirmationDialogAsync(
-                    LangResourceKeys.DIALOG_ARGON_MIGRATION_NOTIFICATION_ERROR
                 );
             }
             finally

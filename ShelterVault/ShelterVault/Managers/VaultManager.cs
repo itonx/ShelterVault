@@ -36,6 +36,11 @@ namespace ShelterVault.Managers
             return vaults;
         }
 
+        public ShelterVaultModel GetCurrentVault()
+        {
+            return _shelterVault.GetCurrentVault();
+        }
+
         public bool IsValid(
             string masterKey,
             ShelterVaultModel shelterVaultModel,
@@ -57,7 +62,10 @@ namespace ShelterVault.Managers
                 encryptionKey = new byte[] { 0x00 };
                 return expectedValue != null && expectedValue.Equals(shelterVaultModel.UUID);
             }
-            else if (shelterVaultModel.Version == (int)EncryptionVersion.v2)
+            else if (
+                shelterVaultModel.Version == (int)EncryptionVersion.v2
+                || shelterVaultModel.Version == (int)EncryptionVersion.v3
+            )
             {
                 byte[] encryptionKeyTmp = encryptionService.DecryptAesBytes(
                     shelterVaultModel.EncryptedTestValue.FromBase64ToBytes(),

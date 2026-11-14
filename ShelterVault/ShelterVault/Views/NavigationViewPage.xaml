@@ -31,7 +31,7 @@
                 Tag="NEW_CREDENTIALS"
                 ToolTipService.ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
             <NavigationViewItem
-                Content="{Binding VaultName, Mode=OneWay}"
+                x:Uid="NavigationViewCredentials"
                 IsExpanded="True"
                 SelectsOnInvoked="False"
                 Tag="VAULT"

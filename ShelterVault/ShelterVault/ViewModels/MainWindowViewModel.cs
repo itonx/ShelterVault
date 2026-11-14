@@ -39,6 +39,9 @@ namespace ShelterVault.ViewModels
         public partial bool ShowLangOptions { get; set; }
 
         [ObservableProperty]
+        public partial string VaultName { get; set; }
+
+        [ObservableProperty]
         public partial CloudSyncStatus CurrentCloudSyncStatus { get; set; }
 
         private readonly IShelterVaultStateService _shelterVaultStateService;
@@ -178,6 +181,7 @@ namespace ShelterVault.ViewModels
             RefreshSyncStatusInfo();
             if (this.ShelterVaultCurrentAppState == AppPage.NavigationView)
             {
+                VaultName = _shelterVaultStateService.ShelterVault.Name;
                 ShowLangOptions = false;
                 ShowSwitchVault = true;
             }
