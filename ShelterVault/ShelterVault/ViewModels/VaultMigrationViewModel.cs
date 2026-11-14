@@ -25,6 +25,7 @@ namespace ShelterVault.ViewModels
         private readonly IEncryptionMigrationManager _encryptionMigrationManager;
         private readonly IVaultManager _vaultManager;
         private readonly ILanguageService _languageService;
+        private readonly IShelterVaultStateService _shelterVaultStateService;
 
         [ObservableProperty]
         public partial bool DisplayArgonMigration { get; set; } = false;
@@ -38,7 +39,8 @@ namespace ShelterVault.ViewModels
             ILogger<SettingsViewModel> logger,
             IEncryptionMigrationManager encryptionMigrationManager,
             IVaultManager vaultManager,
-            ILanguageService languageService
+            ILanguageService languageService,
+            IShelterVaultStateService shelterVaultStateService
         )
         {
             _dialogManager = dialogManager;
@@ -48,6 +50,7 @@ namespace ShelterVault.ViewModels
             _languageService = languageService;
             DisplayArgonMigration = encryptionMigrationManager.IsArgonMigrationAvailable();
             _encryptionMigrationManager = encryptionMigrationManager;
+            _shelterVaultStateService = shelterVaultStateService;
             var currentVault = _vaultManager.GetCurrentVault();
             VaultMigrationMessage =
                 $"{_languageService.GetLangValue("Argon2MigrationDescription/Text")?.Replace("{VAULT_NAME}", currentVault.Name)}";
@@ -74,6 +77,7 @@ namespace ShelterVault.ViewModels
                 await _dialogManager.ShowConfirmationDialogAsync(
                     LangResourceKeys.DIALOG_ARGON_MIGRATION_NOTIFICATION_OK
                 );
+                _shelterVaultStateService.ResetState();
             }
             catch (Exception ex)
             {
