@@ -24,6 +24,7 @@
             <converters:ShelterVaultAppStateToTitleMarginConverter x:Key="ShelterVaultAppStateToTitleMargin" />
             <converters:ShelterVaultAppStateToIsPaneButtonVisibleConverter x:Key="ShelterVaultAppStateToIsPaneButtonVisible" />
             <converters:CloudProviderTypeToTextLangConverter x:Key="CloudProviderTypeToTextLang" />
+            <converters:StringToVisibilityConverter x:Key="StringToVisibility" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -36,6 +36,8 @@
             "ArgonMigrationNotificationError/Text";
         public const string DIALOG_ARGON_MIGRATION_NOTIFICATION_OK =
             "ArgonMigrationNotificationOk/Text";
+        public const string DIALOG_DELETE_VAULT_CONFIRMATION =
+            "DialogDeleteVaultConfiguration/Text";
 
         public const string SYNC_PENDING = "SyncPendingConfiguration/Text";
         public const string SYNC_IN_PROGRESS = "SyncInProgress/Text";

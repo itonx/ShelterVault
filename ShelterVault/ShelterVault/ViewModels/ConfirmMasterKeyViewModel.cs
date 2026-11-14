@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,9 +58,7 @@ namespace ShelterVault.ViewModels
             _shelterVaultLocalDb = shelterVaultLocalDb;
             _weakReferenceInstanceManager = weakReferenceInstanceManager;
             _vaultManager = shelterVaultCreatorManager;
-            Vaults = shelterVault.GetAllActiveVaults().ToList();
-            if (Vaults.Any())
-                SelectedVault = Vaults.FirstOrDefault();
+            LoadVaults();
             RegisterMessages();
         }
 
@@ -67,6 +66,27 @@ namespace ShelterVault.ViewModels
         private void NewVault()
         {
             EventManager.Publish(new EnumNavigation(AppPage.CreateMasterKey));
+        }
+
+        [RelayCommand]
+        private async Task DeleteVault()
+        {
+            var dbPath = Path.Combine(
+                _shelterVaultLocalDb.DefaultShelterVaultPath,
+                string.Concat(SelectedVault.Name, _shelterVaultLocalDb.DbExtension)
+            );
+            if (File.Exists(dbPath))
+            {
+                var cancelDeleteProcess = await _dialogManager.ShowContinueConfirmationDialogAsync(
+                    LangResourceKeys.DIALOG_DELETE_VAULT_CONFIRMATION
+                );
+
+                if (cancelDeleteProcess)
+                    return;
+                _shelterVaultLocalDb.ClearDbPool(SelectedVault.Name);
+                File.Delete(dbPath);
+                LoadVaults();
+            }
         }
 
         [RelayCommand]
@@ -155,6 +175,13 @@ namespace ShelterVault.ViewModels
         private void ChangePasswordVisibility()
         {
             ShowPassword = !ShowPassword;
+        }
+
+        private void LoadVaults()
+        {
+            Vaults = _shelterVault.GetAllActiveVaults().ToList();
+            if (Vaults.Any())
+                SelectedVault = Vaults.FirstOrDefault();
         }
     }
 }

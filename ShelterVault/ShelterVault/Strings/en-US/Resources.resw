@@ -411,4 +411,10 @@
   <data name="NavigationViewCredentials.Content" xml:space="preserve">
     <value>Credentials</value>
   </data>
+  <data name="DeleteVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete vault</value>
+  </data>
+  <data name="DialogDeleteVaultConfiguration.Text" xml:space="preserve">
+    <value>The vault will be deleted. Continue?</value>
+  </data>
 </root>

@@ -17,6 +17,7 @@ namespace ShelterVault.DataLayer
         string DbPath { get; }
         string DbConnectionString { get; }
         void SetDbName(string dbName);
+        void ClearDbPool(string dbName);
     }
 
     public interface ICommonDbOperation
@@ -199,6 +200,13 @@ namespace ShelterVault.DataLayer
 
             connection.Open();
             return connection;
+        }
+
+        public void ClearDbPool(string dbName)
+        {
+            var dbPath = Path.Combine(DefaultShelterVaultPath, string.Concat(dbName, DbExtension));
+            using SqliteConnection connection = new($"Data Source={dbPath};Pooling=True;");
+            SqliteConnection.ClearPool(connection);
         }
     }
 }
