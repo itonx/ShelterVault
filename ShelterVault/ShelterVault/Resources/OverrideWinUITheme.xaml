@@ -4,6 +4,9 @@
         <ResourceDictionary x:Key="Light">
             <!--  Override ShelterVault styles  -->
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="#343a40" />
+            <SolidColorBrush x:Key="CredentialsIcon.Background" Color="#6648ad" />
+            <SolidColorBrush x:Key="CredentialsIcon.Foreground" Color="White" />
+            <SolidColorBrush x:Key="CredentialsIcon.Border" Color="Transparent" />
 
             <!--  Override Default styles  -->
             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32000000" />
@@ -13,6 +16,9 @@
         <ResourceDictionary x:Key="Dark">
             <!--  Override ShelterVault styles  -->
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="White" />
+            <SolidColorBrush x:Key="CredentialsIcon.Background" Color="#6648ad" />
+            <SolidColorBrush x:Key="CredentialsIcon.Foreground" Color="White" />
+            <SolidColorBrush x:Key="CredentialsIcon.Border" Color="Transparent" />
 
             <!--  Override Default styles  -->
             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#32FFFFFF" />

@@ -6,22 +6,114 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ShelterVault.Models"
     Margin="{ThemeResource ShelterVaultPageContentThickness}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Storyboard
+            x:Key="PulseStoryboard"
+            AutoReverse="True"
+            RepeatBehavior="Forever">
+            <ColorAnimation
+                Storyboard.TargetName="PulseBrush"
+                Storyboard.TargetProperty="Color"
+                To="#FFFFF4B0"
+                Duration="0:0:1.2">
+                <ColorAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut" />
+                </ColorAnimation.EasingFunction>
+            </ColorAnimation>
+        </Storyboard>
+    </Page.Resources>
 
     <Grid>
-        <Viewbox MaxWidth="1200" Margin="10,0">
-            <StackPanel>
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontFamily="Cascadia Mono"
-                    Foreground="{ThemeResource ShelterVaultForeground}"
-                    Text=" ███████████████╗  &#x0a; ██           ██║  ███████╗██╗  ██╗███████╗██╗  ████████╗███████╗██████╗     ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗&#x0a; ██    ███    ██║  ██╔════╝██║  ██║██╔════╝██║  ╚══██╔══╝██╔════╝██╔══██╗    ██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝&#x0a; ██     █     ██║  ███████╗███████║█████╗  ██║     ██║   █████╗  ██████╔╝    ██║   ██║███████║██║   ██║██║     ██║   &#x0a; ██     █     ██║  ╚════██║██╔══██║██╔══╝  ██║     ██║   ██╔══╝  ██╔══██╗    ╚██╗ ██╔╝██╔══██║██║   ██║██║     ██║   &#x0a; ██           ██║  ███████║██║  ██║███████╗███████╗██║   ███████╗██║  ██║     ╚████╔╝ ██║  ██║╚██████╔╝███████╗██║   &#x0a; ███████████████║  ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝   ╚══════╝╚═╝  ╚═╝      ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝   &#x0a; ╚══════════════╝  &#x0a;"
-                    TextWrapping="NoWrap" />
-                <local:VaultMigrationControl />
-            </StackPanel>
-        </Viewbox>
+        <ItemsView ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <ItemsView.Layout>
+                <StackLayout Spacing="5" />
+            </ItemsView.Layout>
+            <ItemsView.ItemTemplate>
+                <DataTemplate x:DataType="models:CredentialsViewItem">
+                    <ItemContainer>
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100" />
+                            </Grid.RowDefinitions>
+                            <Grid
+                                Padding="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="{ThemeResource CredentialsIcon.Background}"
+                                BorderThickness="2"
+                                BorderBrush="{ThemeResource CredentialsIcon.Border}"
+                                CornerRadius="10">
+                                <FontIcon
+                                    FontSize="50"
+                                    Foreground="{ThemeResource CredentialsIcon.Foreground}"
+                                    Glyph="&#xE705;" />
+                            </Grid>
+                            <Grid Grid.Column="1" Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    VerticalAlignment="Center"
+                                    Foreground="{ThemeResource ShelterVaultForeground}"
+                                    Text="{x:Bind Title}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
+                                    Foreground="{ThemeResource ShelterVaultForeground}"
+                                    Text="{x:Bind Username}" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    VerticalAlignment="Center"
+                                    Foreground="{ThemeResource ShelterVaultForeground}"
+                                    Text="{x:Bind Password}" />
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Button
+                                    Grid.Row="1"
+                                    Margin="0"
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Style="{ThemeResource AlternateCloseButtonStyle}">
+                                    <FontIcon
+                                        FontSize="20"
+                                        Foreground="{ThemeResource ShelterVaultForeground}"
+                                        Glyph="&#xF78D;" />
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Margin="0"
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Style="{ThemeResource AlternateCloseButtonStyle}">
+                                    <FontIcon
+                                        Margin="0"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource ShelterVaultForeground}"
+                                        Glyph="&#xE8C8;" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </ItemContainer>
+                </DataTemplate>
+            </ItemsView.ItemTemplate>
+        </ItemsView>
     </Grid>
 </Page>

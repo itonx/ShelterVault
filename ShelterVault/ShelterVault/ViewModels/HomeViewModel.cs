@@ -6,27 +6,36 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ShelterVault.Interfaces;
+using ShelterVault.Managers;
+using ShelterVault.Models;
 using ShelterVault.Shared.Constants;
 using Windows.Storage;
 
 namespace ShelterVault.ViewModels
 {
-    public class HomeViewModel : ObservableObject
+    public partial class HomeViewModel : ObservableObject
     {
         private readonly IEncryptionMigrationManager _encryptionMigrationManager;
         private readonly IDialogManager _dialogManager;
         private readonly IShelterVaultStateService _shelterVaultStateService;
 
+        [ObservableProperty]
+        public partial IList<CredentialsViewItem> Credentials { get; set; }
+
         public HomeViewModel(
             IEncryptionMigrationManager encryptionMigrationManager,
             IDialogManager dialogManager,
-            IShelterVaultStateService shelterVaultStateService
+            IShelterVaultStateService shelterVaultStateService,
+            ICredentialsManager credentialsManager
         )
         {
             _encryptionMigrationManager = encryptionMigrationManager;
             _dialogManager = dialogManager;
             _shelterVaultStateService = shelterVaultStateService;
             CheckAvailableMigration();
+            Credentials = credentialsManager
+                .GetAllActiveCredentials(_shelterVaultStateService.ShelterVault.UUID)
+                .ToList();
         }
 
         private void CheckAvailableMigration()

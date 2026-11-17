@@ -20,6 +20,9 @@
                 Opacity=".01"
                 Color="{StaticResource ShelterVaultMainForeground}" />
             <SolidColorBrush x:Key="ShelterVaultForeground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="CredentialsIcon.Background" Color="Transparent" />
+            <SolidColorBrush x:Key="CredentialsIcon.Foreground" Color="{StaticResource ShelterVaultMainForeground}" />
+            <SolidColorBrush x:Key="CredentialsIcon.Border" Color="{StaticResource ShelterVaultMainForeground}" />
             <Style
                 x:Key="ShelterVaultLoginBannerStyle"
                 BasedOn="{StaticResource ShelterVaultLoginBannerStyle}"
