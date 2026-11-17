@@ -34,8 +34,8 @@
                             Margin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleMargin}}"
                             Source="/Images/SmallTile.png" />
                         <TextBlock Foreground="{ThemeResource ShelterVaultForeground}">ShelterVault</TextBlock>
-                        <TextBlock Visibility="{Binding VaultName, Converter={StaticResource StringToVisibility}}">|</TextBlock>
-                        <TextBlock Text="{Binding VaultName, Mode=OneWay}" />
+                        <TextBlock Foreground="{ThemeResource ShelterVaultForeground}" Visibility="{Binding VaultName, Converter={StaticResource StringToVisibility}}">|</TextBlock>
+                        <TextBlock Foreground="{ThemeResource ShelterVaultForeground}" Text="{Binding VaultName, Mode=OneWay}" />
                     </StackPanel>
                 </TitleBar.LeftHeader>
                 <TitleBar.RightHeader>
