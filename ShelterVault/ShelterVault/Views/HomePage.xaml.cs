@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using ShelterVault.Models;
 using ShelterVault.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -29,6 +30,22 @@ namespace ShelterVault.Views
         {
             this.InitializeComponent();
             this.DataContext = App.Current.Services.GetService<HomeViewModel>();
+        }
+
+        private void ItemsView_SelectionChanged(
+            ItemsView sender,
+            ItemsViewSelectionChangedEventArgs args
+        )
+        {
+            if (sender == null)
+                return;
+            if (
+                sender.SelectedItem is CredentialsViewItem credentialsViewItem
+                && CredentialsPage.DataContext is CredentialsViewModel cvm
+            )
+            {
+                cvm.OnNavigated(credentialsViewItem);
+            }
         }
     }
 }

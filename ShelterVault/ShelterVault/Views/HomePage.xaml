@@ -28,7 +28,14 @@
     </Page.Resources>
 
     <Grid>
-        <ItemsView ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ItemsView
+            ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectionChanged="ItemsView_SelectionChanged"
+            SelectionMode="Single">
             <ItemsView.Layout>
                 <StackLayout Spacing="5" />
             </ItemsView.Layout>
@@ -49,8 +56,8 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Background="{ThemeResource CredentialsIcon.Background}"
-                                BorderThickness="2"
                                 BorderBrush="{ThemeResource CredentialsIcon.Border}"
+                                BorderThickness="2"
                                 CornerRadius="10">
                                 <FontIcon
                                     FontSize="50"
@@ -115,5 +122,6 @@
                 </DataTemplate>
             </ItemsView.ItemTemplate>
         </ItemsView>
+        <local:CredentialsPage x:Name="CredentialsPage" Grid.Column="1" />
     </Grid>
 </Page>
