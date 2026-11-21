@@ -72,12 +72,18 @@ namespace ShelterVault.ViewModels
         }
 
         [RelayCommand]
+        private void GoToShelterVaultPage(ShelterVaultPage shelterVaultPage)
+        {
+            WeakReferenceMessenger.Default.Send(new LoadCredentialsMessage(shelterVaultPage));
+        }
+
+        [RelayCommand]
         private void Sync()
         {
             if (ShelterVaultCurrentAppState == AppPage.NavigationView)
             {
                 WeakReferenceMessenger.Default.Send(
-                    new ShowPageRequestMessage(ShelterVaultPage.SETTINGS)
+                    new LoadCredentialsMessage(ShelterVaultPage.SETTINGS)
                 );
             }
         }

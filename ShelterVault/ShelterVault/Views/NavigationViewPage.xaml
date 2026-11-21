@@ -9,45 +9,15 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ShelterVault.Models"
     xmlns:views="using:ShelterVault.Views"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <NavigationView IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ShelterVault.NavigationView.NavigationView}">
+    <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <interactivity:Interaction.Behaviors>
-            <behaviors:PageLoaderBehavior SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SettingsPage="views:SettingsPage" />
+            <desktinyBehaviors:ExecuteOnINavigationImplementedBehavior />
+            <behaviors:PageLoaderBehavior SelectedItem="{Binding SelectedShelterVaultPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SettingsPage="views:SettingsPage" />
         </interactivity:Interaction.Behaviors>
-        <NavigationView.MenuItems>
-            <NavigationViewItem
-                x:Uid="NavigationHomeItem"
-                behaviors:PageLoaderBehavior.PageType="views:HomePage"
-                Icon="Home"
-                Tag="HOME"
-                ToolTipService.ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
-            <NavigationViewItem
-                x:Uid="NavigationNewCredentialsItem"
-                behaviors:PageLoaderBehavior.PageType="views:CredentialsPage"
-                Icon="Add"
-                Tag="NEW_CREDENTIALS"
-                ToolTipService.ToolTip="{Binding Content, RelativeSource={RelativeSource Mode=Self}}" />
-            <NavigationViewItem
-                x:Uid="NavigationViewCredentials"
-                IsExpanded="True"
-                SelectsOnInvoked="False"
-                Tag="VAULT"
-                ToolTipService.ToolTip="Vault">
-                <interactivity:Interaction.Behaviors>
-                    <behaviors:CredentialItemsGeneratorBehavior ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                </interactivity:Interaction.Behaviors>
-                <NavigationViewItem.Icon>
-                    <FontIcon Glyph="&#xE705;" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-        </NavigationView.MenuItems>
-        <Frame Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <interactivity:Interaction.Behaviors>
-                <desktinyBehaviors:ExecuteOnINavigationImplementedBehavior />
-            </interactivity:Interaction.Behaviors>
-        </Frame>
-    </NavigationView>
+    </Frame>
 </Page>

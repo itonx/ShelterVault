@@ -166,7 +166,7 @@ namespace ShelterVault.ViewModels
             if (!await DiscardChangesAsync(completeChallenge: true))
                 return;
             WeakReferenceMessenger.Default.Send(
-                new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME)
+                new LoadCredentialsMessage(Shared.Enums.ShelterVaultPage.HOME)
             );
         }
 
@@ -239,9 +239,6 @@ namespace ShelterVault.ViewModels
                         await UpdateCredential();
                     else if (State == CredentialsViewModelState.New)
                         await CreateCredential();
-                    WeakReferenceMessenger.Default.Send(
-                        new SelectCredentialRequestMessage(SelectedCredential)
-                    );
                 }
             }
             finally
@@ -267,7 +264,7 @@ namespace ShelterVault.ViewModels
                 if (await _credentialsManager.DeleteCredentials(uuid))
                 {
                     WeakReferenceMessenger.Default.Send(
-                        new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME)
+                        new LoadCredentialsMessage(Shared.Enums.ShelterVaultPage.HOME)
                     );
                     WeakReferenceMessenger.Default.Send(
                         new RefreshCredentialListRequestMessage(true)
@@ -353,7 +350,7 @@ namespace ShelterVault.ViewModels
                                 LangResourceKeys.DIALOG_CREDENTIALS_REMOVED_FROM_CLOUD
                             );
                             WeakReferenceMessenger.Default.Send(
-                                new ShowPageRequestMessage(Shared.Enums.ShelterVaultPage.HOME)
+                                new LoadCredentialsMessage(Shared.Enums.ShelterVaultPage.HOME)
                             );
                         }
                         else

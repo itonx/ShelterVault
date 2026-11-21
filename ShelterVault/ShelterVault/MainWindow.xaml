@@ -20,19 +20,17 @@
         IsNocturneVisible="{Binding IsProgressBarVisible, Mode=OneWay}"
         MaximizeAtStartup="true">
         <desktiny:Winston.TitleBar>
-            <TitleBar IsPaneToggleButtonVisible="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToIsPaneButtonVisible}}">
+            <TitleBar>
                 <interactivity:Interaction.Behaviors>
                     <behaviors:PaneToggleRequestedBehavior />
                 </interactivity:Interaction.Behaviors>
                 <TitleBar.LeftHeader>
                     <StackPanel
+                        Margin="10,0,0,0"
                         VerticalAlignment="Center"
                         Orientation="Horizontal"
                         Spacing="5">
-                        <ImageIcon
-                            Width="20"
-                            Margin="{Binding ShelterVaultCurrentAppState, Converter={StaticResource ShelterVaultAppStateToTitleMargin}}"
-                            Source="/Images/SmallTile.png" />
+                        <ImageIcon Width="20" Source="/Images/SmallTile.png" />
                         <TextBlock Foreground="{ThemeResource ShelterVaultForeground}">ShelterVault</TextBlock>
                         <TextBlock Foreground="{ThemeResource ShelterVaultForeground}" Visibility="{Binding VaultName, Converter={StaticResource StringToVisibility}}">|</TextBlock>
                         <TextBlock Foreground="{ThemeResource ShelterVaultForeground}" Text="{Binding VaultName, Mode=OneWay}" />
@@ -41,6 +39,11 @@
                 <TitleBar.RightHeader>
                     <views:ShelterVaultTitleBar />
                 </TitleBar.RightHeader>
+                <AutoSuggestBox
+                    MinWidth="400"
+                    PlaceholderText="Search"
+                    QueryIcon="Find"
+                    Visibility="{Binding VaultName, Converter={StaticResource StringToVisibility}}" />
             </TitleBar>
         </desktiny:Winston.TitleBar>
         <desktiny:Winston.Content>

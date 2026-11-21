@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:desktiny="using:Desktiny.WinUI"
     xmlns:desktinyBehaviors="using:Desktiny.WinUI.Behaviors"
+    xmlns:enums="using:ShelterVault.Shared.Enums"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:ShelterVault.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -21,6 +22,52 @@
                 <desktinyBehaviors:ComboBoxChangeLanguageBehavior />
             </interactivity:Interaction.Behaviors>
         </ComboBox>
+        <Button
+            Width="{Binding ElementName=AppTitleBarThemeButton, Path=ActualHeight}"
+            Command="{Binding GoToShelterVaultPageCommand}"
+            CommandParameter="{x:Bind enums:ShelterVaultPage.HOME}"
+            Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
+            Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
+            <Grid ColumnSpacing="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon Glyph="&#xE80F;" />
+            </Grid>
+        </Button>
+        <Button
+            Width="{Binding ElementName=AppTitleBarThemeButton, Path=ActualHeight}"
+            Command="{Binding GoToShelterVaultPageCommand}"
+            CommandParameter="{x:Bind enums:ShelterVaultPage.CREDENTIALS}"
+            Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
+            Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
+            <Grid ColumnSpacing="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon Glyph="&#xE710;" />
+            </Grid>
+        </Button>
+        <Button
+            Width="{Binding ElementName=AppTitleBarThemeButton, Path=ActualHeight}"
+            Command="{Binding GoToShelterVaultPageCommand}"
+            CommandParameter="{x:Bind enums:ShelterVaultPage.SETTINGS}"
+            Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
+            Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
+            <Grid ColumnSpacing="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon Glyph="&#xE713;" />
+            </Grid>
+        </Button>
+        <desktiny:ThemeButton
+            x:Name="AppTitleBarThemeButton"
+            Width="{Binding ElementName=AppTitleBarThemeButton, Path=ActualHeight}"
+            AppTheme="{Binding CurrentAppTheme, Mode=TwoWay}"
+            Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}">
+            <FontIcon Glyph="{Binding CurrentAppTheme, Converter={StaticResource ThemeToIcon}, Mode=OneWay}" />
+        </desktiny:ThemeButton>
         <Button
             x:Name="AppTitleBarSyncButton"
             Command="{Binding SyncCommand}"
@@ -37,6 +84,7 @@
         </Button>
         <Button
             x:Name="AppTitleBarSwitchVaultButton"
+            Width="{Binding ElementName=AppTitleBarThemeButton, Path=ActualHeight}"
             Command="{Binding SwitchVaultCommand}"
             Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}"
             Visibility="{Binding ShowSwitchVault, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=true}">
@@ -45,16 +93,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <FontIcon Glyph="&#xE8AB;" Style="{StaticResource ShelterVault.AppTitleBar.Buttons.Icon}" />
-                <TextBlock x:Uid="AppBarSwitchVault" Grid.Column="1" />
+                <FontIcon Glyph="&#xF3B1;" />
             </Grid>
         </Button>
-        <desktiny:ThemeButton
-            x:Name="AppTitleBarThemeButton"
-            Width="{Binding ElementName=AppTitleBarThemeButton, Path=ActualHeight}"
-            AppTheme="{Binding CurrentAppTheme, Mode=TwoWay}"
-            Style="{ThemeResource ShelterVault.AppTitleBar.Buttons}">
-            <FontIcon Glyph="{Binding CurrentAppTheme, Converter={StaticResource ThemeToIcon}, Mode=OneWay}" />
-        </desktiny:ThemeButton>
     </StackPanel>
 </UserControl>

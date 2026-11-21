@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -12,6 +13,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using ShelterVault.Models;
+using ShelterVault.Shared.Messages;
 using ShelterVault.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -32,19 +34,21 @@ namespace ShelterVault.Views
             this.DataContext = App.Current.Services.GetService<HomeViewModel>();
         }
 
-        private void ItemsView_SelectionChanged(
-            ItemsView sender,
-            ItemsViewSelectionChangedEventArgs args
-        )
+        private void ItemContainer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            if (sender == null)
-                return;
             if (
-                sender.SelectedItem is CredentialsViewItem credentialsViewItem
-                && CredentialsPage.DataContext is CredentialsViewModel cvm
+                sender is ItemContainer container
+                && CredentialList.SelectedItem is CredentialsViewItem credentialsViewItem
             )
             {
-                cvm.OnNavigated(credentialsViewItem);
+                WeakReferenceMessenger.Default.Send(
+                    new LoadCredentialsMessage(
+                        LoadPagePayload.Create(
+                            Shared.Enums.ShelterVaultPage.CREDENTIALS,
+                            credentialsViewItem
+                        )
+                    )
+                );
             }
         }
     }

@@ -6,6 +6,7 @@ using Desktiny.WinUI.Services;
 using ShelterVault.DataLayer;
 using ShelterVault.Interfaces;
 using ShelterVault.Models;
+using ShelterVault.Shared.Enums;
 using ShelterVault.Shared.Messages;
 
 namespace ShelterVault.ViewModels
@@ -22,7 +23,7 @@ namespace ShelterVault.ViewModels
         public partial IList<CredentialsViewItem> Credentials { get; set; }
 
         [ObservableProperty]
-        public partial object SelectedMenuItem { get; set; }
+        public partial LoadPagePayload SelectedShelterVaultPage { get; set; }
 
         [ObservableProperty]
         public partial string VaultName { get; set; }
@@ -46,7 +47,7 @@ namespace ShelterVault.ViewModels
             Credentials = _credentialsManager
                 .GetAllActiveCredentials(_shelterVaultStateService.ShelterVault.UUID)
                 .ToList();
-            SelectedMenuItem = Shared.Enums.ShelterVaultPage.HOME.ToString();
+            SelectedShelterVaultPage = LoadPagePayload.Create(ShelterVaultPage.HOME);
             VaultName = _shelterVaultStateService.ShelterVault.Name;
             IsPaneOpen = true;
             RegisterMessages();
@@ -55,15 +56,11 @@ namespace ShelterVault.ViewModels
         private void RegisterMessages()
         {
             _weakReferenceInstanceManager.AddInstance(this);
-            WeakReferenceMessenger.Default.Register<NavigationViewModel, ShowPageRequestMessage>(
+            WeakReferenceMessenger.Default.Register<NavigationViewModel, LoadCredentialsMessage>(
                 this,
                 (viewModel, payload) =>
                 {
-                    if (
-                        payload.Value == Shared.Enums.ShelterVaultPage.HOME
-                        || payload.Value == Shared.Enums.ShelterVaultPage.SETTINGS
-                    )
-                        viewModel.SelectedMenuItem = payload.Value.ToString();
+                    viewModel.SelectedShelterVaultPage = payload.Value;
                 }
             );
             WeakReferenceMessenger.Default.Register<
@@ -82,41 +79,8 @@ namespace ShelterVault.ViewModels
                                     viewModel._shelterVaultStateService.ShelterVault.UUID
                                 )
                                 .ToList();
-                            if (viewModel.SelectedMenuItem is CredentialsViewItem item)
-                            {
-                                CredentialsViewItem newSelectedItem =
-                                    viewModel.Credentials.FirstOrDefault(x =>
-                                        x.UUID.Equals(item.UUID)
-                                    );
-                                if (newSelectedItem != null)
-                                {
-                                    newSelectedItem.SkipPageLoader = true;
-                                    viewModel.SelectedMenuItem = null;
-                                    viewModel.SelectedMenuItem = newSelectedItem;
-                                    newSelectedItem.SkipPageLoader = false;
-                                }
-                                WeakReferenceMessenger.Default.Send(
-                                    new CheckSelectedCredentialsAfterSyncMessage(true)
-                                );
-                            }
                         }
                     });
-                }
-            );
-            WeakReferenceMessenger.Default.Register<
-                NavigationViewModel,
-                SelectCredentialRequestMessage
-            >(
-                this,
-                (viewModel, payload) =>
-                {
-                    if (payload.Value != null)
-                    {
-                        CredentialsViewItem selectTarget = viewModel.Credentials.FirstOrDefault(c =>
-                            c.UUID.Equals(payload.Value.UUID)
-                        );
-                        viewModel.SelectedMenuItem = selectTarget;
-                    }
                 }
             );
             WeakReferenceMessenger.Default.Register<

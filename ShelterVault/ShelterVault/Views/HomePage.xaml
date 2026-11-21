@@ -10,48 +10,35 @@
     Margin="{ThemeResource ShelterVaultPageContentThickness}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <Page.Resources>
-        <Storyboard
-            x:Key="PulseStoryboard"
-            AutoReverse="True"
-            RepeatBehavior="Forever">
-            <ColorAnimation
-                Storyboard.TargetName="PulseBrush"
-                Storyboard.TargetProperty="Color"
-                To="#FFFFF4B0"
-                Duration="0:0:1.2">
-                <ColorAnimation.EasingFunction>
-                    <SineEase EasingMode="EaseInOut" />
-                </ColorAnimation.EasingFunction>
-            </ColorAnimation>
-        </Storyboard>
-    </Page.Resources>
 
-    <Grid>
+    <Grid Padding="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="450" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <ItemsView
+            x:Name="CredentialList"
+            HorizontalAlignment="Center"
             ItemsSource="{Binding Credentials, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-            SelectionChanged="ItemsView_SelectionChanged"
             SelectionMode="Single">
             <ItemsView.Layout>
-                <StackLayout Spacing="5" />
+                <UniformGridLayout
+                    MaximumRowsOrColumns="3"
+                    MinColumnSpacing="20"
+                    MinRowSpacing="5" />
             </ItemsView.Layout>
             <ItemsView.ItemTemplate>
                 <DataTemplate x:DataType="models:CredentialsViewItem">
-                    <ItemContainer>
+                    <ItemContainer DoubleTapped="ItemContainer_DoubleTapped">
                         <Grid ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100" />
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="350" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid
+                                Margin="25,0,0,0"
                                 Padding="10"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -60,11 +47,14 @@
                                 BorderThickness="2"
                                 CornerRadius="10">
                                 <FontIcon
-                                    FontSize="50"
+                                    FontSize="65"
                                     Foreground="{ThemeResource CredentialsIcon.Foreground}"
                                     Glyph="&#xE705;" />
                             </Grid>
-                            <Grid Grid.Column="1" Padding="10">
+                            <Grid
+                                Grid.Column="1"
+                                Padding="10"
+                                RowSpacing="10">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition />
@@ -73,55 +63,89 @@
                                 <TextBlock
                                     Grid.Row="0"
                                     VerticalAlignment="Center"
+                                    FontSize="20"
+                                    FontWeight="SemiBold"
                                     Foreground="{ThemeResource ShelterVaultForeground}"
-                                    Text="{x:Bind Title}" />
-                                <TextBlock
+                                    Text="{x:Bind Title}"
+                                    TextTrimming="CharacterEllipsis" />
+                                <Grid
                                     Grid.Row="1"
-                                    VerticalAlignment="Center"
-                                    Foreground="{ThemeResource ShelterVaultForeground}"
-                                    Text="{x:Bind Username}" />
-                                <TextBlock
+                                    BorderBrush="{ThemeResource AccentAAFillColorDefaultBrush}"
+                                    BorderThickness="0,0,0,0"
+                                    ColumnSpacing="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon
+                                        VerticalAlignment="Center"
+                                        FontSize="15"
+                                        Foreground="{ThemeResource ShelterVaultForeground}"
+                                        Glyph="&#xE77B;" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        FontSize="15"
+                                        Foreground="{ThemeResource ShelterVaultForeground}"
+                                        Text="{x:Bind Username}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <Button
+                                        Grid.Column="2"
+                                        Margin="5,0,0,0"
+                                        Padding="0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        Style="{ThemeResource ButtonRevealStyle}">
+                                        <FontIcon
+                                            Margin="0"
+                                            FontSize="18"
+                                            Foreground="{ThemeResource ShelterVaultForeground}"
+                                            Glyph="&#xE8C8;" />
+                                    </Button>
+                                </Grid>
+                                <Grid
                                     Grid.Row="2"
-                                    VerticalAlignment="Center"
-                                    Foreground="{ThemeResource ShelterVaultForeground}"
-                                    Text="{x:Bind Password}" />
-                            </Grid>
-                            <Grid Grid.Column="2">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Button
-                                    Grid.Row="1"
-                                    Margin="0"
-                                    Padding="0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Style="{ThemeResource AlternateCloseButtonStyle}">
+                                    BorderBrush="{ThemeResource AccentAAFillColorDefaultBrush}"
+                                    BorderThickness="0,0,0,0"
+                                    ColumnSpacing="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
                                     <FontIcon
-                                        FontSize="20"
+                                        VerticalAlignment="Center"
+                                        FontSize="15"
                                         Foreground="{ThemeResource ShelterVaultForeground}"
-                                        Glyph="&#xF78D;" />
-                                </Button>
-                                <Button
-                                    Grid.Row="0"
-                                    Margin="0"
-                                    Padding="0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Style="{ThemeResource AlternateCloseButtonStyle}">
-                                    <FontIcon
-                                        Margin="0"
-                                        FontSize="20"
+                                        Glyph="&#xE8D7;" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
                                         Foreground="{ThemeResource ShelterVaultForeground}"
-                                        Glyph="&#xE8C8;" />
-                                </Button>
+                                        Text="**********" />
+                                    <Button
+                                        Grid.Column="2"
+                                        Margin="5,0,0,0"
+                                        Padding="0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        Style="{ThemeResource ButtonRevealStyle}">
+                                        <FontIcon
+                                            Margin="0"
+                                            FontSize="18"
+                                            Foreground="{ThemeResource ShelterVaultForeground}"
+                                            Glyph="&#xE8C8;" />
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </ItemContainer>
                 </DataTemplate>
             </ItemsView.ItemTemplate>
         </ItemsView>
-        <local:CredentialsPage x:Name="CredentialsPage" Grid.Column="1" />
     </Grid>
 </Page>

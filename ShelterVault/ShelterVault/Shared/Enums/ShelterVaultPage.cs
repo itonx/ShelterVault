@@ -7,7 +7,11 @@ namespace ShelterVault.Shared.Enums
     {
         [PageType(typeof(HomePage))]
         HOME,
+
         [PageType(typeof(SettingsPage))]
-        SETTINGS
+        SETTINGS,
+
+        [PageType(typeof(CredentialsPage))]
+        CREDENTIALS,
     }
 }
